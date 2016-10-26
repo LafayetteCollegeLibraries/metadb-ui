@@ -15,7 +15,7 @@ const Facet = React.createClass({
 		items: T.arrayOf(T.shape({
 			name: T.string,
 			hits: T.number,
-			value: T.string,
+			value: T.any,
 		})), //.isRequired,
 
 		// the name of the facet that relates to the key within the `facets` object
@@ -174,6 +174,10 @@ const Facet = React.createClass({
 	},
 
 	render: function () {
+		// skip if there's nothing to display
+		if (!this.props.items.length)
+			return null
+
 		const defaultPanel = this.props.styles.default.panel
 		const defaultHeader = this.props.styles.default.header
 		const selPanel = this.props.styles.hasSelectedFacets.panel

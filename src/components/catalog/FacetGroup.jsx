@@ -26,7 +26,7 @@ const FacetGroup = React.createClass({
 			items: T.arrayOf(T.shape({
 				hits: T.number,
 				label: T.string,
-				value: T.string,
+				value: T.any,
 			}))
 		})).isRequired,
 
