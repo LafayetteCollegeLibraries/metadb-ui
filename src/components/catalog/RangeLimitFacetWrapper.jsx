@@ -9,11 +9,9 @@ const T = React.PropTypes
 
 const RangeLimitFacetWrapper = React.createClass({
 	propTypes: {
-		data: T.shape({
-			name: T.string,
-			label: T.string,
-			items: T.array,
-		}),
+		name: T.string,
+		label: T.string,
+		items: T.array,
 
 		onSelectFacet: T.func.isRequired,
 		onRemoveSelectedFacet: T.func.isRequired,
@@ -23,7 +21,7 @@ const RangeLimitFacetWrapper = React.createClass({
 	getInitialState: function () {
 		return {
 			hits: 0,
-			items: this.props.data.items,
+			items: this.props.items,
 			max: 0,
 			min: 0,
 		}
@@ -34,7 +32,7 @@ const RangeLimitFacetWrapper = React.createClass({
 	},
 
 	calculateRange: function () {
-		const items = this.props.data.items
+		const items = this.props.items
 		let max = -Infinity
 		let min = Infinity
 		let totalHits = 0
@@ -68,7 +66,7 @@ const RangeLimitFacetWrapper = React.createClass({
 		const [min, max] = range
 
 		const facet = {
-			name: this.props.data.name,
+			name: this.props.name,
 			label: min + ' - ' + max,
 			value: {
 				begin: min,
