@@ -175,7 +175,7 @@ const Facet = React.createClass({
 
 	render: function () {
 		// skip if there's nothing to display
-		if (!this.props.items.length)
+		if (!this.props.items || !this.props.items.length) 
 			return null
 
 		const defaultPanel = this.props.styles.default.panel
