@@ -5,7 +5,7 @@ import { search } from '../../lib/api'
 import { addSearch as addSearchToHistory } from '../../lib/search-history'
 import browserHistory from 'react-router/lib/browserHistory'
 import formatSearchQuerystring from '../../lib/format-search-querystring'
-import { parse as parseQs } from 'blacklight-querystring'
+import { parse as parseQuerystring } from 'blacklight-querystring'
 
 import {
 	RECEIVE_SEARCH_ERROR,
@@ -14,7 +14,6 @@ import {
 } from '../constants'
 
 const REQUIRED_OPTS = {
-	utf8: '✓',
 	search_field: 'search',
 }
 
@@ -70,7 +69,7 @@ export const searchCatalog = (query, facets, opts) => dispatch => {
 // `parseSearchQuerystring` is used to extract the query, facets, and 
 // options + passed to `conductSearch`
 export const searchCatalogByQueryString = queryString => dispatch => {
-	const {query, facets, options} = parseQs(queryString)
+	const {query, facets, options} = parseQuerystring(queryString)
 	return conductSearch(dispatch, query, facets, options, queryString)
 }
 
@@ -92,7 +91,6 @@ export const setSearchOption = (field, value) => (dispatch, getState) => {
 	// since searchCatalog's a thunk, we'll use the passed `dispatch` + call it again
 	return searchCatalog(query, facets, options)(dispatch)
 }
-
 
 export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState) => {
 	const search = getState().search || {}
