@@ -1,13 +1,14 @@
-// this acts as a bridge between the FacetPanel interface 
-// and the RangeLimit component by calculating the range data
+// this acts as a bridge between the Facet interface 
+// and the RangeSliderNumber component by calculating
+// the range data
 
 import React from 'react'
-import RangeLimit from './RangeLimit.jsx'
+import RangeSliderNumber from './RangeSliderNumber.jsx'
 import FacetListSelectedItem from './FacetListSelectedItem.jsx'
 
 const T = React.PropTypes
 
-const RangeLimitFacetWrapper = React.createClass({
+const FacetRangeLimitNumber = React.createClass({
 	propTypes: {
 		name: T.string,
 		label: T.string,
@@ -104,7 +105,7 @@ const RangeLimitFacetWrapper = React.createClass({
 		return (
 			<div {...containerProps}>
 				{this.maybeRenderSelectedFacets()}
-				<RangeLimit
+				<RangeSliderNumber
 					max={this.state.max}
 					min={this.state.min}
 					onApplyRange={this.handleApplyRange}
@@ -114,4 +115,4 @@ const RangeLimitFacetWrapper = React.createClass({
 	}
 })
 
-export default RangeLimitFacetWrapper
+export default FacetRangeLimitNumber

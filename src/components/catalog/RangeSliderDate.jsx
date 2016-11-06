@@ -12,7 +12,7 @@ const INTERVALS = {
 	YEAR: 'year',
 }
 
-const FacetDateRangeLimit = React.createClass({
+const RangeSliderDate = React.createClass({
 	propTypes: {
 		interval: T.oneOf([INTERVALS.DAY, INTERVALS.MONTH, INTERVALS.YEAR]),
 
@@ -264,4 +264,4 @@ const FacetDateRangeLimit = React.createClass({
 	}
 })
 
-export default FacetDateRangeLimit
+export default RangeSliderDate
