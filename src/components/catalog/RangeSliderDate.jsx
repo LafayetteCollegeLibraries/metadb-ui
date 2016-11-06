@@ -2,19 +2,20 @@ import React from 'react'
 import Slider from 'rc-slider'
 import Button from '../Button.jsx'
 
+import {
+	intervals as INTERVALS,
+	values as intervalValues,
+} from './common/date-intervals'
+
+import formatDateValue from './common/format-date-value'
+
 import 'rc-slider/assets/index.css'
 
 const T = React.PropTypes
 
-const INTERVALS = {
-	DAY: 'day',
-	MONTH: 'month',
-	YEAR: 'year',
-}
-
 const RangeSliderDate = React.createClass({
 	propTypes: {
-		interval: T.oneOf([INTERVALS.DAY, INTERVALS.MONTH, INTERVALS.YEAR]),
+		interval: T.oneOf(intervalValues),
 
 		// expect min/max/value to be Date.UTC values
 		// (handled at the level of the wrapper)
@@ -22,8 +23,6 @@ const RangeSliderDate = React.createClass({
 		min: T.number.isRequired,
 		
 		onApplyRange: T.func.isRequired,
-
-
 	},
 
 	getDefaultProps: function () {
@@ -59,43 +58,7 @@ const RangeSliderDate = React.createClass({
 	// sets a timestamp to YYYY(-MM(-DD))
 	// dependent on `props.interval`
 	getFormattedDateValue: function (raw) {
-		const d8 = new Date(raw)
-		const formatDay = (d) => {
-			const yr = d.getUTCFullYear()
-			const day = d.getUTCDate()
-			let mo = d.getUTCMonth() + 1
-
-			if (mo < 10)
-				mo = '0' + mo
-
-			return `${yr}-{$mo}-${day}`
-		}
-
-		const formatMonth = (d) => {
-			const yr = d.getUTCFullYear()
-			let mo = d.getUTCMonth() + 1
-
-			if (mo < 10)
-				mo = '0' + mo
-
-			return `${yr}-${mo}`
-		}
-
-		const formatYear = (d) => {
-			return `${d.getUTCFullYear()}`
-		}
-
-		switch (this.props.interval) {
-			case INTERVALS.MONTH:
-				return formatMonth(d8)
-
-			case INTERVALS.DAY:
-				return formatDay(d8)
-
-			case INTERVALS.YEAR:
-			default:
-				return formatYear(d8)
-		}
+		return formatDateValue(this.props.interval, raw)
 	},
 
 	// rc-slider will complain if max-min isn't evenly divisible by
