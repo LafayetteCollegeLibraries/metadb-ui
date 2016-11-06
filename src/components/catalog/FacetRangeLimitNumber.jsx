@@ -5,6 +5,7 @@
 import React from 'react'
 import RangeSliderNumber from './RangeSliderNumber.jsx'
 import FacetListSelectedItem from './FacetListSelectedItem.jsx'
+import calculateRange from './common/calculate-range'
 
 const T = React.PropTypes
 
@@ -29,38 +30,9 @@ const FacetRangeLimitNumber = React.createClass({
 	},
 
 	componentWillMount: function () {
-		this.setState(this.calculateRange())
-	},
-
-	calculateRange: function () {
-		const items = this.props.items
-		let max = -Infinity
-		let min = Infinity
-		let totalHits = 0
-
-		// double duty:
-		// a) clean up date values by parsing their numeric value
-		// b) determine min/max/total hits
-		const cleaned = items.map(function (item, index) {
-			let value = item.value = +item.value
-
-			if (value < min)
-				min = value
-
-			if (value > max)
-				max = value
-
-			totalHits += item.hits
-
-			return item
-		})
-
-		return {
-			items: cleaned,
-			hits: totalHits,
-			max,
-			min,
-		}
+		this.setState(calculateRange(this.props.items, v => {
+			return Number(v)
+		}))
 	},
 
 	handleApplyRange: function (range) {
