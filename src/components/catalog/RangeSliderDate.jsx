@@ -3,8 +3,8 @@ import Slider from 'rc-slider'
 import Button from '../Button.jsx'
 
 import {
-	intervals as INTERVALS,
-	values as intervalValues,
+	INTERVALS,
+	VALUES as INTERVAL_VALUES,
 } from './common/date-intervals'
 
 import formatDateValue from './common/format-date-value'
@@ -15,7 +15,7 @@ const T = React.PropTypes
 
 const RangeSliderDate = React.createClass({
 	propTypes: {
-		interval: T.oneOf(intervalValues),
+		interval: T.oneOf(INTERVAL_VALUES),
 
 		// expect min/max/value to be Date.UTC values
 		// (handled at the level of the wrapper)
@@ -97,7 +97,12 @@ const RangeSliderDate = React.createClass({
 
 	handleMaxValueChange: function (ev) {
 		const val = ev.target.value
-		const args = val.split('-').filter(Boolean).map(Number)
+		const args = val.split('-').map(Number)
+		
+		// months are 0-indexed
+		if (args.length > 1)
+			args[1] = args[1] - 1
+
 		const max = Date.UTC.apply(Date, args)
 
 		this.setState({
@@ -110,7 +115,12 @@ const RangeSliderDate = React.createClass({
 
 	handleMinValueChange: function (ev) {
 		const val = ev.target.value
-		const args = val.split('-').filter(Boolean).map(Number)
+		const args = val.split('-').map(Number)
+		
+		// months are 0-indexed
+		if (args.length > 1)
+			args[1] = args[1] - 1
+		
 		const min = Date.UTC.apply(Date, args)
 
 		this.setState({
@@ -126,7 +136,7 @@ const RangeSliderDate = React.createClass({
 	},
 
 	renderInputPair: function (which, onChange, value) {
-		const id = 'input-' + which
+		const id = 'range-slider-date--input-' + which
 
 		const containerProps = {
 			style: {
