@@ -111,8 +111,8 @@ const RangeSliderNumber = React.createClass({
 	renderSlider: function () {
 		const props = {
 			allowCross: true,
-			min: this.props.min,
-			max: this.props.max,
+			min: +this.props.min,
+			max: +this.props.max,
 			onChange: this.handleSliderChange,
 			pushable: false,
 			range: true,
