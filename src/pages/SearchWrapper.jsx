@@ -6,6 +6,7 @@ import SearchFacetSidebar from '../components/catalog/SearchFacetSidebar.jsx'
 import Facet from '../components/catalog/Facet.jsx'
 import FacetList from '../components/catalog/FacetList.jsx'
 import FacetListWithViewMore from '../components/catalog/FacetListWithViewMore.jsx'
+import FacetRangeLimitDate from '../components/catalog/FacetRangeLimitDate.jsx'
 
 import SearchBreadcrumb from '../components/catalog/SearchBreadcrumb.jsx'
 import SearchBreadcrumbTrail from '../components/catalog/SearchBreadcrumbTrail.jsx'
@@ -202,6 +203,8 @@ const SearchWrapper = React.createClass({
 				<Facet name="subject_sim" />
 				<Facet name="language_sim" />
 				<Facet name="creator_photographer_sim" label="Photographer" bodyComponent={FacetList} />
+				<Facet name="date_artifact_upper_sim" label="Date (Artifact, Upper)" bodyComponent={FacetRangeLimitDate} />
+				<Facet name="date_artifact_lower_sim" label="Date (Artifcat, Lower)" bodyComponent={FacetRangeLimitDate} />
 			</SearchFacetSidebar>
 		)
 	},
