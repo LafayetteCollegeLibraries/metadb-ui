@@ -2,15 +2,15 @@ import React from 'react'
 import { expect } from 'chai'
 import { shallow, mount } from 'enzyme'
 import assign from 'object-assign'
-import FacetRangeLimitNumber from '../FacetRangeLimitNumber.jsx'
+import FacetRangeLimitDate from '../FacetRangeLimitDate.jsx'
 
 import calculateRange from '../common/calculate-range'
-import yearRange from '../common/__tests__/data/year-range.json'
+import isoDateRange from '../common/__tests__/data/iso-date-range.json'
 
 const noop = () => {}
 
 const defaultProps = {
-	...yearRange,
+	...isoDateRange,
 	onSelectFacet: noop,
 	onRemoveSelectedFacet: noop,
 	selectedFacets: [],
@@ -18,18 +18,17 @@ const defaultProps = {
 
 const wrapper = (xtend, renderer) => {
 	const props = assign({}, defaultProps, xtend)
-	return renderer(React.createElement(FacetRangeLimitNumber, props))
+	return renderer(React.createElement(FacetRangeLimitDate, props))
 }
 
 const shallowEl = xtend => wrapper(xtend, shallow)
 const mountEl = xtend => wrapper(xtend, mount)
 
-describe('<FacetRangeLimitNumber />', function () {
+describe('<FacetRangeLimitDate />', function () {
 	it('calculates and stores min/max and hits in state', function () {
-		const props = {...yearRange}
-
+		const props = {...isoDateRange}
 		const $el = shallowEl(props)
-		const {min, max, hits, items} = calculateRange(props.items, val => +val)
+		const {min, max, hits, items} = calculateRange(props.items, val => Date.parse(val))
 
 		expect($el.state('hits')).to.equal(hits)
 		expect($el.state('min')).to.equal(min)
@@ -37,19 +36,19 @@ describe('<FacetRangeLimitNumber />', function () {
 		expect($el.state('items')).to.deep.equal(items)
 	})
 
-	it('will not render FacetListSelectedItem if no selected items', function () {
+	it('does not render FacetListSelectedItems if not selected items', function () {
 		const $el = shallowEl({selectedFacets: []})
 		expect($el.find('FacetListSelectedItem')).to.have.length(0)
 	})
 
-	it('will render FacetListSelectedItem if selected items passed', function () {
+	it('will render FacetListSelectedItems if selected itmes are passed', function () {
 		const selectedFacets = [
 			{
 				name: 'Facet name',
 				value: {
-					begin: 1,
-					end: 10
-				}
+					begin: Date.parse('1986-02-11T00:00:00Z'),
+					end: Date.now(),
+				},
 			}
 		]
 
@@ -58,11 +57,8 @@ describe('<FacetRangeLimitNumber />', function () {
 	})
 
 	describe('the `onSelectFacet` callback', function () {
-		it('is called when triggered via `RangeSliderNumber`', function (done) {
-			const onSelectFacet = () => {
-				done()
-			}
-
+		it('is called when triggered via `RangeSliderDate`', function (done) {
+			const onSelectFacet = () => { done() }
 			const $el = mountEl({onSelectFacet})
 			const $btn = $el.find('Button')
 			$btn.simulate('click')
