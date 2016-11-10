@@ -49,7 +49,7 @@ const FacetRangeLimitDate = React.createClass({
 
 	getFormattedDateValue: function (raw) {
 		return formatDateValue(this.props.interval, raw)
-	}
+	},
 
 	handleApplyRange: function (range) {
 		const [rawMin, rawMax] = range

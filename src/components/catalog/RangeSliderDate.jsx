@@ -81,7 +81,7 @@ const RangeSliderDate = React.createClass({
 				divisor = 315576e+5 // DAY * 365.25
 		}
 
-		return Math.round((max - min) / divisor)
+		return (max - min) / divisor
 	},
 
 	// round range values to their nearest `interval` 
