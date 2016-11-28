@@ -112,6 +112,10 @@ const ControlledVocabularyInput = React.createClass({
 			return true
 
 		const label = item.pref_label[0]
+
+		if (!label)
+			return false
+
 		return label.toLowerCase().indexOf(val) > -1
 	},
 

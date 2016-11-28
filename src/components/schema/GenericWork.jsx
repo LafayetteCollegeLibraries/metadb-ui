@@ -16,7 +16,7 @@ const GenericWork = function (props) {
 
 	const subjectOcmProps = {
 		fetchTerms: () => {
-			return fetch(process.env.API_BASE_URL + '/vocabularies/subjectOcm.json')
+			return fetch(process.env.API_BASE_URL + '/vocabularies/eaic-subject-ocm.json')
 			.then(res => res.json())
 			.then(res => res.terms)
 		},

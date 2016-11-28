@@ -5,6 +5,7 @@
 
 import React from 'react'
 import assign from 'object-assign'
+import Button from '../Button.jsx'
 
 const T = React.PropTypes
 
@@ -111,7 +112,7 @@ const FormField = React.createClass({
 			onClick: this.handleAddValueRow,
 		}
 
-		return React.createElement('button', props)
+		return React.createElement(Button, props)
 	},
 
 	renderRemoveButton: function (idx) {
@@ -122,7 +123,7 @@ const FormField = React.createClass({
 			onClick: this.handleRemoveValueRow.bind(null, idx),
 		}
 
-		return React.createElement('button', props)
+		return React.createElement(Button, props)
 	},
 
 	renderFieldComponents: function () {
@@ -150,18 +151,23 @@ const FormField = React.createClass({
 		// passed from the Form container, meaning `this.props.onChange`
 		// doesn't initially exist + will cause an error to be thrown).
 		const componentProps = assign({}, this.props)
+
 		delete componentProps.multiple
+		delete componentProps.name
 		delete componentProps.onAddValueField
 		delete componentProps.onChange
 		delete componentProps.onRemoveValueField
 		delete componentProps.renderer
 		delete componentProps.value
 
-		const keyBase = 'ff-' + (this.props.name || 'unnamed')
+		const name = this.props.name
+		const keyBase = `ff-${name || 'unnamed'}`
+		const nameBase = `${name}-${Component.displayName || 'renderer'}`
 
 		return values.map((value, index) => {
 			const props = assign({
-				key: keyBase + '-v-' + value + '-' + index,
+				key: `${keyBase}-v-${value}-${index}`,
+				name: `${nameBase}-${index}`,
 				onChange: this.handleOnChange.bind(null, index),
 				value,
 			}, componentProps)

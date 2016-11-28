@@ -98,9 +98,9 @@ describe('<FormField />', function () {
 	})
 
 	describe('the add row <button/>', function () {
-		it('renders after remove-row buttons (when `multiple === true`', function () {
+		it('renders after remove-row buttons (when `multiple === true)`', function () {
 			const $el = shallowEl({multiple: true})
-			const $buttons = $el.find('button')
+			const $buttons = $el.find('Button')
 
 			expect($buttons.length).to.be.greaterThan(1)
 
@@ -108,7 +108,7 @@ describe('<FormField />', function () {
 			expect($add.key()).to.equal('add-row-btn')
 		})
 
-		it('does not render at all (when `multiple === false` (default)', function () {
+		it('does not render at all (when `multiple === false`) [default]', function () {
 			const $el = shallowEl({multiple: false})
 			expect($el.find('button')).to.have.length(0)
 		})

@@ -30,7 +30,7 @@ import assign from 'object-assign'
 import arrayFind from 'array-find'
 
 import {
-	// RECEIVE_SEARCH_ERROR,
+	RECEIVE_SEARCH_ERROR,
 	RECEIVE_SEARCH_RESULTS,
 	SEARCHING,
 } from '../constants'
@@ -43,7 +43,9 @@ export default function searchReducer (state, action) {
 		case SEARCHING:
 			return searching(state, action)
 
-		// case RECEIVE_SEARCH_ERROR:
+		case RECEIVE_SEARCH_ERROR:
+			return receiveError(state, action)
+
 		case RECEIVE_SEARCH_RESULTS:
 			return receiveResults(state, action)
 
@@ -60,6 +62,12 @@ function searching (state, action) {
 		facets: action.facets,
 		options: action.options,
 		queryString: action.queryString,
+	}
+}
+
+function receiveError (state, action) {
+	return {
+		isSearching: false,
 	}
 }
 
