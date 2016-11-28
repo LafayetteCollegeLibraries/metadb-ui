@@ -7,6 +7,7 @@ import { addSearch as addSearchToHistory } from '../../lib/search-history'
 import browserHistory from 'react-router/lib/browserHistory'
 import formatSearchQuerystring from '../../lib/format-search-querystring'
 import { parse as parseQuerystring } from 'blacklight-querystring'
+import createRangeFacet from '../../lib/create-range-facet'
 
 import {
 	RECEIVE_SEARCH_ERROR,
@@ -21,6 +22,8 @@ const REQUIRED_OPTS = {
 const DEFAULT_OPTS = {
 	per_page: 25,
 }
+
+const hasOwnProperty = Object.prototype.hasOwnProperty
 
 function conductSearch (dispatch, query, facets, options, queryString) {
 	dispatch({
@@ -71,6 +74,19 @@ export const searchCatalog = (query, facets, opts) => dispatch => {
 // options + passed to `conductSearch`
 export const searchCatalogByQueryString = queryString => dispatch => {
 	const {query, facets, options} = parseQuerystring(queryString)
+
+	if (hasOwnProperty.call(options, 'range')) {
+		const range = options.range
+		delete options.range
+
+		for (let r in range) {
+			if (!facets[r])
+				facets[r] = []
+
+			facets[r].push(createRangeFacet(r, range[r].begin, range[r].end))
+		}
+	}
+
 	return conductSearch(dispatch, query, facets, options, queryString)
 }
 
@@ -94,7 +110,6 @@ export const setSearchOption = (field, value) => (dispatch, getState) => {
 }
 
 export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState) => {
-	const hasOwnProperty = Object.prototype.hasOwnProperty
 	const search = getState().search || {}
 
 	// recycling the previous search info

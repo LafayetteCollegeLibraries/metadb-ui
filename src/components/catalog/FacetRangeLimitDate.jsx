@@ -5,6 +5,7 @@
 import React from 'react'
 import RangeSliderDate from './RangeSliderDate.jsx'
 import FacetListSelectedItem from './FacetListSelectedItem.jsx'
+import createRangeFacet from '../../../lib/create-range-facet'
 
 import {
 	INTERVALS,
@@ -57,15 +58,7 @@ const FacetRangeLimitDate = React.createClass({
 		const min = this.getFormattedDateValue(rawMin)
 		const max = this.getFormattedDateValue(rawMax)
 
-		const facet = {
-			name: this.props.name,
-			label: `${min} - ${max}`,
-			value: {
-				begin: min,
-				end: max,
-			},
-			type: 'range',
-		}
+		const facet = createRangeFacet(this.props.name, min, max)
 
 		this.props.onSelectFacet(facet)
 	},
