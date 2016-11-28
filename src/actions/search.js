@@ -1,5 +1,6 @@
 import assign from 'object-assign'
 import findIndex from 'array-find-index'
+import isEqual from 'lodash.isequal'
 
 import { search } from '../../lib/api'
 import { addSearch as addSearchToHistory } from '../../lib/search-history'
@@ -66,7 +67,7 @@ export const searchCatalog = (query, facets, opts) => dispatch => {
 
 // this function is used when arriving on a Search page w/ a pre-populated
 // search querystring (ex. arriving from a link, refreshing the results)
-// `parseSearchQuerystring` is used to extract the query, facets, and 
+// `parseSearchQuerystring` is used to extract the query, facets, and
 // options + passed to `conductSearch`
 export const searchCatalogByQueryString = queryString => dispatch => {
 	const {query, facets, options} = parseQuerystring(queryString)
@@ -93,21 +94,27 @@ export const setSearchOption = (field, value) => (dispatch, getState) => {
 }
 
 export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState) => {
+	const hasOwnProperty = Object.prototype.hasOwnProperty
 	const search = getState().search || {}
-	
+
 	// recycling the previous search info
 	const query = search.query || ''
 	const options = assign({}, DEFAULT_OPTS, REQUIRED_OPTS, search.options)
-	
 	const facets = assign({}, search.facets)
+
 	let dirty = false
 	let idx
-	
-	if (facets[field])
-		idx = findIndex(facets[field], f => f.value === facet.value)
-	else
-		idx = -1
 
+	if (facets[field]) {
+		idx = findIndex(facets[field], (f, idx) => {
+			if (hasOwnProperty.call(f, 'value') && hasOwnProperty.call(facet, 'value'))
+				return isEqual(f.value, facet.value)
+			else
+				return isEqual(f, facet)
+		})
+	}
+
+	else idx = -1
 
 	// add to selected-facets
 	if (checked) {
@@ -124,8 +131,8 @@ export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState)
 				facets[field].slice(0, idx),
 				facets[field].slice(idx + 1)
 			)
-			
-			if (!facets[field].length) 
+
+			if (!facets[field].length)
 				delete facets[field]
 
 			dirty = true

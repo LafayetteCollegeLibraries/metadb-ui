@@ -32,7 +32,7 @@ const state = {
 
 const store = mockStore({search: state})
 
-describe('Search actionCreator', function () {	
+describe('Search actionCreator', function () {
 	beforeEach(function () {
 		if (!SEARCH_BASE) {
 			this.skip()
@@ -42,7 +42,7 @@ describe('Search actionCreator', function () {
 		const escaped = SEARCH_BASE.replace(/\./g, '\\.')
 		const reg = new RegExp(escaped + '\?.*')
 
-		fetchMock.get(reg, {status: 200, body: {response: {}}})		
+		fetchMock.get(reg, {status: 200, body: {response: {}}})
 	})
 
 	afterEach(function () {
@@ -84,15 +84,6 @@ describe('Search actionCreator', function () {
 				expect(url.indexOf('search_field=search')).to.be.greaterThan(-1)
 			})
 		})
-
-		// how this is handled is still up in the air, so we'll skip for now
-		xit('prepends unescaped `utf8=✓` to the querystring', function () {
-			return store.dispatch(searchCatalog('another query'))
-			.then(() => {
-				const url = fetchMock.lastUrl()
-				expect(url.indexOf('utf8=✓')).to.be.greaterThan(-1)
-			})
-		})
 	})
 
 	describe('#setSearchOption', function () {
@@ -112,8 +103,9 @@ describe('Search actionCreator', function () {
 			const key = 'key'
 			const val = 'val'
 
-			const options = {}
-			options[key] = val
+			const options = {
+				[key]: val
+			}
 
 			const store = mockStore({search: {options}})
 
@@ -149,6 +141,34 @@ describe('Search actionCreator', function () {
 				const calls = fetchMock.calls()
 				expect(calls.matched).to.not.be.empty
 				expect(calls.matched).to.have.length(1)
+			})
+		})
+
+		it('does not send duplicate search requests (for string values)', function () {
+			const field = 'facet_field'
+			const value = 'value'
+			const facets = {}
+			facets[field] = [value]
+
+			const store = mockStore({search: {facets}})
+
+			return store.dispatch(toggleSearchFacet(field, value, true))
+			.then(() => {
+				expect(fetchMock.calls().matched).to.have.length(0)
+			})
+		})
+
+		it('does not send duplicate search requests (for non-string values)', function () {
+			const field = 'facet_field'
+			const value = {name: 'aye', value: 'a'}
+			const facets = {}
+			facets[field] = [value]
+
+			const store = mockStore({search: {facets}})
+
+			return store.dispatch(toggleSearchFacet(field, value, true))
+			.then(() => {
+				expect(fetchMock.calls().matched).to.have.length(0)
 			})
 		})
 

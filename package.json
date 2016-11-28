@@ -34,6 +34,7 @@
     "is-empty-object": "^1.1.1",
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",
+    "lodash.isequal": "^4.4.0",
     "node-bourbon": "^4.2.8",
     "node-neat": "^1.7.2",
     "node-sass": "^3.8.0",
