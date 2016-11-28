@@ -102,6 +102,9 @@ const SearchWrapper = React.createClass({
 	},
 
 	handleSearchResponse: function (res) {
+		if (!res)
+			return
+
 		const facets = res.response.facets
 		const breadcrumbs = getBreadcrumbList(facets, this.props.search.facets)
 
@@ -234,6 +237,11 @@ const SearchWrapper = React.createClass({
 			onSubmitSearchQuery: this.handleSubmitSearchQuery,
 		}
 
+		const rangeLimitProps = {
+			bodyComponent: FacetRangeLimitDate,
+			interval: 'year',
+		}
+
 		return (
 			<SearchFacetSidebar {...sidebarProps}>
 				<Facet name="human_readable_type_sim" />
@@ -241,9 +249,18 @@ const SearchWrapper = React.createClass({
 				<Facet name="keyword_sim" />
 				<Facet name="subject_sim" />
 				<Facet name="language_sim" />
-				<Facet name="creator_photographer_sim" label="Photographer" bodyComponent={FacetList} />
-				<Facet name="date_artifact_upper_sim" label="Date (Artifact, Upper)" bodyComponent={FacetRangeLimitDate} />
-				<Facet name="date_artifact_lower_sim" label="Date (Artifcat, Lower)" bodyComponent={FacetRangeLimitDate} />
+				<Facet name="creator_photographer_sim"
+					label="Photographer"
+					bodyComponent={FacetList}
+					/>
+				<Facet name="date_artifact_upper_dtsi"
+					label="Date (Artifact, Upper)"
+					{...rangeLimitProps}
+					/>
+				<Facet name="date_artifact_lower_dtsi"
+					label="Date (Artifact, Lower)"
+					{...rangeLimitProps}
+					/>
 			</SearchFacetSidebar>
 		)
 	},
