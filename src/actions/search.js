@@ -121,7 +121,7 @@ export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState)
 	let idx
 
 	if (facets[field]) {
-		idx = findIndex(facets[field], (f, idx) => {
+		idx = findIndex(facets[field], f => {
 			if (hasOwnProperty.call(f, 'value') && hasOwnProperty.call(facet, 'value'))
 				return isEqual(f.value, facet.value)
 			else

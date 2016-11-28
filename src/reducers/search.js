@@ -30,12 +30,10 @@ import assign from 'object-assign'
 import arrayFind from 'array-find'
 
 import {
-	RECEIVE_SEARCH_ERROR,
+	// RECEIVE_SEARCH_ERROR,
 	RECEIVE_SEARCH_RESULTS,
 	SEARCHING,
 } from '../constants'
-
-const hasOwnProperty = Object.prototype.hasOwnProperty
 
 export default function searchReducer (state, action) {
 	if (typeof state === 'undefined')
