@@ -15,7 +15,8 @@ import store, { history } from './store'
 import App from './App.jsx'
 import Home from './pages/Home.jsx'
 import VocabularyManager from './pages/VocabularyManager.jsx'
-import SearchWrapper from './pages/SearchWrapper.jsx'
+import SearchLanding from './pages/SearchLanding.jsx'
+import SearchResults from './pages/SearchResults.jsx'
 import Work from './pages/Work.jsx'
 
 const MetaDB = (
@@ -23,7 +24,12 @@ const MetaDB = (
 	<Router history={history}>
 		<Route path="/" component={App}>
 			<IndexRoute component={Home} />
-			<Route path="search" component={SearchWrapper} />
+			<Route path="search" getComponent={(nextState, cb) => {
+				if (nextState.location.search === '')
+					return cb(null, SearchLanding)
+
+				return cb(null, SearchResults)
+			}}/>
 			<Route path="vocabularies" component={VocabularyManager} />
 			<Route path="works/:workId" component={Work} />
 		</Route>

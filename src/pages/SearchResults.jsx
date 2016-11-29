@@ -18,7 +18,7 @@ import ResultsGalleryItem from '../components/catalog/ResultsGalleryItem.jsx'
 
 import { getBreadcrumbList } from '../../lib/facet-helpers'
 
-const SearchWrapper = React.createClass({
+const SearchResults = React.createClass({
 	componentWillMount: function () {
 		const qs = this.props.location.search
 
@@ -114,17 +114,6 @@ const SearchWrapper = React.createClass({
 			pages: res.response.pages,
 			facets,
 			breadcrumbs,
-		})
-	},
-
-	handleSearchSubmit: function (ev) {
-		ev.preventDefault()
-		const query = ev.target.elements.query.value
-
-		this.props.searchCatalog(query)
-		.then(this.handleSearchResponse)
-		.catch(err => {
-			console.warn('got a search error', err)
 		})
 	},
 
@@ -308,16 +297,7 @@ const SearchWrapper = React.createClass({
 
 	render: function () {
 		if (!this.state.results) {
-			return (
-				<div>
-					{this.maybeRenderLoadingModal()}
-					<h1>search</h1>
-					<form onSubmit={this.handleSearchSubmit}>
-						<input name="query" type="text" />
-						<Button style={{display: 'block'}}>search</Button>
-					</form>
-				</div>
-			)
+			// previously we rendered the search box here. is this necessary now?
 		}
 
 		const styles = {
@@ -361,4 +341,4 @@ const SearchWrapper = React.createClass({
 	}
 })
 
-export default SearchWrapper
+export default SearchResults
