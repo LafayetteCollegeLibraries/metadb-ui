@@ -7,6 +7,7 @@ import {
 	VALUES as INTERVAL_VALUES,
 } from './common/date-intervals'
 
+import roundDate from './common/round-date-to-interval'
 import formatDateValue from './common/format-date-value'
 
 import 'rc-slider/assets/index.css'
@@ -81,16 +82,18 @@ const RangeSliderDate = React.createClass({
 				divisor = 315576e+5 // DAY * 365.25
 		}
 
-		return Math.round((max - min) / divisor)
+		return (max - min) / divisor
 	},
 
-	// round range values to their nearest `interval`
-	// (months are set to their first day; days are set to midnight)
 	handleApplyRange: function () {
 		if (!this.props.onApplyRange)
 			return
 
-		const cleaned = this.state.value.map(this.roundDateValue)
+		// TODO: we're rounding the values at the level above (FacetRangeLimitDate)
+		// and _shouldn't_ have to do the work of rounding again (especially if
+		// the interval is cleanly divisible as per rc-slider's requirements)
+		const roundDateValue = roundDate.bind(null, this.props.interval)
+		const cleaned = this.state.value.map(roundDateValue)
 
 		this.props.onApplyRange.call(null, cleaned)
 	},
@@ -208,23 +211,6 @@ const RangeSliderDate = React.createClass({
 		}
 
 		return <Slider {...props} />
-	},
-
-	roundDateValue: function (val) {
-		const d = new Date(val)
-		const year = d.getUTCFullYear()
-
-		switch (this.props.interval) {
-			case INTERVALS.DAY:
-				return Date.UTC(year, d.getUTCMonth(), d.getUTCDate())
-
-			case INTERVALS.MONTH:
-				return Date.UTC(year, d.getUTCMonth(), 1)
-
-			case INTERVALS.YEAR:
-			default:
-				return Date.UTC(year, 0, 1)
-		}
 	},
 
 	render: function () {

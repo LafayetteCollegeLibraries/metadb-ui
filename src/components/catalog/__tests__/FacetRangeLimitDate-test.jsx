@@ -31,9 +31,10 @@ describe('<FacetRangeLimitDate />', function () {
 		const {min, max, hits, items} = calculateRange(props.items, val => Date.parse(val))
 
 		expect($el.state('hits')).to.equal(hits)
-		expect($el.state('min')).to.equal(min)
-		expect($el.state('max')).to.equal(max)
 		expect($el.state('items')).to.deep.equal(items)
+
+		expect($el.state('min')).to.not.be.undefined
+		expect($el.state('max')).to.not.be.undefined
 	})
 
 	it('does not render FacetListSelectedItems if not selected items', function () {
@@ -41,7 +42,7 @@ describe('<FacetRangeLimitDate />', function () {
 		expect($el.find('FacetListSelectedItem')).to.have.length(0)
 	})
 
-	it('will render FacetListSelectedItems if selected itmes are passed', function () {
+	it('will render FacetListSelectedItems if selected items are passed', function () {
 		const selectedFacets = [
 			{
 				name: 'Facet name',

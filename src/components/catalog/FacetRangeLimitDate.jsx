@@ -14,8 +14,10 @@ import {
 
 import calculateRange from './common/calculate-range'
 import formatDateValue from './common/format-date-value'
+import roundDate from './common/round-date-to-interval'
 
 const T = React.PropTypes
+
 const FacetRangeLimitDate = React.createClass({
 	propTypes: {
 		name: T.string,
@@ -44,6 +46,9 @@ const FacetRangeLimitDate = React.createClass({
 			const parsed = Date.parse(v)
 			return parsed
 		})
+
+		range.min = roundDate(this.props.interval, range.min)
+		range.max = roundDate(this.props.interval, range.max)
 
 		this.setState(range)
 	},
