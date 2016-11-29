@@ -2,9 +2,14 @@ import React from 'react'
 import browserHistory from 'react-router/lib/browserHistory'
 import StringInput from '../components/metadata/StringInput.jsx'
 import Button from '../components/Button.jsx'
-import { getPreviousQueries } from '../../lib/search-history'
+import { clearSearches, getPreviousQueries } from '../../lib/search-history'
 
 const SearchLanding = React.createClass({
+	getInitialState: function () {
+		const previousQueries = getPreviousQueries()
+		return {previousQueries}
+	},
+
 	handleSearchSubmit: function (ev) {
 		ev.preventDefault()
 		const query = ev.target.elements.query.value
@@ -20,21 +25,31 @@ const SearchLanding = React.createClass({
 			padding: '5px',
 		}
 
-		const searches = getPreviousQueries()
-
-		if (!searches.length)
+		if (!this.state.previousQueries.length)
 			return
 
 		return (
 			<div style={containerStyle}>
 				<p>previously searched queries</p>
 				<ul>
-					{searches.map((query, idx) => (
+					{this.state.previousQueries.map((query, idx) => (
 						<li key={`pq-${idx}`}>
 							<a href={`/search?q=${query.replace(' ', '-')}`}>{query}</a>
 						</li>
 					))}
 				</ul>
+
+				<Button
+					type="warning"
+					size="small"
+					onClick={e => {
+						e.preventDefault()
+						clearSearches()
+						this.setState({previousQueries: []})
+					}}
+					>
+					Clear search history
+				</Button>
 			</div>
 		)
 	},

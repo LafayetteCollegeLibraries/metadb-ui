@@ -102,8 +102,10 @@ const SearchResults = React.createClass({
 	},
 
 	handleSearchResponse: function (res) {
-		if (!res)
+		if (!res) {
+			console.log('no res!')
 			return
+		}
 
 		const facets = res.response.facets
 		const breadcrumbs = getBreadcrumbList(facets, this.props.search.facets)
@@ -166,6 +168,10 @@ const SearchResults = React.createClass({
 
 	renderBreadcrumbs: function () {
 		const bc = this.state.breadcrumbs
+
+		if (!bc)
+			return
+
 		const query = this.props.search.query
 
 		const querybc = !query ? null : (
@@ -203,7 +209,7 @@ const SearchResults = React.createClass({
 	},
 
 	renderFacetSidebar: function () {
-		if (!this.props.search.facets)
+		if (!this.state.facets || !this.state.facets.length)
 			return
 
 		const sidebarProps = {
@@ -296,8 +302,8 @@ const SearchResults = React.createClass({
 	},
 
 	render: function () {
-		if (!this.state.results) {
-			// previously we rendered the search box here. is this necessary now?
+		if (this.props.search.isSearching) {
+			return this.maybeRenderLoadingModal()
 		}
 
 		const styles = {
