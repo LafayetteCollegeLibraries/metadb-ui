@@ -3,7 +3,6 @@ import React from 'react'
 import assign from 'object-assign'
 
 const T = React.PropTypes
-
 const DEFAULT_FIELD_NAME = 'undefined-field'
 
 const MetadataForm = React.createClass({
@@ -14,6 +13,8 @@ const MetadataForm = React.createClass({
 		onChange: T.func,
 		onRemoveValueField: T.func,
 		onSubmit: T.func,
+
+		submitButton: T.oneOfType([T.func, T.element]),
 
 		defaultProps: T.object,
 	},
@@ -38,15 +39,22 @@ const MetadataForm = React.createClass({
 	renderFormFields: function () {
 		const data = this.props.data || {}
 		return React.Children.map(this.props.children, (formElement, index) => {
-			// if there's no name, maybe we should set a default one?
-			const name = formElement.props.name || (DEFAULT_FIELD_NAME + '-' + index)
-			const value = data[name] || ['']
+			const name = formElement.props.name
+
+			// we'll use the `name` prop to determine whether or not
+			// we clone the extended props to the element. this will
+			// allow us to add components to the form (eg. <Button/>)
+			// without invalid props being passed along. the assumption
+			// being made is that the `name` prop is what links us
+			// to the Work data.
+			if (typeof name === 'undefined')
+				return formElement
 
 			const wrapperDefaults = {
 				onChange: this.handleOnChange.bind(null, name),
 				onAddValueField: this.handleOnAddValueField.bind(null, name),
 				onRemoveValueField: this.handleOnRemoveValueField.bind(null, name),
-				value,
+				value: (data[name] || []),
 			}
 
 			const mergedProps = assign({},
@@ -55,7 +63,7 @@ const MetadataForm = React.createClass({
 				formElement.props
 			)
 
-			mergedProps.key = 'md-form!' + mergedProps.name + '@' + index
+			mergedProps.key = `md-form!${mergedProps.name}@${index}`
 
 			return React.cloneElement(formElement, mergedProps)
 		})

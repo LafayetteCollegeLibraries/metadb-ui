@@ -10,22 +10,21 @@ const defaultData = {
 	author: ['first author value', 'second author value'],
 }
 
-const defaultProps = {
-	allowMultipleValues: true,
+const defaultFormProps = {
+	data: defaultData,
+	defaultProps: {
+		allowMultipleValues: true,
+	},
+	onAddValueField: noop,
+	onChange: noop,
+	onRemoveValueField: noop,
+	onSubmit: noop,
 }
 
 const noop = () => {}
 
 const wrapEl = (xtend, renderer) => {
-	const props = assign({}, {
-		data: defaultData,
-		defaultProps,
-		onAddValueField: noop,
-		onChange: noop,
-		onRemoveValueField: noop,
-		onSubmit: noop,
-	}, xtend)
-
+	const props = assign({}, defaultFormProps, xtend)
 	return renderer(React.createElement(MetadataForm, props))
 }
 
