@@ -11,7 +11,7 @@ const FacetList = React.createClass({
 		label: T.string.isRequired,
 		name: T.string.isRequired,
 		items: T.array.isRequired,
-		
+
 		onRemoveSelectedFacet: T.func.isRequired,
 		onSelectFacet: T.func.isRequired,
 		selectedFacets: T.array.isRequired,
@@ -23,7 +23,7 @@ const FacetList = React.createClass({
 		// and not appear as unselected values when the render arrives
 		this._selectedFacetValues = null
 	},
-	
+
 	renderFacetList: function () {
 		const { items, name, onSelectFacet } = this.props
 
@@ -37,7 +37,7 @@ const FacetList = React.createClass({
 			}
 
 			return React.createElement(
-				'li', 
+				'li',
 				{ key: 'unsel' + name + index },
 				React.createElement(FacetListItem, props)
 			)

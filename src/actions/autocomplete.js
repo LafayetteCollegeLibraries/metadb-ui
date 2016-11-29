@@ -27,7 +27,7 @@ export const fetchAutocompleteTerms = vocabulary => (dispatch, getState) => {
 
 		return
 	})
-	
+
 	function genGetVocab (vocab) {
 		if (fetchedVocabularies.indexOf(vocab.uri) > -1)
 			return

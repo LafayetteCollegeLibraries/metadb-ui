@@ -1,11 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { expect } from 'chai'
-import { 
-	mount as _mount,
-	shallow as _shallow,
-	render,
-} from 'enzyme'
+import { mount, shallow, render } from 'enzyme'
 import assign from 'object-assign'
 import FacetListWithViewMore from '../FacetListWithViewMore.jsx'
 import data from './data/facet.json'
@@ -27,40 +23,41 @@ const wrap = (xtend, renderer) => {
 	return renderer(React.createElement(FacetListWithViewMore, props))
 }
 
-const mount = xtend => wrap(xtend, _mount)
-const shallow = xtend => wrap(xtend, _shallow)
+const mountEl = xtend => wrap(xtend, mount)
+const shallowEl = xtend => wrap(xtend, shallow)
+const renderEl = xtend => wrap(xtend, render)
 
 describe('<FacetListWithMoreView />', function () {
 	it('renders the number of items established with `limit`', function () {
 		const limit = Math.floor(Math.random() * defaultProps.items.length)
-		const $el = mount({limit})
+		const $el = mountEl({limit})
 		expect($el.find('FacetListItem')).to.have.length(limit)
 	})
 
 	describe('the `View More` span', function () {
 		const SEL = 'span.view-more'
 		it('renders if # items exceeds limit', function () {
-			const $el = shallow()
+			const $el = shallowEl()
 			expect($el.find(SEL)).to.have.length(1)
 		})
 
 		it('does not render if # items is below or equal to limit', function () {
-			const $first = shallow({limit: defaultProps.items.length})
+			const $first = shallowEl({limit: defaultProps.items.length})
 			expect($first.find(SEL)).to.have.length(0)
 
-			const $second = shallow({limit: Infinity})
+			const $second = shallowEl({limit: Infinity})
 			expect($second.find(SEL)).to.have.length(0)
 		})
 
 		it('uses text provided with `viewMoreText` prop', function () {
 			const viewMoreText = 'I am not View More =^_^='
-			const $el = mount({viewMoreText})
+			const $el = mountEl({viewMoreText})
 			expect($el.find(SEL).text()).to.equal(viewMoreText)
 		})
 
 		it('opens the View More modal (w/ header) when clicked', function () {
-			const $el = shallow()
-			
+			const $el = shallowEl()
+
 			expect($el.state('modalOpen')).to.be.false
 			expect($el.find('ModalWithHeader')).to.have.length(0)
 
@@ -75,7 +72,7 @@ describe('<FacetListWithMoreView />', function () {
 	// into an `enzyme` wrapper.
 	//
 	// see: https://github.com/reactjs/react-modal#testing
-	xdescribe('the `View More` modal', function () {
-		it('displays all of the facet options', function () {})
+	describe('the `View More` modal', function () {
+		xit('displays all of the facet options', function () {})
 	})
 })

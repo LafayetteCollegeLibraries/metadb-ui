@@ -78,6 +78,15 @@ describe('Autocomplete actionCreators', function () {
 				})
 		})
 
-		xit('ignores previously fetched vocabularies in state')
+		it('ignores previously fetched vocabularies in state', function () {
+			const store = mockStore({autocompleteTerms: {
+				[VOCAB_ONE.uri]: VOCAB_ONE.terms.map(t => t.pref_label[0])
+			}})
+
+			return store.dispatch(actions.fetchAutocompleteTerms(VOCAB_ONE))
+			.then(() => {
+				expect(fetchMock.calls().matched).to.have.length(0)
+			})
+		})
 	})
 })

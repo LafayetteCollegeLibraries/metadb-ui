@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from '../Button.jsx'
 
 const T = React.PropTypes
 
@@ -33,19 +34,6 @@ const FacetListSelectedItem = React.createClass({
 				position: 'relative',
 			},
 
-			button: {
-				appearance: 'none',
-				backgroundColor: 'transparent',
-				border: 'none',
-				color: this.props.color,
-				cursor: 'pointer',
-				fontSize: '1em',
-				fontWeight: 'bold',
-				marginLeft: '5px',
-				outline: 'none',
-				WebkitAppearance: 'none',
-			},
-			
 			count: {
 				right: '0',
 				position: 'absolute',
@@ -55,11 +43,11 @@ const FacetListSelectedItem = React.createClass({
 		return (
 			<div style={styles.item}>
 				{this.props.data.label}
-				<button
+				<Button
 					children="x"
 					onClick={this.props.onRemove.bind(null, this.props.data)}
-					style={styles.button}
-				/>
+					type="text"
+					/>
 
 				{this.maybeRenderHits({style: styles.count})}
 			</div>

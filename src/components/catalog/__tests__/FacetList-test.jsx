@@ -52,25 +52,15 @@ describe('<FacetList />', function () {
 		$item.find('.facet-label').simulate('click')
 	})
 
-	// describe('when provided `selectedFacets`', function () {
-	// 	const items = [].concat(defaultProps.items)
-	// 	const idx = randomIndex(items)
-	// 	const selectedFacets = [items[idx]]
-
-	// 	it('renders FacetListSelectedItem component', function () {
-	// 		const $el = shallowEl({items, selectedFacets})
-	// 	})
-	// })
-
 	// skipping for now because of using FacetListSelectedItem instead
-	xdescribe('when provided `selectedFacets`', function () {
+	describe('when provided `selectedFacets`', function () {
 		const items = [].concat(defaultProps.items)
 		const idx = randomIndex(items)
 		const selectedFacets = items.splice(idx, 1)
 
-		it('renders <SelectedFacetsList/> component', function () {
+		it('renders a <FacetListSelectedItem/> component for each item', function () {
 			const $el = mountEl({items, selectedFacets})
-			expect($el.find('SelectedFacetsList')).to.have.length(1)
+			expect($el.find('FacetListSelectedItem')).to.have.length(1)
 		})
 
 		it('triggers `onRemoveSelectedFacet` when selectedFacet X button is clicked', function (done) {
@@ -80,8 +70,7 @@ describe('<FacetList />', function () {
 			}
 
 			const $el = mountEl({items, selectedFacets, onRemoveSelectedFacet})
-			const $button = $el.find('SelectedFacetsList').find('button')
-
+			const $button = $el.find('FacetListSelectedItem').find('Button')
 			$button.simulate('click')
 		})
 	})

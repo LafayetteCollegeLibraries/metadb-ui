@@ -9,10 +9,8 @@ import {
 
 	FETCHING_ALL_VOCABULARIES,
 	FETCHING_ALL_VOCABULARIES_ERR,
-	FETCHING_VOCABULARY,
 
 	RECEIVE_ALL_VOCABULARIES,
-	RECEIVE_VOCABULARY,
 	RECEIVE_VOCABULARY_ERROR,
 
 	UPDATING_VOCABULARY,
@@ -109,40 +107,6 @@ export const fetchAllVocabularies = () => dispatch => {
 		.catch(error => {
 			dispatch({
 				type: FETCHING_ALL_VOCABULARIES_ERR,
-				error,
-			})
-
-			throw error
-		})
-}
-
-export const fetchVocabulary = data => (dispatch, getState) => {
-	const vocabs = getState().vocabulary
-	const uri = data.uri
-	const abs = data.absolute_path
-	const vocab = vocabs[uri]
-
-	if (vocab && vocab.isFetching)
-		return
-
-	if (isFresh(vocab, STALE_TIME))
-		return
-
-	dispatch({
-		type: FETCHING_VOCABULARY,
-		uri,
-	})
-
-	return get(abs)
-		.then(data => {
-			dispatch({
-				type: RECEIVE_VOCABULARY,
-				data,
-			})
-		})
-		.catch(error => {
-			dispatch({
-				type: RECEIVE_VOCABULARY_ERROR,
 				error,
 			})
 
