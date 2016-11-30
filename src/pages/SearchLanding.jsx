@@ -34,7 +34,7 @@ const SearchLanding = React.createClass({
 				<ul>
 					{this.state.previousQueries.map((query, idx) => (
 						<li key={`pq-${idx}`}>
-							<a href={`/search?q=${query.replace(' ', '-')}`}>{query}</a>
+							<a href={`/search?q=${query}`}>{query}</a>
 						</li>
 					))}
 				</ul>
