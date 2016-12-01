@@ -31,7 +31,6 @@ const SearchFacetSidebar = React.createClass({
 
 	handleClearFacets: function (ev) {
 		ev.preventDefault && ev.preventDefault()
-
 		this.props.onClearSelectedFacets()
 	},
 
@@ -72,8 +71,8 @@ const SearchFacetSidebar = React.createClass({
 						style={styles.input}
 						type="search"
 					/>
-					{button}
 				</form>
+				{button}
 			</div>
 		)
 	},

@@ -120,11 +120,10 @@ const SearchResults = React.createClass({
 	},
 
 	handleSubmitSearchQuery: function (query) {
-		this.props.searchCatalog(
-			query,
-			this.props.search.facets,
-			this.props.search.options
-		).then(this.handleSearchResponse)
+		const { facets, options } = this.props.search
+
+		this.props.searchCatalog(query, facets, options)
+		.then(this.handleSearchResponse)
 	},
 
 	maybeRenderLoadingModal: function () {
