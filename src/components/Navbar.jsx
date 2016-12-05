@@ -12,6 +12,12 @@ const Navbar = React.createClass({
 				<nav className="site-navigation">
 					<ul>
 						<li>
+							<Link to="/search">
+								Search
+							</Link>
+						</li>
+
+						<li>
 							<Link to="/vocabularies">
 								Vocabulary Manager
 							</Link>
