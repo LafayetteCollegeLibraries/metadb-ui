@@ -6,6 +6,7 @@ import FormField from '../metadata/FormField.jsx'
 import StringInput from '../metadata/StringInput.jsx'
 import TextInput from '../metadata/TextInput.jsx'
 import ControlledVocabularyInput from '../metadata/ControlledVocabularyInput.jsx'
+import Button from '../Button.jsx'
 
 const labelFromName = name => {
 	const split = name.split('_').map(s => s.slice(0,1).toUpperCase() + s.slice(1))
@@ -76,6 +77,8 @@ const GenericWork = function (props) {
 			<FormField name="source" label="Source" />
 			<FormField name="rights" label="Rights (Digital)" renderer={TextInput} />
 			<FormField name="relation_ispartof" label="Relation (IsPartOf)" />
+
+			<Button>Save edits</Button>
 		</MetadataForm>
 	)
 }
