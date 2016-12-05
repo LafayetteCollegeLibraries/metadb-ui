@@ -5,6 +5,7 @@ import MetadataForm from '../metadata/MetadataForm.jsx'
 import FormField from '../metadata/FormField.jsx'
 import StringInput from '../metadata/StringInput.jsx'
 import ControlledVocabularyInput from '../metadata/ControlledVocabularyInput.jsx'
+import Button from '../Button.jsx'
 
 const GenericWork = function (props) {
 	const formProps = {
@@ -31,7 +32,7 @@ const GenericWork = function (props) {
 			<FormField name="description_note" label="Description (Note)" />
 			<FormField name="creator" label="Creator" multiple />
 			<FormField name="subject_lcsh" label="Subject (LCSH)" multiple />
-			<FormField name="subject_ocm" label="Subject (OCM)" {...subjectOcmProps}/>
+			<FormField name="subject_ocm" label="Subject (OCM)" {...subjectOcmProps} />
 			<FormField name="publisher" label="Publisher (Original)" multiple />
 			<FormField name="date_original" label="Date (Original)" />
 			<FormField name="format_medium" label="Format (Medium)" multiple />
@@ -47,6 +48,8 @@ const GenericWork = function (props) {
 			<FormField name="source" label="Source" />
 			<FormField name="rights" label="Rights (Digital)" />
 			<FormField name="relation_ispartof" label="Relation (IsPartOf)" />
+
+			<Button>Save edits</Button>
 		</MetadataForm>
 	)
 }
