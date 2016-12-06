@@ -311,7 +311,7 @@ const SearchResults = React.createClass({
 
 		const styles = {
 			container: {
-				backgroundColor: '#fafafa',
+				// backgroundColor: '#fafafa',
 			},
 
 			sidebar: {

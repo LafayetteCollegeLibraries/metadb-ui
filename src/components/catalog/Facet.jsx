@@ -1,7 +1,7 @@
 /**
  *  <Facet /> is used within a <FacetGroup /> component to organize groups of
  *  facet options. Each of these components maps to a key within the `facets`
- *  object returned via the Blacklight JSON api. 
+ *  object returned via the Blacklight JSON api.
  */
 
 import React from 'react'
@@ -11,7 +11,7 @@ const T = React.PropTypes
 
 const Facet = React.createClass({
 	propTypes: {
-		// an array of facet items provided from Blacklight. 
+		// an array of facet items provided from Blacklight.
 		items: T.arrayOf(T.shape({
 			name: T.string,
 			hits: T.number,
@@ -19,7 +19,7 @@ const Facet = React.createClass({
 		})), //.isRequired,
 
 		// the name of the facet that relates to the key within the `facets` object
-		// provided by Blacklight. 
+		// provided by Blacklight.
 		name: T.string, //.isRequired,
 
 		// triggered when a `selectedFacet`s `X` button is clicked.
@@ -82,6 +82,7 @@ const Facet = React.createClass({
 			styles: {
 				default: {
 					panel: {
+						backgroundColor: '#fff',
 						borderColor: panelColor,
 						borderRadius: '2px',
 						borderStyle: 'solid',
@@ -123,8 +124,8 @@ const Facet = React.createClass({
 
 		const hasSel = this.props.selectedFacets.length > 0
 
-		let stroke = hasSel 
-		? this.props.styles.hasSelectedFacets.color 
+		let stroke = hasSel
+		? this.props.styles.hasSelectedFacets.color
 		: this.props.styles.default.color
 
 		if (!stroke)
@@ -175,7 +176,7 @@ const Facet = React.createClass({
 
 	render: function () {
 		// skip if there's nothing to display
-		if (!this.props.items || !this.props.items.length) 
+		if (!this.props.items || !this.props.items.length)
 			return null
 
 		const defaultPanel = this.props.styles.default.panel
