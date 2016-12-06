@@ -37,6 +37,8 @@ const TextInput = React.createClass({
 				// we're overriding `onChange` to only trigger on blur,
 				// so we need to noop the original function
 				onChange: () => {},
+
+				rows: 4,
 			}
 		)
 
