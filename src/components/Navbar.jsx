@@ -7,7 +7,9 @@ const Navbar = React.createClass({
 	render: function () {
 		return (
 			<header className="navbar">
-				<Link to="/">MetaDB</Link>
+				<Link to="/">
+					<img className="site-logo" src="/assets/logo.svg"/>
+				</Link>
 
 				<nav className="site-navigation">
 					<ul>

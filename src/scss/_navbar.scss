@@ -1,14 +1,19 @@
 .navbar {
 	@include clearfix;
-	background-color: $theme-primary;
+	background-color: #fff;
+	border-bottom: 1px solid $theme-primary;
 	font-size: 1.25rem;
 	margin: -$default-body-margin;
 	margin-bottom: $default-body-margin;
 	padding: .5em;
+	vertical-align: middle;
 
 	a {
-		color: #fff;
 		text-decoration: none;
+	}
+
+	.site-logo {
+		max-height: 20px;
 	}
 }
 
