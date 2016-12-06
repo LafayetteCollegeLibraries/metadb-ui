@@ -6,6 +6,7 @@ import FormField from '../metadata/FormField.jsx'
 import StringInput from '../metadata/StringInput.jsx'
 import TextInput from '../metadata/TextInput.jsx'
 import ControlledVocabularyInput from '../metadata/ControlledVocabularyInput.jsx'
+import DateInput from '../metadata/DateInput.jsx'
 import Button from '../Button.jsx'
 
 const labelFromName = name => {
@@ -63,7 +64,7 @@ const GenericWork = function (props) {
 			<FormField name="subject_lcsh" label="Subject (LCSH)" multiple />
 			{ SubjectOCM() }
 			<FormField name="publisher" label="Publisher (Original)" multiple />
-			<FormField name="date_original" label="Date (Original)" />
+			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="month"/>
 			<FormField name="format_medium" label="Format (Medium)" multiple />
 			<TechnicalMetadata name="format_extent" label="Format Extent" />
 			{ LargerField({name: 'description'}) }
