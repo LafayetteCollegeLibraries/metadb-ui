@@ -23,7 +23,7 @@ const MetaDB = (
 <Provider store={store}>
 	<Router history={history}>
 		<Route path="/" component={App}>
-			<IndexRoute component={Home} />
+			<IndexRoute component={SearchLanding} />
 			<Route path="search" getComponent={(nextState, cb) => {
 				if (nextState.location.search === '')
 					return cb(null, SearchLanding)
