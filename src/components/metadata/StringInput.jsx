@@ -26,13 +26,16 @@ const StringInput = React.createClass({
 	render: function () {
 		const props = assign(
 			// default
-			{type: 'text'},
+			{
+				type: 'text'
+			},
 
 			// passed props
 			this.props,
 
 			// internal overrides
 			{
+				autoComplete: 'off',
 				defaultValue: this.props.value || '',
 				onBlur: this.handleBlur,
 				onFocus: this.handleFocus,
