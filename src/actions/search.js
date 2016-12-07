@@ -20,7 +20,7 @@ const REQUIRED_OPTS = {
 }
 
 const DEFAULT_OPTS = {
-	per_page: 25,
+	per_page: 10,
 }
 
 const hasOwnProperty = Object.prototype.hasOwnProperty
