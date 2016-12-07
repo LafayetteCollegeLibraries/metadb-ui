@@ -18,8 +18,8 @@ const SearchResultsPagerHeader = React.createClass({
 
 	getDefaultProps: function () {
 		return {
-			perPage: 25,
-			perPageOptions: [25, 50, 100, 250],
+			perPage: 10,
+			perPageOptions: [10, 25, 50, 100, 250],
 		}
 	},
 
