@@ -72,7 +72,7 @@ const SearchLanding = React.createClass({
 		return (
 			<div>
 				<form onSubmit={this.handleSearchSubmit} style={searchboxWrapperStyle}>
-					<StringInput name="query" placeholder="enter yr search terms" style={stringInputStyle} />
+					<StringInput name="query" placeholder="Enter your query!" style={stringInputStyle} />
 					<Button
 						children="Search"
 						style={btnStyle}
