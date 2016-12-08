@@ -173,7 +173,7 @@ const Work = React.createClass({
 				{this.maybeRenderNavToSearchResults()}
 
 				<h1 style={{display: 'inline-block'}}>{title}</h1>
-
+				{/*
 				<a
 					href={debugUrl}
 					style={{
@@ -183,7 +183,7 @@ const Work = React.createClass({
 					target="_blank"
 					children={'(debug)'}
 				/>
-
+				*/}
 				{this.props.work.isChanged ? this.showChangedBadge() : ''}
 			</header>
 		)
