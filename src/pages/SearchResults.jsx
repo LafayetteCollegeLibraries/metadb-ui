@@ -242,6 +242,7 @@ const SearchResults = React.createClass({
 				<Facet name="creator_sim" />
 				<Facet name="keyword_sim" />
 				<Facet name="subject_sim" />
+				<Facet name="subject_ocm_sim" />
 				<Facet name="language_sim" />
 				<Facet name="creator_photographer_sim"
 					label="Photographer"
