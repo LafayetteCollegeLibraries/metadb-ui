@@ -32,6 +32,17 @@ const SearchResultsHeader = React.createClass({
 		)
 	},
 
+	renderMetadataToolButton: function () {
+		// pass some empty space for now
+		return <div style={{padding: '.75em'}} />
+
+		// return (
+		// 	<Button onClick={this.props.onOpenToolModal}>
+		// 		Choose metadata tool
+		// 	</Button>
+		// )
+	},
+
 	render: function () {
 		const styles = {
 			buttonContainer: {
@@ -57,9 +68,7 @@ const SearchResultsHeader = React.createClass({
 			<div>
 				<div key="search-results-header-top">
 					<div style={styles.buttonContainer}>
-						<Button onClick={this.props.onOpenToolModal}>
-							Choose metadata tool
-						</Button>
+						{this.renderMetadataToolButton()}
 					</div>
 
 					<div style={styles.toggleContainer}>
