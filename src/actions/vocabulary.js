@@ -11,25 +11,25 @@ import {
 	FETCHING_ALL_VOCABULARIES_ERR,
 
 	RECEIVE_ALL_VOCABULARIES,
-	RECEIVE_VOCABULARY_ERR,
+	// RECEIVE_VOCABULARY_ERR,
 
 	UPDATING_VOCABULARY,
 	UPDATE_VOCABULARY_ERR,
 	UPDATE_VOCABULARY_OK,
 } from '../constants'
 
-import { get } from '../../lib/api/request'
+// import { get } from '../../lib/api/request'
 import {
 	createVocabulary as create,
 	deleteVocabulary as deleteVocab,
 	getVocabularies,
 	updateVocabulary,
 } from '../../lib/api'
-import isFresh from '../../lib/is-fresh'
+// import isFresh from '../../lib/is-fresh'
 import camelCase from '../../lib/camel-case'
 import assign from 'object-assign'
 
-const STALE_TIME = 60 * 1000
+// const STALE_TIME = 60 * 1000
 
 const mockMintAuthUri = val => (
 	`${process.env.AUTH_BASE_URL}/${camelCase(val)}`
