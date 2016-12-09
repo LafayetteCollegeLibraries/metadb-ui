@@ -22,7 +22,7 @@ import {
 	BULK_EDIT_TERMS,
 	FETCHING_VOCABULARY_TERMS,
 	RECEIVE_VOCABULARY_TERMS,
-	RECEIVE_VOCABULARY_TERMS_ERROR,
+	RECEIVE_VOCABULARY_TERMS_ERR,
 	REMOVE_TERM_FROM_VOCABULARY,
 	UPDATE_TERM_REQUEST,
 	UPDATE_TERM_RESPONSE_OK,
@@ -41,7 +41,7 @@ const expectTerm = term => {
 	expect(term).to.have.property('hidden_label')
 
 	expect(term.uri).to.be.a('string')
-	
+
 	expect(term.label).to.be.an('array')
 	expect(term.alt_label).to.be.an('array')
 	expect(term.pref_label).to.be.an('array')
@@ -93,7 +93,7 @@ describe('Terms actionCreators', function () {
 				return store.dispatch(boundAction()).then(() => {
 					const actions = store.getActions()
 					const action = actions[0]
-					
+
 					expect(action.data.label).to.be.an('array')
 					expect(action.data.label).to.have.length(1)
 					expect(action.data.label[0]).to.equal(testTerm)
@@ -194,7 +194,7 @@ describe('Terms actionCreators', function () {
 			})
 		})
 
-		it('dispatches RECEIVE_VOCABULARY_TERMS_ERROR when 404\'d', function () {
+		it('dispatches RECEIVE_VOCABULARY_TERMS_ERR when 404\'d', function () {
 			const nope = {
 				absolute_path: `${API_BASE}/vocabularies/nope.json`,
 			}
@@ -204,7 +204,7 @@ describe('Terms actionCreators', function () {
 				const actions = store.getActions()
 				expect(actions).to.have.length(2)
 				expect(actions[0].type).to.equal(FETCHING_VOCABULARY_TERMS)
-				expect(actions[1].type).to.equal(RECEIVE_VOCABULARY_TERMS_ERROR)
+				expect(actions[1].type).to.equal(RECEIVE_VOCABULARY_TERMS_ERR)
 			})
 		})
 
@@ -299,7 +299,7 @@ describe('Terms actionCreators', function () {
 
 		const updateRandomTerm = () => {
 			const term = getRandomTerm()
-			
+
 			// see https://github.com/dariusk/corpora/blob/master/data/games/wrestling_moves.json
 			const pool = [
 				'Double inverted DDT', 'Elevated jawbreaker', 'Elevated splash',
@@ -364,7 +364,7 @@ describe('Terms actionCreators', function () {
 			return store.dispatch(updateTermInVocabulary(vocab, termStr, term))
 			.then(() => {
 				const actions = store.getActions()
-				
+
 				expect(actions).to.have.length(2)
 
 				const update = actions[1]

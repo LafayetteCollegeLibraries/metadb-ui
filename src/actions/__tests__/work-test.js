@@ -8,13 +8,13 @@ import fetchMock from 'fetch-mock'
 import {
 	ADD_EMPTY_VALUE_TO_WORK,
 	FETCHING_WORK,
-	FETCHING_WORK_ERROR,
+	FETCHING_WORK_ERR,
 	RECEIVE_WORK,
 	REMOVE_VALUE_FROM_WORK,
 	SAVING_WORK,
 	SAVED_WORK,
 	UPDATE_WORK,
-	WORK_NOT_FOUND_ERROR,
+	WORK_NOT_FOUND_ERR,
 } from '../../constants'
 
 const mockStore = configureMockStore([thunk])
@@ -55,7 +55,7 @@ describe('Work actionCreator', function () {
 					value,
 				}
 			]
-			
+
 			store.dispatch(actions.editWorkField(key, index, value))
 			expect(store.getActions()).to.deep.equal(expectedAction)
 		})
@@ -79,7 +79,7 @@ describe('Work actionCreator', function () {
 		after(fetchMock.restore)
 
 
-		it('sends FETCHING_WORK and RECEIVE_WORK actions', function () {	
+		it('sends FETCHING_WORK and RECEIVE_WORK actions', function () {
 			const expectedActions = [
 				{type: FETCHING_WORK, id},
 				{type: RECEIVE_WORK, data: {title: ['HULLO!']}}
@@ -102,12 +102,12 @@ describe('Work actionCreator', function () {
 					const actions = store.getActions()
 					expect(actions[0].type).to.equal(FETCHING_WORK)
 					expect(actions[0].id).to.equal(id)
-					expect(actions[1].type).to.equal(WORK_NOT_FOUND_ERROR)
+					expect(actions[1].type).to.equal(WORK_NOT_FOUND_ERR)
 					expect(actions[1].error.status).to.equal(404)
 				})
 		})
 
-		it('sends FETCHING_WORK and FETCHING_WORK_ERROR if encountering an error', function () {
+		it('sends FETCHING_WORK and FETCHING_WORK_ERR if encountering an error', function () {
 			const id = 'whatever'
 			const store = mockStore({work: {}})
 
@@ -116,7 +116,7 @@ describe('Work actionCreator', function () {
 					const actions = store.getActions()
 					expect(actions[0].type).to.equal(FETCHING_WORK)
 					expect(actions[1].id).to.equal(id)
-					expect(actions[1].type).to.equal(FETCHING_WORK_ERROR)
+					expect(actions[1].type).to.equal(FETCHING_WORK_ERR)
 				})
 		})
 	})
@@ -136,7 +136,7 @@ describe('Work actionCreator', function () {
 
 			const store = mockStore({work: {}})
 
-			store.dispatch(actions.removeValueFromWork(key, index))		
+			store.dispatch(actions.removeValueFromWork(key, index))
 			expect(store.getActions()).to.deep.equal(expectedAction)
 		})
 	})
@@ -174,7 +174,7 @@ describe('Work actionCreator', function () {
 					type: SAVED_WORK,
 				}
 			]
-		
+
 			const state = {
 				work: {
 					data: {

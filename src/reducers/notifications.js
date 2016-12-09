@@ -17,10 +17,10 @@ import {
 	UPDATE_VOCABULARY_ERR,
 
 	// work constants
-	WORK_NOT_FOUND_ERROR,
+	WORK_NOT_FOUND_ERR,
 
 	// types
-	NOTIFICATION_ERROR as ERROR,
+	NOTIFICATION_ERR as ERROR,
 	NOTIFICATION_SUCCESS as SUCCESS,
 } from '../constants'
 
@@ -61,7 +61,7 @@ export default function notificationReducer (state, action) {
 		case UPDATE_VOCABULARY_ERR:
 			return updateVocabularyError(state, action)
 
-		case WORK_NOT_FOUND_ERROR:
+		case WORK_NOT_FOUND_ERR:
 			return workNotFound(state, action)
 
 		default:
@@ -79,7 +79,7 @@ function createNotification (type, message) {
 }
 
 function addTermToVocabError (state, action) {
-	const tmpl = messages.CREATE_TERM_ERROR
+	const tmpl = messages.CREATE_TERM_ERR
 	const errMsg = action.error.message
 	const term = action.term
 	const message = sprintf(tmpl, term, errMsg)
@@ -107,7 +107,7 @@ function clearStaleNotifications (state, action) {
 }
 
 function createVocabularyError (state, action) {
-	const tmpl = messages.CREATE_VOCABULARY_ERROR
+	const tmpl = messages.CREATE_VOCABULARY_ERR
 	const message = sprintf(tmpl, action.error.message)
 
 	return [].concat(state, createNotification(ERROR, message))
@@ -122,7 +122,7 @@ function createVocabularySuccess (state, action) {
 }
 
 function deleteVocabularyError (state, action) {
-	const tmpl = messages.DELETE_VOCABULARY_ERROR
+	const tmpl = messages.DELETE_VOCABULARY_ERR
 	const name = action.data.pref_label[0]
 	const errmsg = action.error.message
 	const message = sprintf(tmpl, name, errmsg)
@@ -139,7 +139,7 @@ function deleteVocabularySuccess (state, action) {
 }
 
 function fetchingVocabulariesError (state, action) {
-	const tmpl = messages.FETCHING_VOCABULARIES_ERROR
+	const tmpl = messages.FETCHING_VOCABULARIES_ERR
 	const msg = action.error.message
 	const message = sprintf(tmpl, msg)
 
@@ -147,7 +147,7 @@ function fetchingVocabulariesError (state, action) {
 }
 
 function updateVocabularyError (state, action) {
-	const tmpl = messages.UPDATE_VOCABULARY_ERROR
+	const tmpl = messages.UPDATE_VOCABULARY_ERR
 	const name = action.vocabulary.pref_label[0]
 	const msg = action.error.message
 	const message = sprintf(tmpl, name, msg)

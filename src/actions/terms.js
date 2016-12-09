@@ -5,10 +5,10 @@ import {
 	BULK_EDIT_TERMS,
 
 	FETCHING_VOCABULARY_TERMS,
-	
+
 	RECEIVE_VOCABULARY_TERMS,
-	RECEIVE_VOCABULARY_TERMS_ERROR,
-	
+	RECEIVE_VOCABULARY_TERMS_ERR,
+
 	REMOVE_TERM_FROM_VOCABULARY,
 
 	UPDATE_TERM_REQUEST,
@@ -16,7 +16,7 @@ import {
 	UPDATE_TERM_RESPONSE_OK,
 } from '../constants'
 
-import { 
+import {
 	addTermToVocabulary as addTerm,
 	getVocabulary,
 	patchTerm,
@@ -77,9 +77,9 @@ export const addTermToVocabulary = function (vocabulary, term) {
 
 export const bulkEditTermsInVocabulary = (vocabulary, terms) => {
 	return (dispatch, getState) => {
-		
+
 		const prevTerms = getState().activeVocabularyTerms.data
-		
+
 		// cut down on the # of array traversals by building an index
 		// `{ termUri: indexInPrevTerms }`
 		const indexed = {}
@@ -92,7 +92,7 @@ export const bulkEditTermsInVocabulary = (vocabulary, terms) => {
 
 			if (typeof idx !== 'undefined')
 				return prevTerms[idx]
-			
+
 			return createNewTerm(term, vocabulary)
 		})
 
@@ -111,7 +111,7 @@ export const bulkEditTermsInVocabulary = (vocabulary, terms) => {
 export const fetchTermsFromVocabulary = vocabulary => {
 	return dispatch => {
 		dispatch({
-			type: FETCHING_VOCABULARY_TERMS, 
+			type: FETCHING_VOCABULARY_TERMS,
 			vocabulary,
 		})
 
@@ -126,7 +126,7 @@ export const fetchTermsFromVocabulary = vocabulary => {
 			})
 			.catch(error => {
 				dispatch({
-					type: RECEIVE_VOCABULARY_TERMS_ERROR,
+					type: RECEIVE_VOCABULARY_TERMS_ERR,
 					error,
 					vocabulary,
 				})

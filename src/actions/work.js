@@ -1,13 +1,13 @@
 import {
 	ADD_EMPTY_VALUE_TO_WORK,
 	FETCHING_WORK,
-	FETCHING_WORK_ERROR,
+	FETCHING_WORK_ERR,
 	RECEIVE_WORK,
 	REMOVE_VALUE_FROM_WORK,
 	UPDATE_WORK,
 	SAVED_WORK,
 	SAVING_WORK,
-	WORK_NOT_FOUND_ERROR,
+	WORK_NOT_FOUND_ERR,
 } from '../constants'
 
 import { getWork, updateWork } from '../../lib/api'
@@ -32,7 +32,7 @@ export const fetchWork = id => (dispatch/*, getState*/) => {
 			error => {
 				if (error.status === 404) {
 					dispatch({
-						type: WORK_NOT_FOUND_ERROR,
+						type: WORK_NOT_FOUND_ERR,
 						error,
 						id,
 					})
@@ -41,7 +41,7 @@ export const fetchWork = id => (dispatch/*, getState*/) => {
 				}
 
 				dispatch({
-					type: FETCHING_WORK_ERROR,
+					type: FETCHING_WORK_ERR,
 					error,
 					id,
 				})

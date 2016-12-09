@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import assign from 'object-assign'
 import {
-	RECEIVE_SEARCH_ERROR,
+	RECEIVE_SEARCH_ERR,
 	RECEIVE_SEARCH_RESULTS,
 	SEARCHING,
 } from '../../constants'
@@ -66,7 +66,7 @@ describe('Search reducer', function () {
 
 			expect(res.facets).to.not.deep.equal(defaultState.facets)
 			expect(res.facets).to.deep.equal(facets)
-			
+
 			expect(res.options).to.not.deep.equal(defaultState.options)
 			expect(res.options).to.deep.equal(options)
 
@@ -75,9 +75,9 @@ describe('Search reducer', function () {
 		})
 	})
 
-	describe('@RECEIVE_SEARCH_ERROR', function () {
+	describe('@RECEIVE_SEARCH_ERR', function () {
 		it('sets `isSearching` to false', function () {
-			const action = { type: RECEIVE_SEARCH_ERROR }
+			const action = { type: RECEIVE_SEARCH_ERR }
 			const res = searchReducer({isSearching: true}, action)
 
 			expect(res.isSearching).to.be.false

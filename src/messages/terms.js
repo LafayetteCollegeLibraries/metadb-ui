@@ -1,1 +1,1 @@
-export const CREATE_TERM_ERROR = 'There was an error creating "%s": %s'
+export const CREATE_TERM_ERR = 'There was an error creating "%s": %s'

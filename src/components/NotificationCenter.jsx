@@ -3,7 +3,7 @@ import { NotificationStack } from 'react-notification'
 import assign from 'object-assign'
 
 import {
-	NOTIFICATION_ERROR as ERROR,
+	NOTIFICATION_ERR as ERROR,
 	NOTIFICAITON_SUCCESS as SUCCESS,
 } from '../constants'
 
@@ -34,7 +34,7 @@ const NotificationCenter = React.createClass({
 					}
 				}
 
-			default: 
+			default:
 				return {}
 		}
 	},
@@ -49,10 +49,10 @@ const NotificationCenter = React.createClass({
 				isActive: true,
 				key: 'notification-'+index,
 				message: notification.message,
-				
+
 				...this.getStyles(notification.type),
 
-				// 
+				//
 				__index: index,
 			}
 		})
