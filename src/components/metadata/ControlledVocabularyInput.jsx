@@ -46,6 +46,11 @@ const ControlledVocabularyInput = React.createClass({
 
 	handleChange: function (ev, value) {
 		this.setState({inputValue: value})
+
+		const menu = this._autocomplete.refs.menu
+
+		if (menu)
+			menu.scrollTop = 0
 	},
 
 	handleSelect: function (value, item) {
@@ -143,6 +148,7 @@ const ControlledVocabularyInput = React.createClass({
 				getItemValue={this.getItemValue}
 				onChange={this.handleChange}
 				onSelect={this.handleSelect}
+				ref={el => this._autocomplete = el}
 				renderItem={this.renderItem}
 				renderMenu={this.renderMenu}
 				shouldItemRender={this.shouldItemRender}
