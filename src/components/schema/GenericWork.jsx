@@ -1,6 +1,6 @@
 // GenericWork schema form
 import React from 'react'
-
+import assign from 'object-assign'
 import MetadataForm from '../metadata/MetadataForm.jsx'
 import FormField from '../metadata/FormField.jsx'
 import StringInput from '../metadata/StringInput.jsx'
@@ -48,21 +48,73 @@ const TechnicalMetadata = props => {
 	return <FormField {...props} renderer={TextInput} disabled />
 }
 
-const GenericWork = function (props) {
-	const formProps = {
-		defaultProps: {
-			renderer: StringInput,
-		},
-		...props,
-	}
+const GenericWork = React.createClass({
+	_fetchingQueue: {},
 
-	return (
+	getInitialState: function () {
+		return {
+			terms: {},
+		}
+	},
+
+	controlledVocabularyField: function (opts) {
+		const { name, label, id } = opts
+		const terms = this.state.terms[id] || []
+
+		if (!this.state.terms.hasOwnProperty(id) && !this._fetchingQueue[id]) {
+			this._fetchingQueue[id] = true
+
+			fetch(`${process.env.API_BASE_URL}/vocabularies/${id}.json`)
+			.then(res => res.json())
+			.then(res => res.terms)
+			.then(terms => {
+				delete this._fetchingQueue[id]
+
+				const update = assign({}, this.state.terms, {[id]: terms})
+				this.setState({terms: update})
+			})
+		}
+
+		return (
+			<FormField
+				highlightMatch
+				label={label}
+				multiple
+				name={name}
+				renderer={ControlledVocabularyInput}
+				terms={terms}
+			/>
+		)
+	},
+
+	render: function () {
+		const formProps = {
+			defaultProps: {
+				renderer: StringInput,
+			},
+
+			...this.props,
+		}
+
+		return (
 		<MetadataForm {...formProps}>
 			<FormField name="title" label="Title" />
 			{ LargerField({name: 'description_note'}) }
 			<FormField name="creator" label="Creator" multiple />
-			<FormField name="subject_lcsh" label="Subject (LCSH)" multiple />
-			{ SubjectOCM() }
+			{
+				this.controlledVocabularyField({
+					name: 'subject_lcsh',
+					label: 'Subject (LCSH)',
+					id: 'mdl-subject-lcsh',
+				})
+			}
+			{
+			 this.controlledVocabularyField({
+					name: 'subject_ocm',
+					label: 'Subject (OCM)',
+					id:'eaic-subject-ocm',
+				})
+			}
 			<FormField name="publisher" label="Publisher (Original)" multiple />
 			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="month"/>
 			<FormField name="format_medium" label="Format (Medium)" multiple />
@@ -82,6 +134,7 @@ const GenericWork = function (props) {
 			<Button>Save edits</Button>
 		</MetadataForm>
 	)
-}
+	}
+})
 
 export default GenericWork

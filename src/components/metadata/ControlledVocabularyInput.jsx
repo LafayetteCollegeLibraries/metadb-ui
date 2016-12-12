@@ -33,6 +33,14 @@ const ControlledVocabularyInput = React.createClass({
 		}
 	},
 
+	// if we're passing terms through props (+ bypassing `fetchTerms`),
+	// we need to update the state if/when updated terms are passed
+	componentWillReceiveProps: function (nextProps) {
+		if (nextProps.terms && (nextProps.terms.length !== this.state.terms.length)) {
+			this.setState({terms: nextProps.terms})
+		}
+	},
+
 	getInitialState: function () {
 		return {
 			inputValue: this.props.value || '',
