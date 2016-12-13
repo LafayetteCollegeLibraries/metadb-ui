@@ -19,7 +19,7 @@ const DateInput = React.createClass({
 		const value = this.props.value
 
 		if (!value)
-			return { date: null }
+			return { date: '' }
 
 		// `time` will either be `HH:MM:SS.000Z`
 		// or undefined (if short date (YYYY-MM-DD) is passed)
