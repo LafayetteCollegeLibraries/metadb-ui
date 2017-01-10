@@ -6,24 +6,23 @@ const T = React.PropTypes
 const SearchBreadcrumbTrail = React.createClass({
 	propTypes: {
 		onRemoveBreadcrumb: T.func.isRequired,
-		
-		facets: T.object,
+
+		breadcrumbs: T.array,
 		query: T.string,
 	},
 
-	renderGroupBreadcrumbs: function (key) {
-		const group = this.props.facets[key]
+	renderGroupBreadcrumbs: function (breadcrumb, index) {
+		const props = {
+			key: `bc${index}`,
+			group: breadcrumb.group.label,
+			value: breadcrumb.facet.label,
+			onRemove: this.props.onRemoveBreadcrumb.bind(null,
+				breadcrumb.group.name,
+				breadcrumb.facet,
+			),
+		}
 
-		return group.map((facet, index) => {
-			const props = {
-				key: key + index + facet.value,
-				group: key,
-				value: facet.label,
-				onRemove: this.props.onRemoveBreadcrumb.bind(null, key, facet),
-			}
-
-			return React.createElement(SearchBreadcrumb, props)
-		})
+		return <SearchBreadcrumb {...props} />
 	},
 
 	renderQuery: function () {
@@ -40,19 +39,13 @@ const SearchBreadcrumbTrail = React.createClass({
 	},
 
 	render: function () {
-		if (!this.props.facets)
-			return null
-
-		const keys = Object.keys(this.props.facets)
-
-		if (!keys.length)
-			return null
+		const bc = this.props.breadcrumbs
 
 		return (
 			<div>
 				{this.renderQuery()}
 
-				{keys.map(this.renderGroupBreadcrumbs)}
+				{!!bc.length && bc.map(this.renderGroupBreadcrumbs)}
 			</div>
 		)
 	}

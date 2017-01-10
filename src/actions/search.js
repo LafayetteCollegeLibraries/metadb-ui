@@ -118,7 +118,7 @@ export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState)
 	const facets = assign({}, search.facets)
 
 	let dirty = false
-	let idx
+	let idx = -1
 
 	if (facets[field]) {
 		idx = findIndex(facets[field], f => {
@@ -128,8 +128,6 @@ export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState)
 				return isEqual(f, facet)
 		})
 	}
-
-	else idx = -1
 
 	// add to selected-facets
 	if (checked) {
