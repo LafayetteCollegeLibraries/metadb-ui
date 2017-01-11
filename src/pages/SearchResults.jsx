@@ -77,17 +77,6 @@ const SearchResults = React.createClass({
 		}
 	},
 
-	getFacetGroupInfo: function (pool, name) {
-		for (let i = 0; i < pool.length; i++)
-			if (pool[i].name === name)
-				return {
-					name: pool[i].name,
-					label: pool[i].label
-				}
-
-		return null
-	},
-
 	handleNextPage: function () {
 		const pages = this.state.pages
 
