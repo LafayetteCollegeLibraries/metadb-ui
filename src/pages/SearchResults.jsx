@@ -18,21 +18,40 @@ import ResultsGalleryItem from '../components/catalog/ResultsGalleryItem.jsx'
 import { getBreadcrumbList } from '../../lib/facet-helpers'
 
 const SearchResults = React.createClass({
+	// TODO: clean this up a bit? this is a hold-over from when this component
+	// was handling the starting search form as well as the results
 	componentWillMount: function () {
 		const qs = this.props.location.search
 
-		if (qs)
+		if (qs) {
 			this.props.searchCatalogByQueryString(qs)
+		}
 	},
 
 	componentWillReceiveProps: function (nextProps) {
+		// compare the queryString in the browser to the previously-searched
+		// one. if it differs, submit the new search. this allows the search
+		// to be updated when the user uses the back/forward buttons in the
+		// browser in addition to selecting facets/options
+		const queryString = window.location.search
+		const previousQueryString = this.props.search.queryString
+
+		// checking that `previousQueryString` is defined prevents this
+		// from being run on mount (when `queryString` will always not
+		// equal `undefined`).
+		if (previousQueryString && queryString !== previousQueryString)
+			return this.props.searchCatalogByQueryString(queryString)
+
+		// we're using `props.search.timestamp` as a unique identifier
+		// to signify that the new search results being passed as props
+		// differ than the ones previous. this could also be done with
+		// a shallow compare of the `search` object but since what would
+		// be changing is at a deeper level (the `search.facets` and
+		// `search.options` objects in particular), this could be costly
 		const timestamp = this.props.search.timestamp
 		const next = nextProps.search.timestamp
 
-		if (!next)
-			return
-
-		if (timestamp === next)
+		if (!next || timestamp === next)
 			return
 
 		this.handleSearchResponse(nextProps.search)
