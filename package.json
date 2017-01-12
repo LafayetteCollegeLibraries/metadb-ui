@@ -71,7 +71,6 @@
     "xhr": "^2.2.1"
   },
   "devDependencies": {
-    "@kadira/storybook": "^1.41.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-static-fs": "^1.1.0",
     "chai": "^3.5.0",
