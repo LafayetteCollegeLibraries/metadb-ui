@@ -25,6 +25,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-runtime": "^6.18.0",
     "blacklight-querystring": "^3.0.0",
+    "classnames": "^2.2.5",
     "color-shade": "^1.0.0",
     "css-loader": "^0.23.1",
     "debounce": "^1.0.0",

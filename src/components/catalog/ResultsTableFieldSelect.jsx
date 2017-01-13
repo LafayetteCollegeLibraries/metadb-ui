@@ -1,5 +1,6 @@
 import React from 'react'
 import workFields from '../../../lib/work-fields'
+import cn from 'classnames'
 
 const propTypes = {
 	onClose: React.PropTypes.func,
@@ -17,17 +18,8 @@ class ResultsTableFieldSelect extends React.Component {
 		super(props)
 
 		this.handleFieldClick = this.handleFieldClick.bind(this)
-		this.handleOnClose = this.handleOnClose.bind(this)
 		this.renderWorkField = this.renderWorkField.bind(this)
 		this.renderWorkFields = this.renderWorkFields.bind(this)
-	}
-
-	componentWillMount () {
-		document.addEventListener('click', this.handleOnClose)
-	}
-
-	componentWillUnmount () {
-		document.removeEventListener('click', this.handleOnClose)
 	}
 
 	handleFieldClick (key) {
@@ -36,26 +28,13 @@ class ResultsTableFieldSelect extends React.Component {
 		this.props.onSelectField.call(null, key, !isSelected, idx)
 	}
 
-	handleOnClose (ev) {
-		if (!this._containerEl)
-			return
-
-		console.log(ev.target === this._containerEl)
-	}
-
 	renderWorkField (key, index) {
 		const selected = this.props.selected.indexOf(key) > -1
 		const props = {
 			children: workFields[key],
+			className: cn('field', {selected}),
 			onClick: this.handleFieldClick.bind(null, key),
 			key: key + index,
-			style: {
-				backgroundColor: (selected ? '#1d5f83' : '#fff'),
-				color: (selected ? '#fff' : '#1e1e1e'),
-				cursor: 'pointer',
-				margin: '1px 2px',
-				padding: '2px',
-			}
 		}
 
 		return <div {...props} />
@@ -68,16 +47,8 @@ class ResultsTableFieldSelect extends React.Component {
 
 	render () {
 		const props = {
+			className: 'results-table--field-select',
 			ref: el => { this._containerEl = el },
-			style: {
-				backgroundColor: '#fff',
-				boxShadow: '0 0 2px 0 #999',
-				fontSize: '.9em',
-				fontWeight: 'normal',
-				padding: '2px',
-				position: 'absolute',
-				textAlign: 'left',
-			}
 		}
 
 		return (

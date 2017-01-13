@@ -2,6 +2,7 @@ import React from 'react'
 import { TacoTable, DataType } from 'react-taco-table'
 import workFields from '../../../lib/work-fields'
 import ResultsTableFieldSelect from './ResultsTableFieldSelect.jsx'
+import cn from 'classnames'
 
 const propTypes = {
 	data: React.PropTypes.array,
@@ -42,11 +43,14 @@ class ResultsTable extends React.Component {
 		// set default column first (thumbnail)
 		const columns = [
 			{
+				className: 'thumbnail-preview',
 				header: this.getFieldToggleHeader(),
 				id: 'thumbnail_path',
 
 				// TODO: a11y updates
 				renderer: path => <img src={this.getThumbnailPath(path)} />,
+
+				thClassName: 'field-select',
 
 				// disable sorting by setting type to None
 				type: DataType.None,
@@ -64,8 +68,17 @@ class ResultsTable extends React.Component {
 
 	getFieldToggleHeader () {
 		const open = this.state.fieldSelectOpen
+		const contents = (
+			<svg viewBox="0 0 300 300" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <rect fill="#1E1E1E" x="25" y="80" width="250" height="40"></rect>
+        <rect fill="#1E1E1E" x="25" y="170" width="250" height="40"></rect>
+        <rect fill="#1E1E1E" x="25" y="260" width="250" height="40"></rect>
+			</svg>
+		)
+
 		const buttonProps = {
-			children: 'X',
+			children: contents,
+			className: cn('btn-size-small', 'toggle', {open}),
 			key: 'toggle-btn',
 			onClick: ev => {
 				ev.preventDefault && ev.preventDefault()
@@ -73,14 +86,6 @@ class ResultsTable extends React.Component {
 					fieldSelectOpen: !this.state.fieldSelectOpen,
 				})
 			},
-			style: {
-				backgroundColor: (open ? '#888' : '#ccc'),
-				cursor: 'pointer',
-				height: '25px',
-				width: '25px',
-				WebkitAppearance: 'none',
-				appearance: 'none',
-			}
 		}
 
 		return [
@@ -94,8 +99,10 @@ class ResultsTable extends React.Component {
 	}
 
 	handleOnSelectField (key, toggle, index) {
-		const { fields } = this.state
+		const fields = [].concat(this.state.fields)
+		let update
 
+		// add a field to the pool
 		if (toggle) {
 
 			// no duplicates!
@@ -103,24 +110,29 @@ class ResultsTable extends React.Component {
 				return
 
 			fields.push(key)
-			this.setState({fields: fields.sort(sortByField)})
-
-			return
+			update = fields.sort(sortByField)
 		}
 
-		if (index === -1)
-			return
+		// remove a field from the pool
+		else {
 
-		const update = [].concat(
-			fields.slice(0, index),
-			fields.slice(index + 1)
-		)
+			// not sure why or even if this'll happen, but if the selected item
+			// isn't in our pool, just bail
+			if (index === -1)
+				return
+
+			update = [].concat(
+				fields.slice(0, index),
+				fields.slice(index + 1)
+			)
+		}
 
 		this.setState({fields: update})
 	}
 
 	renderFieldSelect () {
 		const props = {
+			key: 'field-select',
 			onSelectField: this.handleOnSelectField,
 			selected: this.state.fields,
 		}
@@ -130,7 +142,11 @@ class ResultsTable extends React.Component {
 
 	render () {
 		return (
-			<TacoTable columns={this.getColumns()} data={this.props.data} />
+			<TacoTable
+				className="results-table"
+				columns={this.getColumns()}
+				data={this.props.data}
+				/>
 		)
 	}
 }
