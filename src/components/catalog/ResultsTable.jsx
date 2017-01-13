@@ -48,7 +48,11 @@ class ResultsTable extends React.Component {
 				id: 'thumbnail_path',
 
 				// TODO: a11y updates
-				renderer: path => <img src={this.getThumbnailPath(path)} />,
+				renderer: (path, _, rowData) => (
+					<a href={`/works/${rowData.id}`}>
+						<img src={this.getThumbnailPath(path)} />
+					</a>
+				),
 
 				thClassName: 'field-select',
 
