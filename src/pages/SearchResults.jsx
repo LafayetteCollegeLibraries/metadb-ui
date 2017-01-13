@@ -15,6 +15,7 @@ import SearchResultsHeader from '../components/catalog/SearchResultsHeader.jsx'
 import ResultsContainer from '../components/catalog/ResultsContainer.jsx'
 import ResultsListItem from '../components/catalog/ResultsListItem.jsx'
 import ResultsGalleryItem from '../components/catalog/ResultsGalleryItem.jsx'
+import ResultsTable from '../components/catalog/ResultsTable.jsx'
 
 import { getBreadcrumbList } from '../../lib/facet-helpers'
 
@@ -47,7 +48,8 @@ const SearchResults = React.createClass({
 
 			case 'list':
 			default:
-				return ResultsListItem
+				// return ResultsListItem
+				return ResultsListTable
 		}
 	},
 
@@ -287,18 +289,28 @@ const SearchResults = React.createClass({
 		if (!this.state.results)
 			return
 
-		const which = this.state.resultsView
-
 		const props = {
 			data: this.state.results,
-			displayComponent: this.determineResultsComponent(which),
+			fields: [
+				'title',
+			],
 			offset: this.state.pages.offset_value,
-			containerProps: {
-				style: this.getResultsComponentStyle(which),
-			}
 		}
 
-		return <ResultsContainer {...props} />
+		return <ResultsTable {...props} />
+
+		// const which = this.state.resultsView
+
+		// const props = {
+		// 	data: this.state.results,
+		// 	displayComponent: this.determineResultsComponent(which),
+		// 	offset: this.state.pages.offset_value,
+		// 	containerProps: {
+		// 		style: this.getResultsComponentStyle(which),
+		// 	}
+		// }
+
+		// return <ResultsContainer {...props} />
 	},
 
 	toggleResultsView: function (val) {
