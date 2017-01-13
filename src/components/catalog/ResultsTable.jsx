@@ -13,14 +13,29 @@ const defaultProps = {
 	fields: [],
 }
 
+// create a dictionary to use for sorting the fields based on position.
+// this way, the fields remain in the order displayed in the
+// `ResultsTableFieldSelect` component
+const workFieldKeys = Object.keys(workFields).reduce((dict, key, index) => {
+	dict[key] = index + 1
+	return dict
+}, {})
+
+const sortByField = (a, b) => (workFieldKeys[a] - workFieldKeys[b])
+
 class ResultsTable extends React.Component {
 	constructor (props) {
 		super(props)
 
 		this.state = {
 			fields: ['title', 'creator'],
-			fieldSelectOpen: true,
+			fieldSelectOpen: false,
 		}
+
+		this.getColumns = this.getColumns.bind(this)
+		this.getFieldToggleHeader = this.getFieldToggleHeader.bind(this)
+		this.handleOnSelectField = this.handleOnSelectField.bind(this)
+		this.renderFieldSelect = this.renderFieldSelect.bind(this)
 	}
 
 	getColumns () {
@@ -40,8 +55,8 @@ class ResultsTable extends React.Component {
 
 		const fields = this.state.fields.map(id => ({
 			id,
-			dataType: DataType.String,
 			header: workFields[id],
+			type: DataType.None,
 		}))
 
 		return columns.concat(fields)
@@ -49,50 +64,64 @@ class ResultsTable extends React.Component {
 
 	getFieldToggleHeader () {
 		const open = this.state.fieldSelectOpen
-		const props = {
-			children: [
-				'X',
-				(open ? this.renderFieldSelect() : null),
-			],
+		const buttonProps = {
+			children: 'X',
+			key: 'toggle-btn',
+			onClick: ev => {
+				ev.preventDefault && ev.preventDefault()
+				this.setState({
+					fieldSelectOpen: !this.state.fieldSelectOpen,
+				})
+			},
 			style: {
 				backgroundColor: (open ? '#888' : '#ccc'),
 				cursor: 'pointer',
 				height: '25px',
 				width: '25px',
+				WebkitAppearance: 'none',
+				appearance: 'none',
 			}
 		}
 
-		return <div {...props} />
+		return [
+			<button {...buttonProps} />,
+			(open ? this.renderFieldSelect() : null),
+		]
 	}
 
 	getThumbnailPath (path) {
 		return `${process.env.API_BASE_URL}${path}`
 	}
 
+	handleOnSelectField (key, toggle, index) {
+		const { fields } = this.state
+
+		if (toggle) {
+
+			// no duplicates!
+			if (index > -1)
+				return
+
+			fields.push(key)
+			this.setState({fields: fields.sort(sortByField)})
+
+			return
+		}
+
+		if (index === -1)
+			return
+
+		const update = [].concat(
+			fields.slice(0, index),
+			fields.slice(index + 1)
+		)
+
+		this.setState({fields: update})
+	}
+
 	renderFieldSelect () {
 		const props = {
-			onSelectField: (key, toggle) => {
-				const { fields } = this.state
-
-				if (toggle) {
-					fields.push(key)
-					this.setState({fields})
-					return
-				}
-
-				const idx = fields.indexOf(key)
-
-				if (idx === -1)
-					return
-
-				const update = [].concat(
-					fields.slice(0, idx),
-					fields.slice(idx + 1)
-				)
-
-				this.setState({fields: update})
-			},
-
+			onSelectField: this.handleOnSelectField,
 			selected: this.state.fields,
 		}
 
