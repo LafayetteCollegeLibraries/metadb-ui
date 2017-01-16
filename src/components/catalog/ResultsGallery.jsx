@@ -1,5 +1,5 @@
 import React from 'react'
-import GalleryItem from './ResultsGalleryItem'
+import ResultsGalleryItem from './ResultsGalleryItem.jsx'
 
 const propTypes = {
 	data: React.PropTypes.array,
@@ -15,7 +15,7 @@ class ResultsGallery extends React.Component {
 	}
 
 	renderGalleryItem (item, index) {
-		return <GalleryItem data={item} key={index}/>
+		return <ResultsGalleryItem data={item} key={index}/>
 	}
 
 	render () {
