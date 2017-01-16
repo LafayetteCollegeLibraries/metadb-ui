@@ -1,8 +1,11 @@
 import React from 'react'
 import { TacoTable, DataType } from 'react-taco-table'
+import cn from 'classnames'
 import workFields from '../../../lib/work-fields'
 import ResultsTableFieldSelect from './ResultsTableFieldSelect.jsx'
-import cn from 'classnames'
+import searchResultFields from '../../../lib/search-result-fields'
+
+const DEFAULT_FIELDS = ['title', 'creator']
 
 const propTypes = {
 	data: React.PropTypes.array,
@@ -11,7 +14,7 @@ const propTypes = {
 
 const defaultProps = {
 	data: {},
-	fields: [],
+	fields: DEFAULT_FIELDS,
 }
 
 // create a dictionary to use for sorting the fields based on position.
@@ -28,8 +31,14 @@ class ResultsTable extends React.Component {
 	constructor (props) {
 		super(props)
 
+		let fields = searchResultFields.get()
+
+		if (fields.length === 0) {
+			fields = this.props.fields || []
+		}
+
 		this.state = {
-			fields: ['title', 'creator'],
+			fields,
 			fieldSelectOpen: false,
 		}
 
@@ -37,6 +46,7 @@ class ResultsTable extends React.Component {
 		this.getFieldToggleHeader = this.getFieldToggleHeader.bind(this)
 		this.handleOnSelectField = this.handleOnSelectField.bind(this)
 		this.renderFieldSelect = this.renderFieldSelect.bind(this)
+		this.setFields = this.setFields.bind(this)
 	}
 
 	getColumns () {
@@ -131,17 +141,34 @@ class ResultsTable extends React.Component {
 			)
 		}
 
-		this.setState({fields: update})
+		this.setFields(update)
 	}
 
 	renderFieldSelect () {
+		const onClose = () => {
+			if (this.state.fieldSelectOpen) {
+				this.setState({fieldSelectOpen: false})
+			}
+		}
+
+		const onReset = () => {
+			this.setFields(DEFAULT_FIELDS)
+		}
+
 		const props = {
+			onClose,
+			onReset,
 			key: 'field-select',
 			onSelectField: this.handleOnSelectField,
 			selected: this.state.fields,
 		}
 
 		return <ResultsTableFieldSelect {...props} />
+	}
+
+	setFields (fields) {
+		searchResultFields.set(fields)
+		this.setState({fields})
 	}
 
 	render () {

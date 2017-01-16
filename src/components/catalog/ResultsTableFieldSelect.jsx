@@ -20,6 +20,7 @@ class ResultsTableFieldSelect extends React.Component {
 		super(props)
 
 		this.handleFieldClick = this.handleFieldClick.bind(this)
+		this.handleReset = this.handleReset.bind(this)
 		this.maybeCloseSelect = this.maybeCloseSelect.bind(this)
 		this.renderWorkField = this.renderWorkField.bind(this)
 		this.renderWorkFields = this.renderWorkFields.bind(this)
@@ -37,6 +38,10 @@ class ResultsTableFieldSelect extends React.Component {
 		const idx = this.props.selected.indexOf(key)
 		const isSelected = idx > -1
 		this.props.onSelectField.call(null, key, !isSelected, idx)
+	}
+
+	handleReset () {
+		this.props.onReset && this.props.onReset()
 	}
 
 	maybeCloseSelect (event) {
@@ -64,8 +69,15 @@ class ResultsTableFieldSelect extends React.Component {
 	}
 
 	renderWorkFields () {
+		const header = [
+			(<div className="field field-header" key="header" onClick={this.handleReset}>
+				Restore defaults
+			</div>),
+			(<div className="field-divider" key="divider"/>),
+		]
+
 		const keys = Object.keys(workFields)
-		return keys.map(this.renderWorkField)
+		return header.concat(keys.map(this.renderWorkField))
 	}
 
 	render () {
