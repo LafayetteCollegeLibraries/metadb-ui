@@ -16,6 +16,7 @@ import ResultsGallery from '../components/catalog/ResultsGallery.jsx'
 import ResultsTable from '../components/catalog/ResultsTable.jsx'
 
 import { getBreadcrumbList } from '../../lib/facet-helpers'
+import { display as searchResultsDisplay } from '../../lib/search-result-settings'
 
 const SearchResults = React.createClass({
 	componentWillMount: function () {
@@ -27,7 +28,7 @@ const SearchResults = React.createClass({
 
 	getInitialState: function () {
 		return {
-			resultsView: 'table',
+			resultsView: searchResultsDisplay.get() || 'table',
 		}
 	},
 
@@ -48,21 +49,6 @@ const SearchResults = React.createClass({
 			default:
 				// return ResultsListItem
 				return ResultsTable
-		}
-	},
-
-	getResultsComponentStyle: function (which) {
-		switch (which) {
-			case 'gallery':
-				return {
-					alignItems: 'center',
-					display: 'flex',
-					flexWrap: 'wrap',
-				}
-
-			case 'table':
-			default:
-				return {}
 		}
 	},
 
@@ -272,7 +258,7 @@ const SearchResults = React.createClass({
 			onPreviousPage: this.handlePreviousPage,
 			onOpenToolModal: console.log,
 			onPerPageChange: this.handlePerPageChange,
-			onViewChange: this.toggleResultsView,
+			onViewChange: this.toggleView,
 			perPage: this.props.search.options.per_page,
 			view: this.state.resultsView,
 			viewOptions: ['table', 'gallery'],
@@ -296,8 +282,9 @@ const SearchResults = React.createClass({
 		return <Component {...props} />
 	},
 
-	toggleResultsView: function (val) {
-		this.setState({resultsView: val})
+	toggleView: function (view) {
+		searchResultsDisplay.set(view)
+		this.setState({resultsView: view})
 	},
 
 	render: function () {

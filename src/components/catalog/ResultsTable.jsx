@@ -3,7 +3,7 @@ import { TacoTable, DataType } from 'react-taco-table'
 import cn from 'classnames'
 import workFields from '../../../lib/work-fields'
 import ResultsTableFieldSelect from './ResultsTableFieldSelect.jsx'
-import searchResultFields from '../../../lib/search-result-fields'
+import { fields as searchResultFields } from '../../../lib/search-result-settings'
 
 const DEFAULT_FIELDS = ['title', 'creator']
 
