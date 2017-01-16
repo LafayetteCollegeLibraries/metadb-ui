@@ -1,26 +1,54 @@
 import React from 'react'
 import Link from 'react-router/lib/Link'
 
-const T = React.PropTypes
+const propTypes = {
+	data: React.PropTypes.object,
+}
 
-const ResultsGalleryItem = React.createClass({
-	propTypes: {
-		data: T.object,
-	},
+const defaultProps = {
+	data: {}
+}
 
-	render: function () {
+class ResultsGalleryItem extends React.PureComponent {
+	getTitle () {
+		const { title } = this.props.data
+
+		if (!title || !title.length)
+			return null
+
+		return title[0]
+	}
+
+	renderThumbnail () {
+		const { thumbnail_path } = this.props.data
+
+		if (!thumbnail_path)
+			return null
+
+		const src = `${process.env.API_BASE_URL}${thumbnail_path}`
+		const props = {
+			className: 'search-results-gallery--thumbnail',
+			src,
+		}
+		return <img {...props} />
+	}
+
+	render () {
 		const src = process.env.API_BASE_URL + this.props.data.thumbnail_path
 		return (
 			<figure className="search-results-gallery--item">
 				<Link to={`/works/${this.props.data.id}`}>
-					<img className="search-results-gallery--thumbnail" src={src} />
+					{this.renderThumbnail()}
 					<figcaption className="search-results-gallery--caption">
-						{this.props.data.title[0]}
+						{this.getTitle()}
 					</figcaption>
 				</Link>
 			</figure>
 		)
 	}
-})
+}
+
+ResultsGalleryItem.propTypes = propTypes
+ResultsGalleryItem.defaultProps = defaultProps
 
 export default ResultsGalleryItem
