@@ -34,6 +34,10 @@
 
 	// src/components/catalog/ResultsTableFieldSelect.jsx
 	&--field-select {
+		$selected-color: #1d5f83;
+		$selected-text: $white;
+		$hover-color: lighten($selected-color, 50%);
+
 		background-color: $white;
 		box-shadow: 0 0 2px 0 $grey;
 		font-size: .9em;
@@ -49,9 +53,17 @@
 			margin: 1px 2px;
 			padding: 2px;
 
+			&:hover {
+				background-color: $hover-color;
+
+				&.selected {
+					color: $hover-color;
+				}
+			}
+
 			&.selected {
-				background-color: #1d5f83;
-				color: $white;
+				background-color: $selected-color;
+				color: $selected-text;
 			}
 		}
 	}
