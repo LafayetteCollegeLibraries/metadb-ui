@@ -12,9 +12,7 @@ import SearchBreadcrumb from '../components/catalog/SearchBreadcrumb.jsx'
 import SearchBreadcrumbTrail from '../components/catalog/SearchBreadcrumbTrail.jsx'
 import SearchResultsHeader from '../components/catalog/SearchResultsHeader.jsx'
 
-import ResultsContainer from '../components/catalog/ResultsContainer.jsx'
-import ResultsListItem from '../components/catalog/ResultsListItem.jsx'
-import ResultsGalleryItem from '../components/catalog/ResultsGalleryItem.jsx'
+import ResultsGallery from '../components/catalog/ResultsGallery.jsx'
 import ResultsTable from '../components/catalog/ResultsTable.jsx'
 
 import { getBreadcrumbList } from '../../lib/facet-helpers'
@@ -29,7 +27,7 @@ const SearchResults = React.createClass({
 
 	getInitialState: function () {
 		return {
-			resultsView: 'list',
+			resultsView: 'table',
 		}
 	},
 
@@ -44,12 +42,12 @@ const SearchResults = React.createClass({
 	determineResultsComponent: function (which) {
 		switch (which) {
 			case 'gallery':
-				return ResultsGalleryItem
+				return ResultsGallery
 
-			case 'list':
+			case 'table':
 			default:
 				// return ResultsListItem
-				return ResultsListTable
+				return ResultsTable
 		}
 	},
 
@@ -62,7 +60,7 @@ const SearchResults = React.createClass({
 					flexWrap: 'wrap',
 				}
 
-			case 'list':
+			case 'table':
 			default:
 				return {}
 		}
@@ -104,10 +102,8 @@ const SearchResults = React.createClass({
 	},
 
 	handleSearchResponse: function (res) {
-		if (!res) {
-			console.log('no res!')
-			return
-		}
+		if (!res)
+			throw new Error('SearchResults#handleSearchResponse - no response passed')
 
 		const facets = res.response.facets
 		const breadcrumbs = getBreadcrumbList(facets, this.props.search.facets)
@@ -279,7 +275,7 @@ const SearchResults = React.createClass({
 			onViewChange: this.toggleResultsView,
 			perPage: this.props.search.options.per_page,
 			view: this.state.resultsView,
-			viewOptions: ['list', 'gallery'],
+			viewOptions: ['table', 'gallery'],
 		}
 
 		return React.createElement(SearchResultsHeader, props)
@@ -289,28 +285,15 @@ const SearchResults = React.createClass({
 		if (!this.state.results)
 			return
 
+		const which = this.state.resultsView
+		const Component = this.determineResultsComponent(which)
+
 		const props = {
 			data: this.state.results,
-			fields: [
-				'title',
-			],
 			offset: this.state.pages.offset_value,
 		}
 
-		return <ResultsTable {...props} />
-
-		// const which = this.state.resultsView
-
-		// const props = {
-		// 	data: this.state.results,
-		// 	displayComponent: this.determineResultsComponent(which),
-		// 	offset: this.state.pages.offset_value,
-		// 	containerProps: {
-		// 		style: this.getResultsComponentStyle(which),
-		// 	}
-		// }
-
-		// return <ResultsContainer {...props} />
+		return <Component {...props} />
 	},
 
 	toggleResultsView: function (val) {

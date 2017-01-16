@@ -9,12 +9,10 @@ const DEFAULT_FIELDS = ['title', 'creator']
 
 const propTypes = {
 	data: React.PropTypes.array,
-	fields: React.PropTypes.array,
 }
 
 const defaultProps = {
-	data: {},
-	fields: DEFAULT_FIELDS,
+	data: [],
 }
 
 // create a dictionary to use for sorting the fields based on position.
@@ -34,7 +32,7 @@ class ResultsTable extends React.Component {
 		let fields = searchResultFields.get()
 
 		if (fields.length === 0) {
-			fields = this.props.fields || []
+			fields = DEFAULT_FIELDS
 		}
 
 		this.state = {

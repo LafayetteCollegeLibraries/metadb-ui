@@ -1,0 +1,28 @@
+.search-results-gallery {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-top: 1em;
+	width: 100%;
+
+	&--item {
+		flex-basis: 175px;
+		flex-shrink: 1;
+		margin: auto;
+		padding: 10px;
+
+		&:hover {
+			background-color: lighten(#4ea8dd, 25%);
+			opacity: .75;
+		}
+	}
+
+	&--thumbnail {
+		width: 100%;
+	}
+
+	&--caption {
+		font-size: .9em;
+		text-align: center;
+	}
+}
