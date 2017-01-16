@@ -2,6 +2,8 @@ import React from 'react'
 import workFields from '../../../lib/work-fields'
 import cn from 'classnames'
 
+const SELECT_CLASSNAME = 'results-table--field-select'
+
 const propTypes = {
 	onClose: React.PropTypes.func,
 	onSelectField: React.PropTypes.func,
@@ -18,14 +20,35 @@ class ResultsTableFieldSelect extends React.Component {
 		super(props)
 
 		this.handleFieldClick = this.handleFieldClick.bind(this)
+		this.maybeCloseSelect = this.maybeCloseSelect.bind(this)
 		this.renderWorkField = this.renderWorkField.bind(this)
 		this.renderWorkFields = this.renderWorkFields.bind(this)
+	}
+
+	componentWillMount () {
+		document.addEventListener('click', this.maybeCloseSelect)
+	}
+
+	componentWillUnmount () {
+		document.removeEventListener('click', this.maybeCloseSelect)
 	}
 
 	handleFieldClick (key) {
 		const idx = this.props.selected.indexOf(key)
 		const isSelected = idx > -1
 		this.props.onSelectField.call(null, key, !isSelected, idx)
+	}
+
+	maybeCloseSelect (event) {
+		let target = event.target
+
+		do {
+			if (target.className.indexOf(SELECT_CLASSNAME) > -1) {
+				return
+			}
+		} while (target = target.parentElement)
+
+		this.props.onClose()
 	}
 
 	renderWorkField (key, index) {
@@ -47,7 +70,7 @@ class ResultsTableFieldSelect extends React.Component {
 
 	render () {
 		const props = {
-			className: 'results-table--field-select',
+			className: SELECT_CLASSNAME,
 			ref: el => { this._containerEl = el },
 		}
 
