@@ -41,7 +41,7 @@
     "node-bourbon": "^4.2.8",
     "node-neat": "^1.7.2",
     "node-sass": "^3.8.0",
-    "number-with-commas": "^1.0.2",
+    "number-with-commas": "^1.1.0",
     "object-assign": "^4.1.0",
     "openseadragon": "^2.2.1",
     "pdfjs-dist": "^1.6.332",
@@ -49,8 +49,8 @@
     "promise-queue": "^2.2.3",
     "raw-loader": "^0.5.1",
     "rc-slider": "^5.1.2",
-    "react": "^15.3.1",
-    "react-addons-shallow-compare": "^15.3.1",
+    "react": "^15.4.2",
+    "react-addons-shallow-compare": "^15.4.2",
     "react-autocomplete": "^1.4.0",
     "react-dom": "^15.1.0",
     "react-dropzone": "^3.5.3",
@@ -68,8 +68,7 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1",
-    "xhr": "^2.2.1"
+    "webpack-dev-server": "^1.14.1"
   },
   "devDependencies": {
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -93,7 +92,8 @@
     "random-array-index": "^1.1.0",
     "random-bool": "^1.0.2",
     "raw-loader": "^0.5.1",
-    "react-addons-test-utils": "^15.3.1",
+    "react-addons-test-utils": "^15.4.2",
+    "react-dom": "^15.4.2",
     "redux-mock-store": "^1.2.0"
   },
   "plugins": [
