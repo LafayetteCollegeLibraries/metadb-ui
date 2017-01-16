@@ -39,9 +39,11 @@
 		$hover-color: lighten($selected-color, 50%);
 
 		background-color: $white;
-		box-shadow: 0 0 2px 0 $grey;
+		box-shadow: 0 0 4px 1px $grey;
 		font-size: .9em;
 		font-weight: normal;
+		max-height: 75%;
+		overflow-y: scroll;
 		padding: 2px;
 		position: absolute;
 		text-align: left;
