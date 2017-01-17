@@ -83,13 +83,19 @@ class ResultsTable extends React.Component {
 			}
 		]
 
+		// TODO: should fields w/ multiple values be more than
+		// semi-colon delimited?
+		const renderer = data => {
+			if (Array.isArray(data))
+				return data.join('; ')
+
+			return data
+		}
+
 		const fields = this.state.fields.map(id => ({
 			id,
 			header: workFields[id],
-
-			// TODO: should fields w/ multiple values be more than
-			// semi-colon delimited?
-			renderer: data => (data.join('; ')),
+			renderer,
 			type: DataType.None,
 		}))
 

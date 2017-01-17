@@ -77,7 +77,6 @@ const SearchResults = React.createClass({
 
 			case 'table':
 			default:
-				// return ResultsListItem
 				return ResultsTable
 		}
 	},
