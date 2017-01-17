@@ -1,18 +1,32 @@
 import React from 'react'
-import { TacoTable, DataType } from 'react-taco-table'
+
+// this is a hack, but importing the whole of `react-taco-table`
+// throws an error during testing (`Object.assign` not existing)
+// because the module imports a plugin which uses this, but we
+// aren't using that plugin.
+// ~~~~~~~~~~
+// PhantomJS 2.1.1 (Mac OS X 0.0.0) ERROR
+//  TypeError: undefined is not a constructor (evaluating 'Object.assign({}, d3Scale, d3ScaleChromatic)')
+//  at webpack:///~/react-taco-table/lib/plugins/HeatmapPlugin.js:32:0 <- test.webpack.js:97422
+// ~~~~~~~~~~
+// import { TacoTable, DataType } from 'react-taco-table'
+import TacoTable from 'react-taco-table/lib/TacoTable'
+import DataType from 'react-taco-table/lib/DataType'
+
 import cn from 'classnames'
 import workFields from '../../../lib/work-fields'
 import ResultsTableFieldSelect from './ResultsTableFieldSelect.jsx'
 import { fields as searchResultFields } from '../../../lib/search-result-settings'
 
-const DEFAULT_FIELDS = ['title', 'creator']
-
 const propTypes = {
 	data: React.PropTypes.array,
+	getSelectedFields: React.PropTypes.func,
+	setSelectedFields: React.PropTypes.func,
 }
 
 const defaultProps = {
 	data: [],
+	defaultFields: ['title', 'creator'],
 }
 
 // create a dictionary to use for sorting the fields based on position.
@@ -32,7 +46,7 @@ class ResultsTable extends React.Component {
 		let fields = searchResultFields.get()
 
 		if (fields.length === 0) {
-			fields = DEFAULT_FIELDS
+			fields = this.props.defaultFields
 		}
 
 		this.state = {
@@ -72,6 +86,10 @@ class ResultsTable extends React.Component {
 		const fields = this.state.fields.map(id => ({
 			id,
 			header: workFields[id],
+
+			// TODO: should fields w/ multiple values be more than
+			// semi-colon delimited?
+			renderer: data => (data.join('; ')),
 			type: DataType.None,
 		}))
 
@@ -80,11 +98,31 @@ class ResultsTable extends React.Component {
 
 	getFieldToggleHeader () {
 		const open = this.state.fieldSelectOpen
+
+		// simple wrapper for svg lines
+		const rect = (x, y) => {
+			const props = {
+				width: '250',
+				height: '40',
+				fill: '#1e1e1e',
+				x,
+				y,
+			}
+
+			return <rect {...props} />
+		}
+
+		// our button will just have an svg of three stacked lines (the ol'
+		// hamburger button), + we'll do this w/ jsx
 		const contents = (
-			<svg viewBox="0 0 300 300" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <rect fill="#1E1E1E" x="25" y="80" width="250" height="40"></rect>
-        <rect fill="#1E1E1E" x="25" y="170" width="250" height="40"></rect>
-        <rect fill="#1E1E1E" x="25" y="260" width="250" height="40"></rect>
+			<svg
+				version="1.1"
+				viewBox="0 0 300 300"
+				xmlns="http://www.w3.org/2000/svg"
+				>
+        { rect('25', '80') }
+        { rect('25', '170') }
+        { rect('25', '260') }
 			</svg>
 		)
 
@@ -150,12 +188,13 @@ class ResultsTable extends React.Component {
 		}
 
 		const onReset = () => {
-			this.setFields(DEFAULT_FIELDS)
+			this.setFields(this.props.defaultFields)
 		}
 
 		const props = {
 			onClose,
 			onReset,
+			fields: workFields,
 			key: 'field-select',
 			onSelectField: this.handleOnSelectField,
 			selected: this.state.fields,
@@ -175,6 +214,7 @@ class ResultsTable extends React.Component {
 				className="results-table"
 				columns={this.getColumns()}
 				data={this.props.data}
+				sortable={false}
 				/>
 		)
 	}

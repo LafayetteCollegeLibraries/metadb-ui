@@ -1,16 +1,17 @@
 import React from 'react'
-import workFields from '../../../lib/work-fields'
 import cn from 'classnames'
 
 const SELECT_CLASSNAME = 'results-table--field-select'
 
 const propTypes = {
+	fields: React.PropTypes.object,
 	onClose: React.PropTypes.func,
 	onSelectField: React.PropTypes.func,
 	selected: React.PropTypes.array,
 }
 
 const defaultProps = {
+	fields: {},
 	onClose: () => {},
 	selected: [],
 }
@@ -59,7 +60,7 @@ class ResultsTableFieldSelect extends React.Component {
 	renderWorkField (key, index) {
 		const selected = this.props.selected.indexOf(key) > -1
 		const props = {
-			children: workFields[key],
+			children: this.props.fields[key],
 			className: cn('field', {selected}),
 			onClick: this.handleFieldClick.bind(null, key),
 			key: key + index,
@@ -76,7 +77,7 @@ class ResultsTableFieldSelect extends React.Component {
 			(<div className="field-divider" key="divider"/>),
 		]
 
-		const keys = Object.keys(workFields)
+		const keys = Object.keys(this.props.fields)
 		return header.concat(keys.map(this.renderWorkField))
 	}
 
