@@ -13,6 +13,7 @@ const propTypes = {
 const defaultProps = {
 	fields: {},
 	onClose: () => {},
+	onSelectField: () => {},
 	selected: [],
 }
 
