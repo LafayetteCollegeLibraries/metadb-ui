@@ -15,14 +15,6 @@ import {
 	SEARCHING,
 } from '../constants'
 
-const REQUIRED_OPTS = {
-	search_field: 'search',
-}
-
-const DEFAULT_OPTS = {
-	per_page: 10,
-}
-
 const hasOwnProperty = Object.prototype.hasOwnProperty
 
 function conductSearch (dispatch, query, facets, options, queryString) {
@@ -57,7 +49,7 @@ function conductSearch (dispatch, query, facets, options, queryString) {
 
 export const searchCatalog = (query, facets, opts) => dispatch => {
 	// save ourselves the hassle of keeping track of these defaults
-	const options = assign({}, REQUIRED_OPTS, opts)
+	const options = assign({}, opts)
 
 	if (!facets)
 		facets = {}
@@ -96,7 +88,7 @@ export const setSearchOption = (field, value) => (dispatch, getState) => {
 
 	const query = search.query || ''
 	const facets = assign({}, search.facets)
-	const options = assign({}, DEFAULT_OPTS, REQUIRED_OPTS, search.options)
+	const options = assign({}, search.options)
 
 	// we'll pass null to remove the option
 	if (value === null) {
@@ -114,11 +106,11 @@ export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState)
 
 	// recycling the previous search info
 	const query = search.query || ''
-	const options = assign({}, DEFAULT_OPTS, REQUIRED_OPTS, search.options)
+	const options = assign({}, search.options)
 	const facets = assign({}, search.facets)
 
 	let dirty = false
-	let idx
+	let idx = -1
 
 	if (facets[field]) {
 		idx = findIndex(facets[field], f => {
@@ -128,8 +120,6 @@ export const toggleSearchFacet = (field, facet, checked) => (dispatch, getState)
 				return isEqual(f, facet)
 		})
 	}
-
-	else idx = -1
 
 	// add to selected-facets
 	if (checked) {
