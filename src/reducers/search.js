@@ -7,22 +7,29 @@
  *  note: all of the heavy lifting is being done within the action/search creator
  *
  *  {
- *    // flagged when SEARCHING action is received
- *    isSearching: bool
- *
- *    // contains the actual search query
- *    query: string
- *
  *    // facets grouped by field
  *    // { 'subject': [{value: 'art' ...}, {value: 'anthropology' ...} ]}
  *    facets: object
  *
+ *    // flagged when SEARCHING action is received
+ *    isSearching: bool
+
  *    // search options
  *    // { 'per_page': 25 }
  *    options: object
  *
+ *    // contains the search query
+ *    query: string
+ *
  *		// the actual formatted querystring (used for pushState)
  *    queryString: string
+ *
+ *    // raw Blacklight results (specificially, the `response` object)
+ *    results: object
+ *
+ *    // Date.now() used to determine whether or not to update state on the
+ *    // SearchResults page
+ *    timestamp: number
  *  }
  */
 
@@ -81,45 +88,40 @@ function receiveError (/* state, action */) {
 // the server.
 
 function receiveResults (state, action) {
+	const results = action.results.response
+	const fullSet = results.facets
+	const selectedFacets = state.facets || {}
 	const facets = {}
-	const selectedFacets = state.facets
 
-	// if we previously don't have a `facets` to check against,
-	// use an empty object to prevent from throwing
-	const keys = Object.keys(selectedFacets || {})
+	const keys = Object.keys(selectedFacets)
 
-	// bail early if no facet keys
-	if (!keys.length) {
-		return assign({}, state, {
-			isSearching: false,
+	if (keys.length) {
+		keys.forEach(key => {
+			const facet = selectedFacets[key]
+
+			facets[key] = facet.map(facetValue => {
+				// in most cases (read: not arriving from a link) the facets
+				// will be objects, so we'll just return them and deal with
+				// the minimal extra work
+				if (typeof facetValue === 'object' && facetValue !== null)
+					return facetValue
+
+				// otherwise, loop through all of the facet-groups to find
+				// the appropriate one, and then loop through its items
+				// to locate the facet object
+				const group = arrayFind(fullSet, g => g.name === key)
+				return arrayFind(group.items, facetItem => facetItem.value === facetValue)
+
+				// filter out any empty values that may have been returned
+				// as `null`
+			}).filter(Boolean)
 		})
 	}
-
-	const fullSet = action.results.response.facets
-
-	keys.forEach(key => {
-		const facet = selectedFacets[key]
-
-		facets[key] = facet.map(facetValue => {
-			// in most cases (read: not arriving from a link) the facets
-			// will be objects, so we'll just return them and deal with
-			// the minimal extra work
-			if (typeof facetValue === 'object' && facetValue !== null)
-				return facetValue
-
-			// otherwise, loop through all of the facet-groups to find
-			// the appropriate one, and then loop through its items
-			// to locate the facet object
-			const group = arrayFind(fullSet, g => g.name === key)
-			return arrayFind(group.items, facetItem => facetItem.value === facetValue)
-
-			// filter out any empty values that may have been returned
-			// as `null`
-		}).filter(Boolean)
-	})
 
 	return assign({}, state, {
 		isSearching: false,
 		facets,
+		results,
+		timestamp: Date.now(),
 	})
 }
