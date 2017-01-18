@@ -88,7 +88,7 @@ function receiveError (/* state, action */) {
 // the server.
 
 function receiveResults (state, action) {
-	const results = action.results.response
+	const results = action.results.response || {}
 	const fullSet = results.facets
 	const selectedFacets = state.facets || {}
 	const facets = {}

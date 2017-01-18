@@ -76,14 +76,6 @@ describe('Search actionCreator', function () {
 				expect(actions[0].options.per_page).to.equal(options.per_page)
 			})
 		})
-
-		it('appends `search_field=search` to url', function () {
-			return store.dispatch(searchCatalog('some query'))
-			.then(() => {
-				const url = fetchMock.lastUrl()
-				expect(url.indexOf('search_field=search')).to.be.greaterThan(-1)
-			})
-		})
 	})
 
 	describe('#setSearchOption', function () {

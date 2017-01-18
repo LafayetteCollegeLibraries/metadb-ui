@@ -86,7 +86,12 @@ describe('Search reducer', function () {
 
 	describe('@RECEIVE_SEARCH_RESULTS', function () {
 		it('sets `isSearching` to false', function () {
-			const action = { type: RECEIVE_SEARCH_RESULTS }
+			const action = {
+				type: RECEIVE_SEARCH_RESULTS,
+				results: {
+					response: {},
+				}
+			}
 			const res = searchReducer({isSearching: true}, action)
 
 			expect(res.isSearching).to.be.false
