@@ -211,7 +211,7 @@ const SearchResults = React.createClass({
 
 		const rangeLimitProps = {
 			bodyComponent: FacetRangeLimitDate,
-			interval: 'year',
+			interval: 'day',
 		}
 
 		return (
