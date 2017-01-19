@@ -1,0 +1,16 @@
+$range-slider-input-wiggle-room: 10px;
+
+.range-slider-date--inputs-container {
+	margin-bottom: $range-slider-input-wiggle-room;
+}
+
+.range-slider-date--label {
+	display: inline-block;
+}
+
+.range-slider-date--input {
+	display: block;
+	margin-bottom: $range-slider-input-wiggle-room;
+	margin-right: $range-slider-input-wiggle-room;
+	min-width: 5em;
+}
