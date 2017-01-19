@@ -5,6 +5,7 @@ import Slider from 'rc-slider'
 import formatDateValue from './common/format-date-value'
 import roundDateValue from './common/round-date-to-interval'
 import parseInputValue from './common/parse-input-date-value'
+
 import {
 	INTERVALS,
 	VALUES as INTERVAL_VALUES,
@@ -68,6 +69,11 @@ class RangeSliderDate extends React.Component {
 			max: formatDateValue(props.interval, props.max)
 		}
 
+		this._rounded = {
+			min: roundDateValue(props.interval, props.min),
+			max: roundDateValue(props.interval, props.max),
+		}
+
 		this.getStepValue = this.getStepValue.bind(this)
 		this.handleApplyRange = this.handleApplyRange.bind(this)
 		// this.handleInputChange is bound within this.renderInput
@@ -82,7 +88,8 @@ class RangeSliderDate extends React.Component {
 
 	getStepValue () {
 		if (!this._step && this._step !== 0) {
-			const { min, max, interval } = this.props
+			const { min, max } = this._rounded ? this._rounded : this.props
+			const { interval } = this.props
 			this._step = getStepValue(min, max, interval)
 		}
 
@@ -150,8 +157,8 @@ class RangeSliderDate extends React.Component {
 
 		const props = {
 			allowCross: true,
-			min: this.props.min,
-			max: this.props.max,
+			min: this._rounded.min,
+			max: this._rounded.max,
 			onChange,
 			pushable: false,
 			range: !hasSingleValue,
