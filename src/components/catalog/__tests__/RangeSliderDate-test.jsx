@@ -141,7 +141,7 @@ describe('<RangeSliderDate />', function () {
 	})
 
 	describe('the `min` input', function () {
-		it('changes the first value of `state.value`', function () {
+		it('changes the value of `state.min`', function () {
 			const minValue = '1999-12-31'
 			const split = minValue.split('-').map(Number)
 			split[1] = split[1] - 1
@@ -163,7 +163,7 @@ describe('<RangeSliderDate />', function () {
 	})
 
 	describe('the `max` input', function () {
-		it('changes the second value of `state.value`', function () {
+		it('changes the value of `state.max`', function () {
 			const maxValue = '2017-01-01'
 			const split = maxValue.split('-').map(Number)
 			split[1] = split[1] - 1
