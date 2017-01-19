@@ -5,10 +5,15 @@ import Slider from 'rc-slider'
 import formatDateValue from './common/format-date-value'
 import roundDateValue from './common/round-date-to-interval'
 import parseInputValue from './common/parse-input-date-value'
-import { VALUES as INTERVAL_VALUES } from './common/date-intervals'
+import {
+	INTERVALS,
+	VALUES as INTERVAL_VALUES,
+} from './common/date-intervals'
 
 // TODO: move this styling to SCSS area
 import 'rc-slider/assets/index.css'
+
+const { YEAR, MONTH, DAY } = INTERVALS
 
 const propTypes = {
 	// min/max are UTC timestamp values (similar to Date.now())
@@ -21,14 +26,22 @@ const propTypes = {
 }
 
 const defaultProps = {
-	interval: INTERVAL_VALUES.DAY,
+	interval: DAY,
 }
 
-// helper fn
+// helper fns
+function getInputType (interval) {
+	switch (interval) {
+		case MONTH: return 'month'
+		case YEAR:  return 'number'
+		case DAY:
+		default:    return 'date'
+	}
+}
 
 function getStepValue (min, max, interval) {
 	const day = 1000 * 60 * 60 * 24
-	const { YEAR, MONTH, DAY } = INTERVAL_VALUES
+
 	let divisor
 
 	switch (interval) {
@@ -91,7 +104,8 @@ class RangeSliderDate extends React.Component {
 		const parsed = parseInputValue(value)
 
 		const update = {}
-		update[which] = Number.isNaN(parsed) ? null : parsed
+		// (parsed !== parsed) === Number.isNaN(parsed)
+		update[which] = parsed !== parsed ? null : parsed
 
 		this.setState(update)
 	}
@@ -99,14 +113,15 @@ class RangeSliderDate extends React.Component {
 	renderInput (which) {
 		const tsValue = this.state[which]
 		const value = tsValue ? formatDateValue(this.props.interval, tsValue) : ''
+		const type = getInputType(this.props.interval)
 
 		const props = {
 			className: "input",
-			key: `input--${which}`,
+			key: `input-${which}`,
 			min: this._formatted.min,
 			max: this._formatted.max,
 			onChange: this.handleInputChange.bind(this, which),
-			type: 'date',
+			type,
 			value,
 		}
 

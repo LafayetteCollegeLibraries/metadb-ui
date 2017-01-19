@@ -113,7 +113,7 @@ describe('<RangeSliderDate />', function () {
 				const fns = [
 					'getUTCFullYear', 'getUTCMonth', 'getUTCDate'
 				]
-				
+
 				let i = 0
 				let current, comp
 
@@ -150,14 +150,14 @@ describe('<RangeSliderDate />', function () {
 			const $el = shallowEl({interval: INTERVALS.DAY})
 
 			const $min = $el.find('input[type="date"]').filterWhere(el => (
-				el.key() === 'min-input'
+				el.key() === 'input-min'
 			))
 
 			expect($min).to.have.length(1)
 
 			$min.simulate('change', {target: {value: minValue}})
 
-			const minState = $el.state('value')[0]
+			const minState = $el.state('min')
 			expect(minState).to.equal(minTs)
 		})
 	})
@@ -172,14 +172,14 @@ describe('<RangeSliderDate />', function () {
 			const $el = shallowEl({interval: INTERVALS.DAY})
 
 			const $max = $el.find('input[type="date"]').filterWhere(el => (
-				el.key() === 'max-input'
+				el.key() === 'input-max'
 			))
 
 			expect($max).to.have.length(1)
 
 			$max.simulate('change', {target: {value: maxValue}})
 
-			const maxState = $el.state('value')[1]
+			const maxState = $el.state('max')
 			expect(maxState).to.equal(maxTs)
 		})
 	})
