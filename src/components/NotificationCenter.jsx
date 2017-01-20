@@ -16,15 +16,14 @@ const NotificationCenter = React.createClass({
 	},
 
 	getStyles: function (type) {
-		const base = {
-
+		const defaults = {
 		}
 
 		switch (type) {
 			case ERROR:
-				return {
+				return assign({}, defaults, {
 					barStyle: {
-						backgroundColor: '#f42069',
+						backgroundColor: '#910029',
 						color: '#fff',
 					},
 
@@ -32,20 +31,31 @@ const NotificationCenter = React.createClass({
 						color: '#fff',
 						fontWeight: 'bold',
 					}
-				}
+				})
 
 			default:
-				return {}
+				return defaults
 		}
+	},
+
+	styleFactory: function (index, style) {
+		return assign({}, style, {
+			// need to null out `bottom`, as it's set by react-notification's
+			// defaultStyles. this will effectively remove it from the style object.
+			bottom: null,
+			top: `${3 + (index * 4)}rem`,
+		})
 	},
 
 	render: function () {
 		const notifications = this.props.notifications.map((notification, index) => {
+			const isError = notification.type === ERROR
+
 			return {
 				action: 'X',
 				onClick: this.props.onClearNotification.bind(null, index),
 
-				dismissAfter: (1000 * 10),
+				dismissAfter: isError ? false : (1000 * 10),
 				isActive: true,
 				key: 'notification-'+index,
 				message: notification.message,
@@ -58,6 +68,8 @@ const NotificationCenter = React.createClass({
 		})
 
 		const props = {
+			activeBarStyleFactory: this.styleFactory,
+			barStyleFactory: this.styleFactory,
 			notifications,
 			onDismiss: notification => {
 				this.props.onClearNotification(notification.__index)
