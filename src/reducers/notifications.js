@@ -1,12 +1,12 @@
 import { sprintf } from 'sprintf-js'
 
 import {
-	CLEAR_ALL_NOTIFICATIONS,
 	CLEAR_NOTIFICATION,
-	CLEAR_STALE_NOTIFICATIONS,
 
 	// term constants
 	ADD_TERM_TO_VOCABULARY_ERR,
+	RECEIVE_VOCABULARY_TERMS_ERR,
+	UPDATE_TERM_RESPONSE_ERR,
 
 	// vocab constants
 	CREATE_VOCABULARY_RESPONSE_ERR,
@@ -16,7 +16,11 @@ import {
 	FETCHING_ALL_VOCABULARIES_ERR,
 	UPDATE_VOCABULARY_ERR,
 
+	// search constants
+	RECEIVE_SEARCH_ERR,
+
 	// work constants
+	FETCHING_WORK_ERR,
 	WORK_NOT_FOUND_ERR,
 
 	// types
@@ -30,65 +34,57 @@ export default function notificationReducer (state, action) {
 	if (typeof state === 'undefined')
 		return []
 
-	switch (action.type) {
-		case ADD_TERM_TO_VOCABULARY_ERR:
-			return addTermToVocabError(state, action)
-
-		case CLEAR_ALL_NOTIFICATIONS:
-			return clearAllNotifications(state, action)
-
-		case CLEAR_NOTIFICATION:
+	// CLEAR_NOTIFICATION returns a new state, so we'll check for
+	// that action first, before generating a message
+	if (action.type === CLEAR_NOTIFICATION)
 			return clearNotification(state, action)
 
-		case CLEAR_STALE_NOTIFICATIONS:
-			return clearStaleNotifications(state, action)
+	const message = getMessage(action)
+
+	// the state remains the same if we come out of `getMessage` empty-handed
+	if (!message) return state
+
+	return [].concat(state, message).filter(Boolean)
+}
+
+function getMessage (action) {
+	switch (action.type) {
+		case ADD_TERM_TO_VOCABULARY_ERR:
+			return addTermToVocabError(action)
 
 		case CREATE_VOCABULARY_RESPONSE_ERR:
-			return createVocabularyError(state, action)
+			return createVocabularyError(action)
 
 		case CREATE_VOCABULARY_RESPONSE_OK:
-			return createVocabularySuccess(state, action)
+			return createVocabularySuccess(action)
 
 		case DELETE_VOCABULARY_RESPONSE_ERR:
-			return deleteVocabularyError(state, action)
+			return deleteVocabularyError(action)
 
 		case DELETE_VOCABULARY_RESPONSE_OK:
-			return deleteVocabularySuccess(state, action)
+			return deleteVocabularySuccess(action)
 
 		case FETCHING_ALL_VOCABULARIES_ERR:
-			return fetchingVocabulariesError(state, action)
+			return fetchingVocabulariesError(action)
+
+		case FETCHING_WORK_ERR:
+			return fetchingWorkError(action)
+
+		case RECEIVE_SEARCH_ERR:
+			return receiveSearchError(action)
+
+		case RECEIVE_VOCABULARY_TERMS_ERR:
+			return receiveVocabularyTermsError(action)
+
+		case UPDATE_TERM_RESPONSE_ERR:
+			return updateTermError(action)
 
 		case UPDATE_VOCABULARY_ERR:
-			return updateVocabularyError(state, action)
+			return updateVocabularyError(action)
 
 		case WORK_NOT_FOUND_ERR:
-			return workNotFound(state, action)
-
-		default:
-			return state
+			return workNotFound(action)
 	}
-}
-
-// helper fn to reduce waste
-function createNotification (type, message) {
-	return {
-		type,
-		message,
-		time: Date.now(),
-	}
-}
-
-function addTermToVocabError (state, action) {
-	const tmpl = messages.CREATE_TERM_ERR
-	const errMsg = action.error.message
-	const term = action.term
-	const message = sprintf(tmpl, term, errMsg)
-
-	return [].concat(state, createNotification(ERROR, message))
-}
-
-function clearAllNotifications () {
-	return []
 }
 
 function clearNotification (state, action) {
@@ -99,66 +95,117 @@ function clearNotification (state, action) {
 	)
 }
 
-function clearStaleNotifications (state, action) {
-	return state.filter(notification => {
-		const threshold = Date.now() - notification.time
-		return threshold >= action.limit
-	})
+// helper fns to reduce waste
+function createNotification (type, message) {
+	return {
+		type,
+		message,
+		time: Date.now(),
+	}
 }
 
-function createVocabularyError (state, action) {
+function success (message) { return createNotification(SUCCESS, message) }
+function error (message) { return createNotification(ERROR, message) }
+
+function addTermToVocabError (action) {
+	const tmpl = messages.CREATE_TERM_ERR
+	const errMsg = action.error.message
+	const term = action.term
+	const message = sprintf(tmpl, term, errMsg)
+
+	return error(message)
+}
+
+
+function createVocabularyError (action) {
 	const tmpl = messages.CREATE_VOCABULARY_ERR
 	const message = sprintf(tmpl, action.error.message)
 
-	return [].concat(state, createNotification(ERROR, message))
+	return error(message)
 }
 
-function createVocabularySuccess (state, action) {
+function createVocabularySuccess (action) {
 	const tmpl = messages.CREATE_VOCABULARY_SUCCESS
 	const vocabName = action.data.pref_label[0]
 	const message = sprintf(tmpl, vocabName)
 
-	return [].concat(state, createNotification(SUCCESS, message))
+	return success(message)
 }
 
-function deleteVocabularyError (state, action) {
+function deleteVocabularyError (action) {
 	const tmpl = messages.DELETE_VOCABULARY_ERR
 	const name = action.data.pref_label[0]
 	const errmsg = action.error.message
 	const message = sprintf(tmpl, name, errmsg)
 
-	return [].concat(state, createNotification(ERROR, message))
+	return error(message)
 }
 
-function deleteVocabularySuccess (state, action) {
+function deleteVocabularySuccess (action) {
 	const tmpl = messages.DELETE_VOCABULARY_SUCCESS
 	const name = action.data.pref_label[0]
 	const message = sprintf(tmpl, name)
 
-	return [].concat(state, createNotification(SUCCESS, message))
+	return success(message)
 }
 
-function fetchingVocabulariesError (state, action) {
+function fetchingWorkError (action) {
+	const tmpl = messages.FETCHING_WORK_ERR
+	const id = action.id
+	const errmsg = action.error.message
+	const message = sprintf(tmpl, id, errmsg)
+
+	return error(message)
+}
+
+function fetchingVocabulariesError (action) {
 	const tmpl = messages.FETCHING_VOCABULARIES_ERR
 	const msg = action.error.message
 	const message = sprintf(tmpl, msg)
 
-	return [].concat(state, createNotification(ERROR, message))
+	return error(message)
 }
 
-function updateVocabularyError (state, action) {
+function receiveSearchError (action) {
+	const tmpl = messages.RECEIVE_SEARCH_ERR
+	const msg = action.error.message
+	const message = sprintf(tmpl, msg)
+
+	return error(message)
+}
+
+function receiveVocabularyTermsError (action) {
+	const tmpl = messages.RECEIVE_VOCABULARY_TERMS_ERR
+	const vocab = action.vocabulary.pref_label[0] || action.vocabulary.uri
+	const msg = action.error.message
+	const message = sprintf(tmpl, vocab, msg)
+
+	return error(message)
+}
+
+function updateTermError (action) {
+	const tmpl = messages.UPDATE_TERM_RESPONSE_ERR
+	const vocab = action.vocabulary.pref_label[0] || action.vocabulary.uri
+	const term = action.term.pref_label[0] || action.term.uri
+	const msg = action.error.message
+	const message = sprintf(tmpl, vocab, term, msg)
+
+	return error(message)
+}
+
+function updateVocabularyError (action) {
 	const tmpl = messages.UPDATE_VOCABULARY_ERR
 	const name = action.vocabulary.pref_label[0]
 	const msg = action.error.message
 	const message = sprintf(tmpl, name, msg)
 
-	return [].concat(state, createNotification(ERROR, message))
+	return error(message)
 }
 
-function workNotFound (state, action) {
+function workNotFound (action) {
 	const tmpl = messages.WORK_NOT_FOUND_WITH_ID
 	const id = action.id
 	const message = sprintf(tmpl, id)
 
-	return [].concat(state, createNotification(ERROR, message))
+	return error(message)
 }

@@ -176,6 +176,8 @@ export const updateTermInVocabulary = function (vocabulary, term, data) {
 				dispatch({
 					type: UPDATE_TERM_RESPONSE_ERR,
 					error,
+					term,
+					vocabulary,
 				})
 			})
 	}
