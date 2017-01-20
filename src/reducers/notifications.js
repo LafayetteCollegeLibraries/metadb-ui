@@ -37,7 +37,7 @@ export default function notificationReducer (state, action) {
 	// CLEAR_NOTIFICATION returns a new state, so we'll check for
 	// that action first, before generating a message
 	if (action.type === CLEAR_NOTIFICATION)
-			return clearNotification(state, action)
+		return clearNotification(state, action)
 
 	const message = getMessage(action)
 
