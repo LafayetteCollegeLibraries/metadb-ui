@@ -67,8 +67,8 @@ function getMessage (action) {
 		case FETCHING_ALL_VOCABULARIES_ERR:
 			return fetchingVocabulariesError(action)
 
-		case FETCHING_WORK_ERR:
-			return fetchingWorkError(action)
+		// case FETCHING_WORK_ERR:
+		// 	return fetchingWorkError(action)
 
 		case RECEIVE_SEARCH_ERR:
 			return receiveSearchError(action)
@@ -82,8 +82,8 @@ function getMessage (action) {
 		case UPDATE_VOCABULARY_ERR:
 			return updateVocabularyError(action)
 
-		case WORK_NOT_FOUND_ERR:
-			return workNotFound(action)
+		// case WORK_NOT_FOUND_ERR:
+		// 	return workNotFound(action)
 	}
 }
 

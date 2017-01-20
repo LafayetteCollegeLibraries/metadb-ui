@@ -11,6 +11,7 @@ import ThumbnailPreview from '../components/media/ThumbnailPreview.jsx'
 import OpenSeadragonViewer from '../components/media/OpenSeadragonViewer.jsx'
 import PDFViewer from '../components/media/PDFViewer.jsx'
 
+import WorkNotFound from './WorkNotFound.jsx'
 
 const Work = React.createClass({
 	componentDidMount: function () {
@@ -206,6 +207,10 @@ const Work = React.createClass({
 	},
 
 	render: function () {
+		if (this.props.work.error && this.props.work.error.code === 404) {
+			return <WorkNotFound {...this.props} />
+		}
+
 		const workSpaceStyle = {
 			display: 'table',
 			tableLayout: 'fixed',

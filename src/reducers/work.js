@@ -1,11 +1,13 @@
 import {
 	ADD_EMPTY_VALUE_TO_WORK,
 	FETCHING_WORK,
+	FETCHING_WORK_ERR,
 	RECEIVE_WORK,
 	REMOVE_VALUE_FROM_WORK,
 	SAVED_WORK,
 	SAVING_WORK,
 	UPDATE_WORK,
+	WORK_NOT_FOUND_ERR,
 } from '../constants'
 
 import assign from 'object-assign'
@@ -21,6 +23,11 @@ export default function workReducer (state, action) {
 		case FETCHING_WORK:
 			return fetchingWork(state, action)
 
+		// see lafayette_concerns#3, xhr requests for non-existant works
+		// are returning 401: Unauthorized
+		case FETCHING_WORK_ERR:
+			return workNotFound(state, action)
+
 		case RECEIVE_WORK:
 			return receiveWork(state, action)
 
@@ -35,6 +42,9 @@ export default function workReducer (state, action) {
 
 		case UPDATE_WORK:
 			return updateWork(state, action)
+
+		case WORK_NOT_FOUND_ERR:
+			return workNotFound(state, action)
 
 		default:
 			return state
@@ -138,4 +148,16 @@ function updateWork (state, action) {
 		isChanged: true,
 		updates,
 	})
+}
+
+// we need to set something to know the work wasn't found
+// + to display a not-found page
+function workNotFound (state, action) {
+	return {
+		error: {
+			code: 404,
+			id: action.id,
+			message: action.error.message,
+		}
+	}
 }

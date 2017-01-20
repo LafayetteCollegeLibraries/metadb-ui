@@ -1,0 +1,13 @@
+.error-page {
+	&-container {
+		margin: auto;
+		width: 66%;
+	}
+
+	&-message {
+		border: 2px solid #4ea8dd;
+		border-radius: $default-border-radius;
+		margin-top: 3rem;
+		padding: 1rem;
+	}
+}
