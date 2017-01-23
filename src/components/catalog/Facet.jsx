@@ -114,7 +114,7 @@ const Facet = React.createClass({
 
 	getInitialState: function () {
 		return {
-			open: this.props.open,
+			open: this.props.open || this.props.selectedFacets.length > 0,
 		}
 	},
 
