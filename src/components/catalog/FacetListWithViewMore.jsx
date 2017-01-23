@@ -43,6 +43,7 @@ const FacetListWithViewMore = React.createClass({
 
 	getFacetListProps: function (xtend) {
 		return assign({}, {
+			className: 'facet-list',
 			items: this.props.items,
 			label: this.props.label,
 			name: this.props.name,
@@ -72,6 +73,7 @@ const FacetListWithViewMore = React.createClass({
 
 		const label = this.props.label
 		const props = {
+			contentLabel: `Viewing all facets for ${label}`,
 			isOpen: this.state.modalOpen,
 			header: function (modal) {
 				return (
@@ -107,7 +109,7 @@ const FacetListWithViewMore = React.createClass({
 			items: this.props.items.slice(0, limit),
 			key: 'dss-fpwvm-limited-list',
 		})
-		
+
 		const LimitedList = React.createElement(FacetList, flProps)
 
 		// no need to add a `view more` link if there aren't more to view
