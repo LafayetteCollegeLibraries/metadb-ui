@@ -51,6 +51,7 @@ const BulkTermsEditModal = React.createClass({
 		}
 
 		const editorProps = {
+			contentLabel: 'Bulk Terms Edit',
 			onSubmit: this.handleSubmit,
 			resizable: false,
 			terms: this.props.terms,

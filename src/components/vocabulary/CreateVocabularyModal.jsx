@@ -29,9 +29,12 @@ const CreateVocabularyModal = React.createClass({
 	},
 
 	render: function () {
+		const label = 'Create a new vocabulary'
+
 		const modalProps = {
+			contentLabel: label,
 			isOpen: this.state.open,
-			label: 'Create a new vocabulary',
+			label: label,
 			onRequestClose: this.closeModal,
 			style: {
 				content: {

@@ -41,9 +41,11 @@ const EditVocabularyModal = React.createClass({
 
 	render: function () {
 		const name = this.getVocabularyName()
+		const label = `Edit metadata for ${name}`
 
 		const modalProps = {
-			header: `Edit metadata for ${name}`,
+			contentLabel: label,
+			header: label,
 			isOpen: this.state.open,
 			onRequestClose: this.closeModal,
 			style: {

@@ -67,6 +67,7 @@ const TermEditModal = React.createClass({
 		const label = this.state.data.pref_label[0]
 		const modalProps = {
 			allowHTML: true,
+			contentLabel: `Editing term: ${label}`,
 			header: `Editing term: <em>${label}</em>`,
 			isOpen: this.state.open,
 			onRequestClose: this.handleClose,

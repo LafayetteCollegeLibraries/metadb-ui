@@ -129,26 +129,36 @@ const SearchResults = React.createClass({
 	},
 
 	maybeRenderLoadingModal: function () {
-		const open = this.props.search.isSearching ? true : false
+		const isOpen = this.props.search.isSearching ? true : false
 
-		const styles = {
-			overlay: {
-				backgroundColor: 'rgba(0, 0, 0, .5)',
+		const props = {
+			isOpen,
+			contentLabel: 'Loading',
+			style: {
+				overlay: {
+					backgroundColor: 'rgba(0, 0, 0, .5)',
+				},
+				content: {
+					bottom: '75%',
+					left: '25%',
+					right: '25%',
+					top: '15%',
+				},
+				header: {
+					margin: '0',
+				},
 			},
-			content: {
-				bottom: '75%',
-				left: '25%',
-				right: '25%',
-				top: '15%',
-			},
-			header: {
+		}
+
+		const h1props = {
+			style: {
 				margin: '0',
 			}
 		}
 
 		return (
-			<Modal isOpen={open} style={styles}>
-				<h1 style={styles.header}>Searching... </h1>
+			<Modal {...props}>
+				<h1 {...h1props}>Searching... </h1>
 			</Modal>
 		)
 	},
