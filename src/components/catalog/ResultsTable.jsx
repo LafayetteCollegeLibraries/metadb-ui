@@ -216,12 +216,14 @@ class ResultsTable extends React.Component {
 
 	render () {
 		return (
-			<TacoTable
-				className="results-table"
-				columns={this.getColumns()}
-				data={this.props.data}
-				sortable={false}
-				/>
+			<div className="results-table-container">
+				<TacoTable
+					className="results-table"
+					columns={this.getColumns()}
+					data={this.props.data}
+					sortable={false}
+					/>
+			</div>
 		)
 	}
 }

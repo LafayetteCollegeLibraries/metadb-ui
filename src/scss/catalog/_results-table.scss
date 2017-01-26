@@ -1,5 +1,11 @@
 // src/components/catalog/ResultsTable.jsx
+.results-table-container {
+	overflow-x: scroll;
+}
+
 .results-table {
+	$thumbnail-size: 175px;
+
 	margin-top: 1em;
 	min-width: 100%;
 
@@ -14,17 +20,15 @@
 	}
 
 	td {
+		min-width: $thumbnail-size;
 		padding: 1em;
 	}
 
 	td.thumbnail-preview {
-		$thumbnail-size: 175px;
-
 		background-color: #eee;
 		height: $thumbnail-size;
 		padding: 1em;
 		text-align: center;
-		width: $thumbnail-size;
 
 		img {
 			max-height: 100%;
