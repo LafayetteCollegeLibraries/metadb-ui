@@ -1,6 +1,6 @@
 import React from 'react'
 import assign from 'object-assign'
-import ModalWithHeader from '../ModalWithHeader.jsx'
+import Modal, { Header } from '../Modal.jsx'
 import FacetList from './FacetList.jsx'
 
 const T = React.PropTypes
@@ -76,16 +76,16 @@ const FacetListWithViewMore = React.createClass({
 			className: 'FacetListWithViewMore-container',
 			contentLabel: `Viewing all facets for ${label}`,
 			isOpen: this.state.modalOpen,
-			header: `Viewing all facets for <strong>${label}</strong>`,
 			allowHTML: true,
 			key: 'dss-flwvm-modal',
 			onRequestClose: this.toggleModal,
 		}
 
 		return (
-			<ModalWithHeader {...props}>
+			<Modal {...props}>
+				<Header>Viewing all facets for <strong>{label}</strong></Header>
 				<FacetList {...this.getFacetListProps()} />
-			</ModalWithHeader>
+			</Modal>
 		)
 	},
 

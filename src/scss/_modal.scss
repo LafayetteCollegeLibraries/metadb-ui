@@ -6,32 +6,39 @@ $default-modal-color: #1d5f83;
 
 // Remove scroll on the body when react-modal is open
 .ReactModal__Body--open {
-    overflow: hidden;
+	overflow: hidden;
 }
 
-.ModalWithHeader {
+.Modal {
 	&-container {
-    background: #fff;
-    border: 1px solid $default-modal-color;
-    border-radius: 4px;
-    bottom: $initial-positioning;
-    left: $initial-positioning;
-    outline: none;
-    overflow: auto;
-    padding: $padding;
-    position: absolute;
-    right: $initial-positioning;
-    top: $initial-positioning;
-    -webkit-overflow-scrolling: touch;
+		background: #fff;
+		border: 1px solid $default-modal-color;
+		border-radius: 4px;
+		bottom: $initial-positioning;
+		left: $initial-positioning;
+		outline: none;
+		overflow: auto;
+		padding: $padding;
+		position: absolute;
+		right: $initial-positioning;
+		top: $initial-positioning;
+		-webkit-overflow-scrolling: touch;
+
+		&.full {
+			bottom: 1%;
+			left: 1%;
+			right: 1%;
+			top: 1%;
+		}
 	}
 
 	&-overlay {
-    background-color: rgba(255, 255, 255, 0.75);
-    bottom: 0;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
+		background-color: rgba(255, 255, 255, 0.75);
+		bottom: 0;
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
 	}
 
 	&-header {
@@ -40,8 +47,25 @@ $default-modal-color: #1d5f83;
 		font-size: 1.125em;
 		margin: -$padding;
 		margin-bottom: $padding;
-		padding: $padding / 2;
 		text-align: center;
+	}
+
+	&-footer {
+		background-color: #eee;
+		bottom: 0;
+		clear: both;
+		margin-left: -$padding;
+		margin-right: -$padding;
+		position: absolute;
+		width: 100%;
+
+		> .button-group {
+			float: right;
+		}
+	}
+
+	&-header, &-footer {
+		padding: $padding / 2;
 	}
 }
 

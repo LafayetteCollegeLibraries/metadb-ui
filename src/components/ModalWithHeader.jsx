@@ -1,5 +1,6 @@
 import React from 'react'
-import Modal from 'react-modal'
+import Modal, { Header } from './Modal.jsx'
+
 import assign from 'object-assign'
 
 const T = React.PropTypes
@@ -28,7 +29,7 @@ const ModalWithHeader = React.createClass({
 		else
 			props.children = this.props.header
 
-		return <header {...props}/>
+		return <Header {...props}/>
 	},
 
 	render: function () {
