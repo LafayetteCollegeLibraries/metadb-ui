@@ -33,6 +33,7 @@ const CreateVocabularyModal = React.createClass({
 
 		const modalProps = {
 			contentLabel: label,
+			header: label,
 			isOpen: this.state.open,
 			label: label,
 			onRequestClose: this.closeModal,
