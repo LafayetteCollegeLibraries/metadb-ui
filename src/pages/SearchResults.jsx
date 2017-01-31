@@ -17,6 +17,8 @@ import ResultsTable from '../components/catalog/ResultsTable.jsx'
 import { getBreadcrumbList } from '../../lib/facet-helpers'
 import { display as searchResultsDisplay } from '../../lib/search-result-settings'
 
+import AddMetadataModal from '../components/bulk-tools/AddMetadataModal.jsx'
+
 const SearchResults = React.createClass({
 	// TODO: clean this up a bit? this is a hold-over from when this component
 	// was handling the starting search form as well as the results
@@ -59,6 +61,7 @@ const SearchResults = React.createClass({
 
 	getInitialState: function () {
 		return {
+			bulkTool: null,
 			resultsView: searchResultsDisplay.get() || 'table',
 		}
 	},
@@ -81,6 +84,10 @@ const SearchResults = React.createClass({
 		}
 	},
 
+	handleCloseBulkTool: function () {
+		this.setState({bulkTool: null})
+	},
+
 	handleNextPage: function () {
 		const pages = this.state.pages
 
@@ -88,6 +95,10 @@ const SearchResults = React.createClass({
 			return
 
 		this.props.setSearchOption('page', pages.next_page)
+	},
+
+	handleOpenBulkTool: function (bulkTool) {
+		this.setState({bulkTool})
 	},
 
 	handlePerPageChange: function (val) {
@@ -128,11 +139,27 @@ const SearchResults = React.createClass({
 		this.props.searchCatalog(query, facets, options)
 	},
 
+	maybeRenderBulkTool: function () {
+		if (!this.state.bulkTool)
+			return null
+
+		const Component = this.state.bulkTool.component
+		const data = this.props.search.results || {}
+
+		return (
+			<Component
+				data={data}
+				onClose={this.handleCloseBulkTool}
+			/>
+		)
+	},
+
 	maybeRenderLoadingModal: function () {
-		const isOpen = this.props.search.isSearching ? true : false
+		if (!this.props.search.isSearching)
+			return null
 
 		const props = {
-			isOpen,
+			isOpen: true,
 			contentLabel: 'Loading',
 			style: {
 				overlay: {
@@ -257,10 +284,17 @@ const SearchResults = React.createClass({
 			return
 
 		const props = {
+			bulkTools: [
+				{
+					name: 'Bulk apply metadata',
+					description: 'Apply metadata to all items in current search',
+					component: AddMetadataModal,
+				}
+			],
 			pageData: this.state.pages,
 			onNextPage: this.handleNextPage,
+			onOpenBulkTool: this.handleOpenBulkTool,
 			onPreviousPage: this.handlePreviousPage,
-			onOpenToolModal: console.log,
 			onPerPageChange: this.handlePerPageChange,
 			onViewChange: this.toggleView,
 			perPage: this.props.search.options.per_page,
@@ -318,6 +352,7 @@ const SearchResults = React.createClass({
 		return (
 			<div>
 				{this.maybeRenderLoadingModal()}
+				{this.maybeRenderBulkTool()}
 
 				<section key="sidebar" style={styles.sidebar.container}>
 					{this.renderFacetSidebar()}
