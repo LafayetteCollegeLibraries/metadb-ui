@@ -1,0 +1,53 @@
+// base modal (ModalWithHeader)
+
+$padding: 20px;
+$initial-positioning: 10%;
+$default-modal-color: #1d5f83;
+
+// Remove scroll on the body when react-modal is open
+.ReactModal__Body--open {
+    overflow: hidden;
+}
+
+.ModalWithHeader {
+	&-container {
+    background: #fff;
+    border: 1px solid $default-modal-color;
+    border-radius: 4px;
+    bottom: $initial-positioning;
+    left: $initial-positioning;
+    outline: none;
+    overflow: auto;
+    padding: $padding;
+    position: absolute;
+    right: $initial-positioning;
+    top: $initial-positioning;
+    -webkit-overflow-scrolling: touch;
+	}
+
+	&-overlay {
+    background-color: rgba(255, 255, 255, 0.75);
+    bottom: 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+	}
+
+	&-header {
+		background-color: $default-modal-color;
+		color: #fff;
+		font-size: 1.125em;
+		margin: -$padding;
+		margin-bottom: $padding;
+		padding: $padding / 2;
+		text-align: center;
+	}
+}
+
+.FacetListWithViewMore-container {
+	bottom: 33%;
+	left: 33%;
+	right: 33%;
+	top: 10%;
+}
