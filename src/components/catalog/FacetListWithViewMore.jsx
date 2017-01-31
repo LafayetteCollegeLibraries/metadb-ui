@@ -73,25 +73,13 @@ const FacetListWithViewMore = React.createClass({
 
 		const label = this.props.label
 		const props = {
+			className: 'FacetListWithViewMore-container',
 			contentLabel: `Viewing all facets for ${label}`,
 			isOpen: this.state.modalOpen,
-			header: function (modal) {
-				return (
-					<header {...modal.getHeaderProps()}>
-						Viewing all for <strong>{label}</strong>
-					</header>
-				)
-			},
+			header: `Viewing all facets for <strong>${label}</strong>`,
+			allowHTML: true,
 			key: 'dss-flwvm-modal',
 			onRequestClose: this.toggleModal,
-			style: {
-				content: {
-					bottom: '33%',
-					left: '33%',
-					right: '33%',
-					top: '10%',
-				}
-			}
 		}
 
 		return (
