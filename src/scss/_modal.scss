@@ -61,6 +61,11 @@ $default-modal-color: #1d5f83;
 
 		> .button-group {
 			float: right;
+
+			// give some breathing room to items within .button-group
+			* + * {
+				margin: 0 10px;
+			}
 		}
 	}
 
