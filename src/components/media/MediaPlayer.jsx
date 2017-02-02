@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import plyr from 'plyr'
 
 /**
- * VideoPlayer component is used to load and play videos
+ * MediaPlayer component is used to load and play videos
  */
 class MediaPlayer extends Component {
 
@@ -11,10 +10,6 @@ class MediaPlayer extends Component {
 
 		this.renderVideo = this.renderVideo.bind(this)
 		this.renderAudio = this.renderAudio.bind(this)
-	}
-
-	componentDidMount () {
-		plyr.setup()
 	}
 
 	renderAudio(){
@@ -37,7 +32,8 @@ class MediaPlayer extends Component {
 	render () {
 		return (
 			<div style={this.props.styleConfig || {width: '50%'}}>
-				{	this.props.video ? this.renderVideo() : ( this.props.audio ? this.renderAudio() : console.log('Specify media component type')) }
+				{/* {	this.props.audio ? this.renderAudio() : ( this.props.video ? this.renderVideo() : console.log('Specify media component type')) } */}
+				{ this.renderAudio() }
 			</div>
 		)
 	}
