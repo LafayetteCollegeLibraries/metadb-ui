@@ -12,7 +12,6 @@ $button-offset: 1%;
 	}
 
 	button.add-row-btn {
-		left: $input-width + $button-offset;
 		margin-top: 1em;
 		position: absolute;
 	}
@@ -43,4 +42,10 @@ $button-offset: 1%;
 	+ * {
 		margin-top: 2px;
 	}
+
+}
+
+.form-field--add-row-padding {
+	display: inline-block;
+	width: $input-width;
 }

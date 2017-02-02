@@ -90,7 +90,12 @@ const FormField = React.createClass({
 		if (!this.allowsMultipleValues())
 			return
 
-		return this.renderAddButton()
+		return (
+			<div className="form-element">
+				<div className="form-field--add-row-padding"/>
+				{ this.renderAddButton() }
+			</div>
+		)
 	},
 
 	maybeRenderLabel: function () {
@@ -112,7 +117,7 @@ const FormField = React.createClass({
 			onClick: this.handleAddValueRow,
 		}
 
-		return React.createElement(Button, props)
+		return <Button {...props} />
 	},
 
 	renderRemoveButton: function (idx) {
@@ -123,7 +128,7 @@ const FormField = React.createClass({
 			onClick: this.handleRemoveValueRow.bind(null, idx),
 		}
 
-		return React.createElement(Button, props)
+		return <Button {...props} />
 	},
 
 	renderFieldComponents: function () {
