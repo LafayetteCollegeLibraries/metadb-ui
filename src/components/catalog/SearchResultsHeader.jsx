@@ -3,7 +3,7 @@ import Button from '../Button.jsx'
 import Toggle from '../Toggle.jsx'
 import SearchResultsPagerHeader from './SearchResultsPagerHeader.jsx'
 
-import BulkToolMenu from '../bulk-tools/Menu.jsx'
+import BatchToolMenu from '../batch-tools/Menu.jsx'
 
 const T = React.PropTypes
 const BORDER_RADIUS = '2px'
@@ -15,8 +15,8 @@ const SearchResultsHeader = React.createClass({
 		onPerPageChange: T.func.isRequired,
 		onViewChange: T.func.isRequired,
 
-		bulkTools: T.array,
-		onOpenBulkTool: T.func.isRequired,
+		batchTools: T.array,
+		onOpenBatchTool: T.func.isRequired,
 
 		pageData: T.object.isRequired,
 		view: T.string,
@@ -25,7 +25,7 @@ const SearchResultsHeader = React.createClass({
 		perPage: T.oneOfType([T.number, T.string]),
 		perPageOptions: T.array,
 
-		bulkTools: T.array,
+		batchTools: T.array,
 	},
 
 	getInitialState: function () {
@@ -39,13 +39,13 @@ const SearchResultsHeader = React.createClass({
 			return
 
 		return (
-			<BulkToolMenu
+			<BatchToolMenu
 				onClose={this.toggleToolDropdown}
 				onSelect={(tool) => {
 					this.toggleToolDropdown()
-					this.props.onOpenBulkTool(tool)
+					this.props.onOpenBatchTool(tool)
 				}}
-				tools={this.props.bulkTools}
+				tools={this.props.batchTools}
 			/>
 		)
 	},
