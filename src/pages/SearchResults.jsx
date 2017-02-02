@@ -17,7 +17,7 @@ import ResultsTable from '../components/catalog/ResultsTable.jsx'
 import { getBreadcrumbList } from '../../lib/facet-helpers'
 import { display as searchResultsDisplay } from '../../lib/search-result-settings'
 
-import AddMetadataModal from '../components/bulk-tools/AddMetadataModal.jsx'
+import AddMetadataModal from '../components/batch-tools/AddMetadataModal.jsx'
 
 const SearchResults = React.createClass({
 	// TODO: clean this up a bit? this is a hold-over from when this component
@@ -61,7 +61,7 @@ const SearchResults = React.createClass({
 
 	getInitialState: function () {
 		return {
-			bulkTool: null,
+			batchTool: null,
 			resultsView: searchResultsDisplay.get() || 'table',
 		}
 	},
@@ -84,8 +84,8 @@ const SearchResults = React.createClass({
 		}
 	},
 
-	handleCloseBulkTool: function () {
-		this.setState({bulkTool: null})
+	handleCloseBatchTool: function () {
+		this.setState({batchTool: null})
 	},
 
 	handleNextPage: function () {
@@ -97,8 +97,8 @@ const SearchResults = React.createClass({
 		this.props.setSearchOption('page', pages.next_page)
 	},
 
-	handleOpenBulkTool: function (bulkTool) {
-		this.setState({bulkTool})
+	handleOpenBatchTool: function (batchTool) {
+		this.setState({batchTool})
 	},
 
 	handlePerPageChange: function (val) {
@@ -139,17 +139,17 @@ const SearchResults = React.createClass({
 		this.props.searchCatalog(query, facets, options)
 	},
 
-	maybeRenderBulkTool: function () {
-		if (!this.state.bulkTool)
+	maybeRenderBatchTool: function () {
+		if (!this.state.batchTool)
 			return null
 
-		const Component = this.state.bulkTool.component
+		const Component = this.state.batchTool.component
 		const data = this.props.search.results || {}
 
 		return (
 			<Component
 				data={data}
-				onClose={this.handleCloseBulkTool}
+				onClose={this.handleCloseBatchTool}
 			/>
 		)
 	},
@@ -284,16 +284,16 @@ const SearchResults = React.createClass({
 			return
 
 		const props = {
-			bulkTools: [
+			batchTools: [
 				{
-					name: 'Bulk apply metadata',
+					name: 'Batch apply metadata',
 					description: 'Apply metadata to all items in current search',
 					component: AddMetadataModal,
 				}
 			],
 			pageData: this.state.pages,
 			onNextPage: this.handleNextPage,
-			onOpenBulkTool: this.handleOpenBulkTool,
+			onOpenBatchTool: this.handleOpenBatchTool,
 			onPreviousPage: this.handlePreviousPage,
 			onPerPageChange: this.handlePerPageChange,
 			onViewChange: this.toggleView,
@@ -352,7 +352,7 @@ const SearchResults = React.createClass({
 		return (
 			<div>
 				{this.maybeRenderLoadingModal()}
-				{this.maybeRenderBulkTool()}
+				{this.maybeRenderBatchTool()}
 
 				<section key="sidebar" style={styles.sidebar.container}>
 					{this.renderFacetSidebar()}

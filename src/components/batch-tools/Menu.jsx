@@ -1,10 +1,10 @@
 import React from 'react'
 import Item from './MenuItem.jsx'
 
-const MENU_CLASSNAME = 'BulkToolsMenu-container'
+const MENU_CLASSNAME = 'BatchToolsMenu-container'
 const T = React.PropTypes
 
-const BulkToolsMenu = React.createClass({
+const BatchToolsMenu = React.createClass({
 	propTypes: {
 		onClose: T.func.isRequired,
 		onSelect: T.func.isRequired,
@@ -60,4 +60,4 @@ const BulkToolsMenu = React.createClass({
 	}
 })
 
-export default BulkToolsMenu
+export default BatchToolsMenu
