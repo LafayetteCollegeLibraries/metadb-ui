@@ -1,0 +1,18 @@
+.WorkHeader {
+	&-container {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		padding: 1em .5em 2em;
+	}
+
+	&-title {
+		color: #1e1e1e;
+		margin: 0;
+	}
+
+	&-status {
+		color: #aaa;
+		margin: 0;
+	}
+}

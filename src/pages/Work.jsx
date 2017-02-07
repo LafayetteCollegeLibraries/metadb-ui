@@ -4,6 +4,7 @@ import assign from 'object-assign'
 import scrollToTop from '../../lib/scroll-to-top'
 import browserHistory from 'react-router/lib/browserHistory'
 import Button from '../components/Button.jsx'
+import WorkHeader from '../components/work/WorkHeader.jsx'
 
 // import WorkMetadataForm from '../components/WorkMetadataForm.jsx'
 import GenericWork from '../components/schema/GenericWork.jsx'
@@ -62,6 +63,17 @@ const Work = React.createClass({
 
 	adjustSections: function (ev) {
 		this.setState({mediaOpen: !this.state.mediaOpen})
+	},
+
+	getHeaderStatus: function () {
+		if (this.props.work.isSaving)
+			return 'Saving...'
+
+		if (!this.props.work.isSaving && !this.state.hasChanges)
+			return 'All changes saved'
+
+		if (this.state.hasChanges)
+			return 'Has unsaved changes'
 	},
 
 	handleFormSubmit: function () {
@@ -256,28 +268,12 @@ const Work = React.createClass({
 		if (Array.isArray(title) && title.length > 1)
 			title = title[0]
 
-		const base = `${process.env.API_BASE_URL}/concern/generic_works`
-		const debugUrl = `${base}/${this.props.params.workId}.json`
+		const props = {
+			title,
+			status: this.getHeaderStatus(),
+		}
 
-		return (
-			<header>
-				{this.maybeRenderNavToSearchResults()}
-
-				<h1 style={{display: 'inline-block'}}>{title}</h1>
-
-				<a
-					href={debugUrl}
-					style={{
-						fontFamily: 'monospace',
-						margin: '0 1em',
-					}}
-					target="_blank"
-					children={'(debug)'}
-				/>
-
-				{this.state.hasChanges ? this.showChangedBadge() : ''}
-			</header>
-		)
+		return <WorkHeader {...props} />
 	},
 
 	showChangedBadge: function () {
@@ -314,6 +310,7 @@ const Work = React.createClass({
 
 		return (
 			<div>
+				{this.maybeRenderNavToSearchResults()}
 				{this.renderHeader()}
 
 				<div style={workSpaceStyle} className="work-space">
