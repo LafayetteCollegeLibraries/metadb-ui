@@ -63,14 +63,15 @@ class MediaPlayer extends Component {
 
 
 /**
- * video - true if provided media is video
- * audio - true if provided media is audio
+ * type - type of the media: youtube, audio, video or vimeo
  * styleConfig - styles for whole div element
  * poster - image used to display before playing the media
  * config - configuration of media player( check Plyr official documentation)
  * mediaSrc - source of media
  * trackSrc - provide captions
  * trackConfig - configuration for track( check Plyr official documentation)
+ * youtubeId - youtube video Id if type is youtube
+ * vimeoId - vimeo video Id if type is vimeo
  */
 MediaPlayer.propTypes = {
 	type: React.PropTypes.string,
