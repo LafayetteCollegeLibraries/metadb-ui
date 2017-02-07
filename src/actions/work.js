@@ -59,6 +59,7 @@ export const saveWork = (id, updates) => dispatch => {
 		.then(() => {
 			dispatch({
 				type: SAVED_WORK,
+				updates,
 			})
 		})
 		//.catch(err => {})

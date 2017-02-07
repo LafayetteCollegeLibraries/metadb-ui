@@ -11,6 +11,8 @@ import ThumbnailPreview from '../components/media/ThumbnailPreview.jsx'
 import OpenSeadragonViewer from '../components/media/OpenSeadragonViewer.jsx'
 import PDFViewer from '../components/media/PDFViewer.jsx'
 
+import isWorkUpdated from '../../lib/is-work-updated'
+
 import WorkNotFound from './WorkNotFound.jsx'
 
 const Work = React.createClass({
@@ -28,6 +30,26 @@ const Work = React.createClass({
 	onExit: function (nextLocation) {
 		if (this.state.hasChanges)
 			return 'Any unsaved changes will be lost. Are you sure?'
+	},
+
+	componentWillReceiveProps: function (nextProps) {
+		if (!this.state.data && nextProps.work.data) {
+			return this.setState({data: nextProps.work.data})
+		}
+
+		if (!nextProps.work.isSaving) {
+			const prev = this.props.work.data
+			const next = nextProps.work.data
+
+			const isUpdated = isWorkUpdated(prev, next)
+
+			if (isUpdated) {
+				this.setState({
+					hasChanges: false,
+					updates: {},
+				})
+			}
+		}
 	},
 
 	getInitialState: function () {
@@ -52,27 +74,10 @@ const Work = React.createClass({
 		const updateKeys = Object.keys(updates)
 		const original = this.props.work.data
 
-		if (!updateKeys.length)
+		if (!updateKeys.length || !original)
 			return false
 
-		let validity = false
-
-		for (let i = 0; i < updateKeys.length; i++) {
-			const key = updateKeys[i]
-
-			if (updates[key].filter(Boolean).length !== original[key].length)
-				return true
-
-			for (let j = 0; j < updates[key].length; j++) {
-				if (updates[key][j] === '')
-					continue
-
-				if (updates[key][j] !== original[key][j])
-					return true
-			}
-		}
-
-		return false
+		return isWorkUpdated(original, updates)
 	},
 
 	maybeRenderNavToSearchResults: function () {
@@ -94,20 +99,21 @@ const Work = React.createClass({
 
 	mediaPreview: function () {
 		const work = this.props.work
+		const data = work.data
 
-		if (!work || !work.data)
+		if (!work || !data)
 			return
 
-		if (work.isFetching || !Object.keys(work.data).length)
+		if (work.isFetching || !Object.keys(data).length)
 			return
 
-		if (!work.data.thumbnail_path)
+		if (!data.thumbnail_path)
 			return
 
 		return (
 			<ThumbnailPreview
 				onClick={this.adjustSections}
-				src={work.data.thumbnail_path}
+				src={data.thumbnail_path}
 			/>
 		)
 	},
@@ -115,13 +121,12 @@ const Work = React.createClass({
 	mediaPreviewSide: function () {
 		// open pdf js viewer only when the work is pdf type
 		const fileIsPDF = true; // Find if file is pdf, ....
-		return (
-			<div>
-				{
-					(this.state.mediaOpen) ? (fileIsPDF ? this.pdfjsViewer() : this.openSeadragonViewer()) : this.mediaPreview()
-				}
-			</div>
-		)
+
+		if (this.state.mediaOpen) {
+			return fileIsPDF ? this.pdfjsViewer() : this.openSeadragonViewer()
+		}
+
+		return this.mediaPreview()
 	},
 
 	onAddField: function (name) {
@@ -163,6 +168,10 @@ const Work = React.createClass({
 			updates[name].slice(0, index),
 			updates[name].slice(index + 1)
 		)
+
+		if (!original[name].length && !updates[name].length) {
+			delete updates[name]
+		}
 
 		this.setState({
 			hasChanges: this.hasChanges(updates),
@@ -206,21 +215,22 @@ const Work = React.createClass({
 
 	workEditSide: function () {
 		const work = this.props.work
-		if (!work || !work.data)
+		const data = work.data
+
+		if (!work || !data)
 			return
 
-		if (work.isFetching || !Object.keys(work.data).length)
+		if (work.isFetching || !Object.keys(data).length)
 			return
 
-		const workData = work.data
 		const updates = this.state.updates
-		const schema = workData.form
+		const schema = data.form
 
 		return (
 			<GenericWork
 				{...this.props}
 
-				data={assign({}, workData, updates)}
+				data={assign({}, data, updates)}
 				getAutocompleteTerms={this.props.fetchAutocompleteTerms}
 				onAddValueField={this.onAddField}
 				onChange={this.onChange}
@@ -233,12 +243,14 @@ const Work = React.createClass({
 
 	renderHeader: function () {
 		const work = this.props.work
+		const data = this.state.data
+
 		let title
 
-		if (work.isFetching || typeof work.data === 'undefined')
+		if (work.isFetching || !data)
 			title = 'fetching...'
 		else
-			title = work.data.title || work.data.id
+			title = data.title || data.id
 
 		// default to just the first title for now
 		if (Array.isArray(title) && title.length > 1)

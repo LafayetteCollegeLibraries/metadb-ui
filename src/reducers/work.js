@@ -51,16 +51,13 @@ function receiveWork (state, action) {
 		fetchedAt: Date.now(),
 		isFetching: false,
 		isSaving: false,
-		updates: {},
 	}
 }
 
-function savedWork (state/* , action*/) {
+function savedWork (state, action) {
 	return assign({}, state, {
-		data: assign({}, state.data, state.updates),
-		isChanged: false,
+		data: assign({}, state.data, action.updates),
 		isSaving: false,
-		updates: {},
 	})
 }
 
