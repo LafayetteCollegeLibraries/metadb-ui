@@ -25,21 +25,16 @@ const Work = React.createClass({
 		this.props.router.setRouteLeaveHook(this.props.route, this.onExit)
 	},
 
-	componentWillUnmount: function () {
-		// this.props.removeError()
-		// this.props.removeWork()
-
-	},
-
 	onExit: function (nextLocation) {
-		if (this.props.work.isChanged)
+		if (this.state.hasChanges)
 			return 'Any unsaved changes will be lost. Are you sure?'
 	},
 
-
 	getInitialState: function () {
 		return {
-			mediaOpen: false
+			hasChanges: false,
+			mediaOpen: false,
+			updates: {},
 		}
 	},
 
@@ -48,9 +43,36 @@ const Work = React.createClass({
 	},
 
 	handleFormSubmit: function () {
-		this.props.saveWork(this.props.params.workId)
+		this.props.saveWork(this.props.params.workId, this.state.updates)
 
 		scrollToTop()
+	},
+
+	hasChanges: function (updates) {
+		const updateKeys = Object.keys(updates)
+		const original = this.props.work.data
+
+		if (!updateKeys.length)
+			return false
+
+		let validity = false
+
+		for (let i = 0; i < updateKeys.length; i++) {
+			const key = updateKeys[i]
+
+			if (updates[key].filter(Boolean).length !== original[key].length)
+				return true
+
+			for (let j = 0; j < updates[key].length; j++) {
+				if (updates[key][j] === '')
+					continue
+
+				if (updates[key][j] !== original[key][j])
+					return true
+			}
+		}
+
+		return false
 	},
 
 	maybeRenderNavToSearchResults: function () {
@@ -102,6 +124,52 @@ const Work = React.createClass({
 		)
 	},
 
+	onAddField: function (name) {
+		const updates = assign({}, this.state.updates)
+		const original = this.props.work.data
+
+		if (!updates[name])
+			updates[name] = [].concat(original[name])
+
+		updates[name].push('')
+
+		this.setState({updates})
+	},
+
+	onChange: function (name, index, value) {
+		const updates = assign({}, this.state.updates)
+		const original = this.props.work.data
+
+		if (!updates[name])
+			updates[name] = [].concat(original[name])
+
+		updates[name][index] = value
+
+		this.setState({
+			hasChanges: this.hasChanges(updates),
+			updates,
+		})
+	},
+
+	onRemoveValue: function (name, index) {
+		const updates = assign({}, this.state.updates)
+		const original = this.props.work.data
+
+		if (!updates[name]) {
+			updates[name] = [].concat(original[name])
+		}
+
+		updates[name] = [].concat(
+			updates[name].slice(0, index),
+			updates[name].slice(index + 1)
+		)
+
+		this.setState({
+			hasChanges: this.hasChanges(updates),
+			updates,
+		})
+	},
+
 	openSeadragonViewer: function () {
 		const work = this.props.work
 		if (!work || !work.data)
@@ -145,7 +213,7 @@ const Work = React.createClass({
 			return
 
 		const workData = work.data
-		const updates = work.updates
+		const updates = this.state.updates
 		const schema = workData.form
 
 		return (
@@ -154,9 +222,9 @@ const Work = React.createClass({
 
 				data={assign({}, workData, updates)}
 				getAutocompleteTerms={this.props.fetchAutocompleteTerms}
-				onAddValueField={this.props.addEmptyValueToWork}
-				onChange={this.props.editWorkField}
-				onRemoveValueField={this.props.removeValueFromWork}
+				onAddValueField={this.onAddField}
+				onChange={this.onChange}
+				onRemoveValueField={this.onRemoveValue}
 				onSubmit={this.handleFormSubmit}
 				schema={schema}
 			/>
@@ -195,7 +263,7 @@ const Work = React.createClass({
 					children={'(debug)'}
 				/>
 
-				{this.props.work.isChanged ? this.showChangedBadge() : ''}
+				{this.state.hasChanges ? this.showChangedBadge() : ''}
 			</header>
 		)
 	},
