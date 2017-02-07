@@ -57,7 +57,6 @@ const Work = React.createClass({
 		return {
 			hasChanges: false,
 			mediaOpen: false,
-			updates: {},
 		}
 	},
 
@@ -66,6 +65,20 @@ const Work = React.createClass({
 	},
 
 	getHeaderStatus: function () {
+		if (typeof this.state.updates === 'undefined' && this.props.work.isFetching)
+			return
+
+		if (typeof this.state.updates === 'undefined' && this.props.work.data) {
+			const lastModified = this.props.work.data.date_modified
+			const date = new Date(Date.parse(lastModified))
+
+			if (Number.isNaN(date)) {
+				return ''
+			}
+
+			return 'Last updated: ' + date.toDateString()
+		}
+
 		if (this.props.work.isSaving)
 			return 'Saving...'
 
