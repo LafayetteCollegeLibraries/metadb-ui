@@ -20,6 +20,19 @@ class MediaPlayer extends Component {
 		)
 	}
 
+	renderYoutube(){
+		return (
+			<div data-type="youtube" data-video-id={this.props.youtubeId}></div>
+		)
+	}
+
+	renderVimeo(){
+		console.log("Foo")
+		return (
+			<div data-type="vimeo" data-video-id={this.props.vimeoId}></div>
+		)
+	}
+
 	renderVideo(){
 		return (
 				<video poster={this.props.poster} {...this.props.config} >
@@ -32,8 +45,17 @@ class MediaPlayer extends Component {
 	render () {
 		return (
 			<div style={this.props.styleConfig || {width: '50%'}}>
-				{/* {	this.props.audio ? this.renderAudio() : ( this.props.video ? this.renderVideo() : console.log('Specify media component type')) } */}
-				{ this.renderAudio() }
+		  	{
+					this.props.type === "audio"
+					? this.renderAudio()
+					: this.props.type === "video"
+						? this.renderVideo()
+						: this.props.type === "youtube"
+							? this.renderYoutube()
+							: this.props.type === "vimeo"
+								? this.renderVimeo()
+								:	console.log('Specify media component type')
+				}
 			</div>
 		)
 	}
@@ -51,14 +73,15 @@ class MediaPlayer extends Component {
  * trackConfig - configuration for track( check Plyr official documentation)
  */
 MediaPlayer.propTypes = {
-	video: React.PropTypes.bool,
-	audio: React.PropTypes.bool,
+	type: React.PropTypes.string,
 	styleConfig: React.PropTypes.any,
 	poster: React.PropTypes.string,
 	config: React.PropTypes.any,
 	mediaSrc: React.PropTypes.string,
 	trackSrc: React.PropTypes.string,
-	trackConfig: React.PropTypes.any
+	trackConfig: React.PropTypes.any,
+	youtubeId: React.PropTypes.string,
+	vimeoId: React.PropTypes.string
 }
 
 export default MediaPlayer
