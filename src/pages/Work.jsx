@@ -1,6 +1,8 @@
 import React from 'react'
 import withRouter from 'react-router/lib/withRouter'
 
+import { StickyContainer, Sticky } from 'react-sticky'
+
 import NavToSearchResults from '../components/NavToSearchResults.jsx'
 import WorkHeader from '../components/work/Header.jsx'
 import WorkEdit from '../components/work/Edit.jsx'
@@ -72,7 +74,7 @@ const Work = React.createClass({
 
 	renderHeader: function () {
 		const { isFetching, data } = this.props.work
-		const title = getWorkTitle(data)
+		const title = isFetching ? 'fetching...' : getWorkTitle(data)
 
 		const props = {
 			status: this.getHeaderStatus(),
@@ -102,15 +104,17 @@ const Work = React.createClass({
 		}
 
 		return (
-			<div>
+			<StickyContainer className="Work-container">
 				{this.maybeRenderNavToSearchResults()}
 
-				{this.renderHeader()}
+				<Sticky stickyStyle={{width: '100%'}} className="Work-sticky-header">
+					{this.renderHeader()}
+				</Sticky>
 
 				<div className="work-space">
 					<WorkEdit {...workEditProps} />
 				</div>
-			</div>
+			</StickyContainer>
 		)
 	}
 })

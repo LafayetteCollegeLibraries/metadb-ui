@@ -3,9 +3,10 @@ html {
 }
 
 body {
-	background-color: #fafafa;
+	background-color: #default-body-background-color;
 	height: auto;
 	margin: $default-body-margin;
+	padding: 0;
 }
 
 @import "reset/typography";

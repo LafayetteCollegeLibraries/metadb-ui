@@ -1,18 +1,27 @@
 .WorkHeader {
+	$group-transition: all 125ms ease-out;
+
 	&-container {
 		align-items: center;
 		display: flex;
 		justify-content: space-between;
 		padding: 1em .5em 2em;
+		transition: $group-transition;
 	}
 
 	&-title {
 		color: #1e1e1e;
 		margin: 0;
+		transition: $group-transition;
 	}
 
 	&-status {
 		color: #aaa;
+		// this sets a min-width that will cause `.WorkHeader-title` to wrap
+		// if the title is too long
+		flex-basis: 15%;
 		margin: 0;
+		text-align: right;
+		transition: $group-transition;
 	}
 }

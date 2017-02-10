@@ -1,0 +1,28 @@
+// src/pages/Work.jsx
+.Work {
+
+	&-sticky-header {
+		background-color: $white;
+		transition: all 125ms ease-out;
+		z-index: 10;
+
+		&.sticky {
+			box-shadow: 0 2px 4px 0 #aaa;
+			margin-left: -$default-body-margin;
+			padding: 5px;
+
+			.WorkHeader-container {
+				padding-bottom: .5em;
+				padding-top: .5em;
+			}
+
+			.WorkHeader-title {
+				font-size: 1.5em;
+			}
+
+			.WorkHeader-status {
+				font-size: 0.9em;
+			}
+		}
+	}
+}
