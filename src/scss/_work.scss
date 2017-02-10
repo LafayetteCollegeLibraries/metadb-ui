@@ -1,5 +1,10 @@
+.StickyContainer > div {
+	width: 100%;
+}
+
 // src/pages/Work.jsx
 .Work {
+	overflow-x: hidden;
 
 	&-sticky-header {
 		background-color: $white;
@@ -24,5 +29,27 @@
 				font-size: 0.9em;
 			}
 		}
+	}
+
+	&-content {
+		display: flex;
+		flex-direction: row-reverse;
+		width: 100%;
+	}
+
+	// shared styles btwn View + Edit
+	&-sub-container {
+		display: inline-block;
+		position: relative;
+		transition: all 240ms ease-out;
+	}
+
+	&-view-container {
+
+	}
+
+	&-edit-container {
+		flex-grow: 1;
+		flex-shrink: 1;
 	}
 }

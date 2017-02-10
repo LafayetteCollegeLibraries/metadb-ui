@@ -2,7 +2,10 @@ import React from 'react'
 import withRouter from 'react-router/lib/withRouter'
 
 import { StickyContainer, Sticky } from 'react-sticky'
+import cn from 'classnames'
 
+import ThumbnailPreview from '../components/media/ThumbnailPreview.jsx'
+import OpenSeadragonViewer from '../components/media/OpenSeadragonViewer.jsx'
 import NavToSearchResults from '../components/NavToSearchResults.jsx'
 import WorkHeader from '../components/work/Header.jsx'
 import WorkEdit from '../components/work/Edit.jsx'
@@ -30,8 +33,14 @@ const Work = React.createClass({
 	getInitialState: function () {
 		return {
 			hasFirstSave: false,
+			mediaIsStuck: false,
 			mediaOpen: false,
 		}
+	},
+
+	adjustSections: function () {
+		this.setState({mediaOpen: !this.state.mediaOpen})
+		this.forceUpdate()
 	},
 
 	getHeaderStatus: function () {
@@ -84,6 +93,41 @@ const Work = React.createClass({
 		return <WorkHeader {...props} />
 	},
 
+	renderMediaPreview: function () {
+		const { work } = this.props
+		const data = work.data
+
+		if (!work || !data)
+			return
+
+		if (work.isFetching || !Object.keys(data).length)
+			return
+
+		if (!data.thumbnail_path)
+			return
+
+		if (this.state.mediaOpen) {
+			return (
+				<OpenSeadragonViewer
+					prefixUrl='http://openseadragon.github.io/openseadragon/images/'
+					tileSources={data.iiif_images}
+					sequenceMode={data.iiif_images.length > 1}
+					showReferenceStrip={data.iiif_images.length > 1}
+					referenceStripScroll='vertical'
+					showNavigator={true}
+					onClose={this.adjustSections}
+			  />
+			 )
+		}
+
+		const props = {
+			onClick: this.adjustSections,
+			src: data.thumbnail_path,
+		}
+
+		return <ThumbnailPreview {...props} />
+	},
+
 	render: function () {
 		const { work } = this.props
 
@@ -97,22 +141,57 @@ const Work = React.createClass({
 			)
 		}
 
+		const { mediaOpen } = this.state
+
+		const workViewContainerProps = {
+			className: cn('Work-sub-container', {
+				'Work-view-container': true,
+				'is-open': mediaOpen,
+				'StickyContainer': true,
+			}),
+
+			style: {
+				width: mediaOpen ? '66%' : '33%',
+			}
+		}
+
+		const workEditContainerProps = {
+			className: cn('Work-sub-container', {
+				'Work-edit-container': true,
+			}),
+
+			style: {
+				width: mediaOpen ? '33%' : '66%',
+			}
+		}
+
 		const workEditProps = {
 			autosave: true,
 			data: work.data || {},
 			updateWork: this.handleUpdateWork,
 		}
 
+		const stickyWorkViewProps = {
+		}
+
 		return (
-			<StickyContainer className="Work-container">
+			<StickyContainer className="Work-container StickyContainer">
 				{this.maybeRenderNavToSearchResults()}
 
 				<Sticky stickyStyle={{width: '100%'}} className="Work-sticky-header">
 					{this.renderHeader()}
 				</Sticky>
 
-				<div className="work-space">
-					<WorkEdit {...workEditProps} />
+				<div className="Work-content">
+					<StickyContainer {...workViewContainerProps}>
+						<Sticky {...stickyWorkViewProps}>
+							{this.renderMediaPreview()}
+						</Sticky>
+					</StickyContainer>
+
+					<div {...workEditContainerProps}>
+						<WorkEdit {...workEditProps} />
+					</div>
 				</div>
 			</StickyContainer>
 		)

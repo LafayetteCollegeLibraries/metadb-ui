@@ -71,9 +71,9 @@ const MetadataForm = React.createClass({
 
 	render: function () {
 		return (
-			<form onSubmit={this.handleSubmit}>
+			<div className="MetadataForm">
 				{this.renderFormFields()}
-			</form>
+			</div>
 		)
 	}
 })

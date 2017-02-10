@@ -116,7 +116,7 @@ const GenericWork = React.createClass({
 				})
 			}
 			<FormField name="publisher" label="Publisher (Original)" multiple />
-			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="month"/>
+			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="day"/>
 			<FormField name="format_medium" label="Format (Medium)" multiple />
 			<TechnicalMetadata name="format_extent" label="Format Extent" />
 			{ LargerField({name: 'description'}) }
@@ -130,8 +130,6 @@ const GenericWork = React.createClass({
 			<FormField name="source" label="Source" />
 			<FormField name="rights" label="Rights (Digital)" renderer={TextInput} />
 			<FormField name="relation_ispartof" label="Relation (IsPartOf)" />
-
-			<Button>Save edits</Button>
 		</MetadataForm>
 	)
 	}
