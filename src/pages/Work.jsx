@@ -1,20 +1,11 @@
 import React from 'react'
 import withRouter from 'react-router/lib/withRouter'
-import assign from 'object-assign'
-import scrollToTop from '../../lib/scroll-to-top'
-import browserHistory from 'react-router/lib/browserHistory'
-import Button from '../components/Button.jsx'
-import WorkHeader from '../components/work/WorkHeader.jsx'
 
-// import WorkMetadataForm from '../components/WorkMetadataForm.jsx'
-import GenericWork from '../components/schema/GenericWork.jsx'
-import ThumbnailPreview from '../components/media/ThumbnailPreview.jsx'
-import OpenSeadragonViewer from '../components/media/OpenSeadragonViewer.jsx'
-import PDFViewer from '../components/media/PDFViewer.jsx'
+import NavToSearchResults from '../components/NavToSearchResults.jsx'
+import WorkHeader from '../components/work/Header.jsx'
+import WorkEdit from '../components/work/Edit.jsx'
 
-import isWorkUpdated from '../../lib/is-work-updated'
-
-import WorkNotFound from './WorkNotFound.jsx'
+import getWorkTitle from '../../lib/get-work-title'
 
 const Work = React.createClass({
 	componentDidMount: function () {
@@ -28,318 +19,101 @@ const Work = React.createClass({
 		this.props.router.setRouteLeaveHook(this.props.route, this.onExit)
 	},
 
-	onExit: function (nextLocation) {
-		if (this.state.hasChanges)
+	onExit: function (/* nextLocation */) {
+		if (this.state.hasChanges) {
 			return 'Any unsaved changes will be lost. Are you sure?'
-	},
-
-	componentWillReceiveProps: function (nextProps) {
-		if (!this.state.data && nextProps.work.data) {
-			return this.setState({data: nextProps.work.data})
-		}
-
-		if (!nextProps.work.isSaving) {
-			const prev = this.props.work.data
-			const next = nextProps.work.data
-
-			const isUpdated = isWorkUpdated(prev, next)
-
-			if (isUpdated) {
-				this.setState({
-					hasChanges: false,
-					updates: {},
-				})
-			}
 		}
 	},
 
 	getInitialState: function () {
 		return {
-			hasChanges: false,
+			hasFirstSave: false,
 			mediaOpen: false,
 		}
 	},
 
-	adjustSections: function (ev) {
-		this.setState({mediaOpen: !this.state.mediaOpen})
-	},
-
 	getHeaderStatus: function () {
-		if (typeof this.state.updates === 'undefined' && this.props.work.isFetching)
+		const { isFetching, isSaving, data } = this.props.work
+		const { hasFirstSave } = this.state
+
+		if (isFetching)
 			return
 
-		if (typeof this.state.updates === 'undefined' && this.props.work.data) {
-			const lastModified = this.props.work.data.date_modified
-			const date = new Date(Date.parse(lastModified))
-
-			if (Number.isNaN(date)) {
-				return ''
-			}
-
-			return 'Last updated: ' + date.toDateString()
-		}
-
-		if (this.props.work.isSaving)
+		if (isSaving)
 			return 'Saving...'
 
-		if (!this.props.work.isSaving && !this.state.hasChanges)
-			return 'All changes saved'
+		if (hasFirstSave) {
+			const dateString = data.last_modified
+			const date = new Date(Date.parse(dateString))
 
-		if (this.state.hasChanges)
-			return 'Has unsaved changes'
+			// TODO: better date formatting
+			return `Last updated: ${date.toDateString()}`
+		}
+
+		return 'All changes saved'
 	},
 
-	handleFormSubmit: function () {
-		this.props.saveWork(this.props.params.workId, this.state.updates)
+	handleUpdateWork: function (changes) {
+		const id = this.props.params.workId
 
-		scrollToTop()
-	},
+		// TODO: better handling for this case
+		if (!id)
+			throw Error ('No work ID provided')
 
-	hasChanges: function (updates) {
-		const updateKeys = Object.keys(updates)
-		const original = this.props.work.data
-
-		if (!updateKeys.length || !original)
-			return false
-
-		return isWorkUpdated(original, updates)
+		return this.props.saveWork(id, changes)
 	},
 
 	maybeRenderNavToSearchResults: function () {
 		if (!Object.keys(this.props.search).length)
-			return
+			return null
 
-		return (
-			<nav>
-				<Button
-					onClick={() => browserHistory.goBack()}
-					size="large"
-					type="text"
-					>
-					&lt; Return to results
-				</Button>
-			</nav>
-		)
-	},
-
-	mediaPreview: function () {
-		const work = this.props.work
-		const data = work.data
-
-		if (!work || !data)
-			return
-
-		if (work.isFetching || !Object.keys(data).length)
-			return
-
-		if (!data.thumbnail_path)
-			return
-
-		return (
-			<ThumbnailPreview
-				onClick={this.adjustSections}
-				src={data.thumbnail_path}
-			/>
-		)
-	},
-
-	mediaPreviewSide: function () {
-		// open pdf js viewer only when the work is pdf type
-		const fileIsPDF = true; // Find if file is pdf, ....
-
-		if (this.state.mediaOpen) {
-			return fileIsPDF ? this.pdfjsViewer() : this.openSeadragonViewer()
-		}
-
-		return this.mediaPreview()
-	},
-
-	onAddField: function (name) {
-		const updates = assign({}, this.state.updates)
-		const original = this.props.work.data
-
-		if (!updates[name])
-			updates[name] = [].concat(original[name])
-
-		updates[name].push('')
-
-		this.setState({updates})
-	},
-
-	onChange: function (name, index, value) {
-		const updates = assign({}, this.state.updates)
-		const original = this.props.work.data
-
-		if (!updates[name])
-			updates[name] = [].concat(original[name])
-
-		updates[name][index] = value
-
-		this.setState({
-			hasChanges: this.hasChanges(updates),
-			updates,
-		})
-	},
-
-	onRemoveValue: function (name, index) {
-		const updates = assign({}, this.state.updates)
-		const original = this.props.work.data
-
-		if (!updates[name]) {
-			updates[name] = [].concat(original[name])
-		}
-
-		updates[name] = [].concat(
-			updates[name].slice(0, index),
-			updates[name].slice(index + 1)
-		)
-
-		if (!original[name].length && !updates[name].length) {
-			delete updates[name]
-		}
-
-		this.setState({
-			hasChanges: this.hasChanges(updates),
-			updates,
-		})
-	},
-
-	openSeadragonViewer: function () {
-		const work = this.props.work
-		if (!work || !work.data)
-			return
-
-		if (work.isFetching || !Object.keys(work.data).length)
-			return
-
-		const workData = work.data
-
-		return (
-			<div>
-			  <OpenSeadragonViewer
-					prefixUrl='http://openseadragon.github.io/openseadragon/images/'
-					tileSources={workData.iiif_images}
-					sequenceMode={workData.iiif_images.length > 1}
-					showReferenceStrip={workData.iiif_images.length > 1}
-					referenceStripScroll='vertical'
-					showNavigator={true}
-					onClose={this.adjustSections}
-			  />
-			</div>
-		)
-	},
-
-	pdfjsViewer: function(){
-		const work = this.props.work
-		return(
-			<div>
-				<PDFViewer src={work.data.download_path} />
-			</div>
-		)
-	},
-
-	workEditSide: function () {
-		const work = this.props.work
-		const data = work.data
-
-		if (!work || !data)
-			return
-
-		if (work.isFetching || !Object.keys(data).length)
-			return
-
-		const updates = this.state.updates
-		const schema = data.form
-
-		return (
-			<GenericWork
-				{...this.props}
-
-				data={assign({}, data, updates)}
-				getAutocompleteTerms={this.props.fetchAutocompleteTerms}
-				onAddValueField={this.onAddField}
-				onChange={this.onChange}
-				onRemoveValueField={this.onRemoveValue}
-				onSubmit={this.handleFormSubmit}
-				schema={schema}
-			/>
-		)
+		return <NavToSearchResults />
 	},
 
 	renderHeader: function () {
-		const work = this.props.work
-		const data = this.state.data
-
-		let title
-
-		if (work.isFetching || !data)
-			title = 'fetching...'
-		else
-			title = data.title || data.id
-
-		// default to just the first title for now
-		if (Array.isArray(title) && title.length > 1)
-			title = title[0]
+		const { isFetching, data } = this.props.work
+		const title = getWorkTitle(data)
 
 		const props = {
-			title,
 			status: this.getHeaderStatus(),
+			title,
 		}
 
 		return <WorkHeader {...props} />
 	},
 
-	showChangedBadge: function () {
-		return (
-			<span className="badge badge-changed">updated</span>
-		)
-	},
-
 	render: function () {
-		if (this.props.work.error && this.props.work.error.code === 404) {
+		const { work } = this.props
+
+		if (work.error && work.error.code === 404) {
 			return <WorkNotFound {...this.props} />
 		}
 
-		const workSpaceStyle = {
-			display: 'table',
-			tableLayout: 'fixed',
-			width: '100%',
+		if (work.isFetching) {
+			return (
+				<div>{this.renderHeader()}</div>
+			)
 		}
 
-		const workEditStyle = {
-			display: 'table-cell',
-			verticalAlign: 'top',
-			width: (this.state.mediaOpen ? '33%' : '66%'),
-		}
-
-		const mediaPreviewStyle = {
-			borderLeft: '1px solid #aaa',
-			display: 'table-cell',
-			transition: 'width 250ms ease-in',
-			verticalAlign: 'top',
-			padding: '1em',
-			width: (this.state.mediaOpen ? '66%' : '33%'),
+		const workEditProps = {
+			autosave: true,
+			data: work.data || {},
+			updateWork: this.handleUpdateWork,
 		}
 
 		return (
 			<div>
 				{this.maybeRenderNavToSearchResults()}
+
 				{this.renderHeader()}
 
-				<div style={workSpaceStyle} className="work-space">
-
-					<div style={workEditStyle} ref={e => this._workEditEl = e}>
-						{this.workEditSide()}
-					</div>
-
-					<div style={mediaPreviewStyle} ref={e =>this._mediaPreviewEl = e}>
-						{this.mediaPreviewSide()}
-					</div>
-
+				<div className="work-space">
+					<WorkEdit {...workEditProps} />
 				</div>
 			</div>
 		)
 	}
 })
 
+// wrap Work component with `withRouter` to allow access to `setRouteLeaveHook`
 export default withRouter(Work)

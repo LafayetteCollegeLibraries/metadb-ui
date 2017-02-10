@@ -48,7 +48,6 @@ function fetchingWork (/* state, action */) {
 function receiveWork (state, action) {
 	return {
 		data: action.data,
-		fetchedAt: Date.now(),
 		isFetching: false,
 		isSaving: false,
 	}
