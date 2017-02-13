@@ -30,6 +30,15 @@ const Work = React.createClass({
 		}
 	},
 
+	componentDidUpdate: function (prevProps, prevState) {
+		if (this.state.mediaOpen !== prevState.mediaOpen) {
+			setTimeout(function () {
+				window.scrollBy(0,1)
+				window.scrollBy(0,-1)
+			}, 250)
+		}
+	},
+
 	getInitialState: function () {
 		return {
 			hasFirstSave: false,
