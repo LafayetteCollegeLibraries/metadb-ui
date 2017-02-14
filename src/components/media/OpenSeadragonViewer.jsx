@@ -1,5 +1,7 @@
 import React from 'react'
 import 'openseadragon'
+import assign from 'object-assign'
+import Button from '../Button.jsx'
 
 const T = React.PropTypes
 
@@ -23,27 +25,27 @@ const OpenSeadragonViewer = React.createClass({
 	},
 
 	initOpenSeadragon: function () {
+		const props = assign({}, this.props)
+		delete props.onClose
+
 		this.viewer = OpenSeadragon({
-			id: 'react-osd--viewer',
-			prefixUrl: this.props.prefixUrl,
-			tileSources: this.props.tileSources,
-			sequenceMode: this.props.sequenceMode,
-    	showReferenceStrip: this.props.showReferenceStrip,
-			referenceStripScroll: this.props.referenceStripScroll,
-			showNavigator:  this.props.showNavigator
+			element: this._element,
+
+			...props,
 		})
 
-		var additionalControls = [];
-		var closeButton = new OpenSeadragon.Button({
-			tooltip: "Close Viewer",
+		const icon = 'http://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/32/close-icon.png'
+		const additionalControls = [];
+		const closeButton = new OpenSeadragon.Button({
+			tooltip: 'Close Viewer',
 			onClick: this.props.onClose,
-			srcRest: "http://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/32/close-icon.png",
-			srcGroup: "http://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/32/close-icon.png",
-			srcHover: "http://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/32/close-icon.png",
-			srcDown: "http://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/32/close-icon.png"
+			srcRest: icon,
+			srcGroup: icon,
+			srcHover: icon,
+			srcDown: icon
 		});
 		additionalControls.push(closeButton);
-		var URButtonGroup = new OpenSeadragon.ButtonGroup({buttons: additionalControls});
+		const URButtonGroup = new OpenSeadragon.ButtonGroup({buttons: additionalControls});
 
 		this.viewer.addControl(URButtonGroup.element, {
 			anchor: OpenSeadragon.ControlAnchor.TOP_RIGHT
@@ -51,14 +53,11 @@ const OpenSeadragonViewer = React.createClass({
 	},
 
 	render: function () {
-		const style = {
-			height: '600px',
-			width: '800px',
-			verticalAlign: 'top',
-		}
-
 		return (
-			<div className="openseadragon-container" id="react-osd--viewer" style={style}></div>
+			<div
+				className="OpenSeadragonViewer-container"
+				ref={el => this._element = el}
+			/>
 		)
 	}
 })
