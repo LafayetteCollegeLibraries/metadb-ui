@@ -109,11 +109,7 @@ const Work = React.createClass({
 		//   return /* pdfRenderer */
 		// }
 
-		// TODO: remove OpenSeadragon example!
-		// using placeholder for now while we have server issues w/ the url provided
-		// in work response.
-		const images = ['http://openseadragon.github.io/example-images/duomo/duomo.dzi']
-		// const images = data.iiif_images
+		const images = data.iiif_images
 
 		if (this.state.mediaOpen) {
 			return (
