@@ -119,6 +119,7 @@ const Work = React.createClass({
 			return (
 				<OpenSeadragonViewer
 					prefixUrl='http://openseadragon.github.io/openseadragon/images/'
+					autoHideControls={false}
 					tileSources={images}
 					sequenceMode={images.length > 1}
 					showReferenceStrip={images.length > 1}
