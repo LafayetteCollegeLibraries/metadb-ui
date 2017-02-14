@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from '../Button.jsx'
 
 const T = React.PropTypes
 
@@ -21,20 +22,22 @@ const ThumbnailPreview = React.createClass({
 		if (!this.props.caption)
 			return
 
-		return <figcaption>{this.props.caption}</figcaption>
+		return (
+			<figcaption className="ThumbnailPreview-caption">
+				{this.props.caption}
+			</figcaption>
+		)
 	},
 
 	render: function () {
 		return(
-			<div className="thumbnail-preview-panel">
-				<figure className="thumbnail-preview" >
+			<div className="ThumbnailPreview-container">
+				<figure className="ThumbnailPreview-figure" >
 					<img src={this.props.src} />
 
 					{this.maybeRenderCaption()}
-					<button onClick={this.handleOnClick}>Open Viewer</button>
 				</figure>
-				<a href="#">View/Create Derivatives</a>
-				<h6>Last updated: YYYY - MM - DD</h6>
+				<Button onClick={this.handleOnClick}>Open Viewer</Button>
 			</div>
 		)
 	}
