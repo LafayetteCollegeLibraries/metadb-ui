@@ -48,18 +48,23 @@
 		// which qualifies as `.Work-content > div`, the latter of which
 		// is more specific + will win the race in css styling
 		> div:not([class]) {
-			background-color: $white;
 			flex-basis: 33%;
 			text-align: center;
 			z-index: 9;
 		}
 
-		// &.media-is-open > div:not([class]) {
-		// 	background-color: $black;
-		// }
+		&.media-is-open {
+			> div {
+				flex-basis: 100%;
+			}
 
-		&.media-is-open > div {
-			flex-basis: 100%;
+			.Work-view-container {
+				box-shadow: 0 5px 20px 5px $white;
+			}
+
+			.Work-edit-container {
+				padding-top: $default-body-margin * 2;
+			}
 		}
 	}
 
