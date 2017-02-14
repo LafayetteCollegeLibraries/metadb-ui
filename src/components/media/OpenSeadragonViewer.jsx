@@ -16,12 +16,30 @@ const OpenSeadragonViewer = React.createClass({
 		onClose: T.func
 	},
 
+	getInitialState: function () {
+		return {
+			height: this.getHeight(),
+		}
+	},
+
+	componentWillMount: function () {
+		window.addEventListener('resize', this.resizeContainer)
+	},
+
+	componentWillUnmount: function () {
+		window.removeEventListener('resize', this.resizeContainer)
+	},
+
 	componentDidMount: function () {
 		this.initOpenSeadragon()
 	},
 
-	shouldComponentUpdate: function () {
-		return false
+	shouldComponentUpdate: function (nextProps, nextState) {
+		return nextState.height !== this.state.height
+	},
+
+	getHeight: function () {
+		return Math.floor(window.innerHeight * 0.5)
 	},
 
 	initOpenSeadragon: function () {
@@ -52,11 +70,24 @@ const OpenSeadragonViewer = React.createClass({
 		});
 	},
 
+	resizeContainer: function () {
+		let timeout
+
+		if (!timeout) {
+			timeout = setTimeout(() => {
+				timeout = null
+				this.setState({height: this.getHeight()})
+			}, 66)
+		}
+	},
+
 	render: function () {
+		const { height } = this.state
 		return (
 			<div
 				className="OpenSeadragonViewer-container"
 				ref={el => this._element = el}
+				style={{height}}
 			/>
 		)
 	}
