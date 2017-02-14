@@ -30,19 +30,9 @@ const Work = React.createClass({
 		}
 	},
 
-	componentDidUpdate: function (prevProps, prevState) {
-		if (this.state.mediaOpen !== prevState.mediaOpen) {
-			setTimeout(function () {
-				window.scrollBy(0,1)
-				window.scrollBy(0,-1)
-			}, 250)
-		}
-	},
-
 	getInitialState: function () {
 		return {
 			hasFirstSave: false,
-			mediaIsStuck: false,
 			mediaOpen: false,
 		}
 	},
@@ -115,13 +105,23 @@ const Work = React.createClass({
 		if (!data.thumbnail_path)
 			return
 
+		// if (isPdf) {
+		//   return /* pdfRenderer */
+		// }
+
+		// TODO: remove OpenSeadragon example!
+		// using placeholder for now while we have server issues w/ the url provided
+		// in work response.
+		const images = ['http://openseadragon.github.io/example-images/duomo/duomo.dzi']
+		// const images = data.iiif_images
+
 		if (this.state.mediaOpen) {
 			return (
 				<OpenSeadragonViewer
 					prefixUrl='http://openseadragon.github.io/openseadragon/images/'
-					tileSources={data.iiif_images}
-					sequenceMode={data.iiif_images.length > 1}
-					showReferenceStrip={data.iiif_images.length > 1}
+					tileSources={images}
+					sequenceMode={images.length > 1}
+					showReferenceStrip={images.length > 1}
 					referenceStripScroll='vertical'
 					showNavigator={true}
 					onClose={this.adjustSections}
@@ -131,7 +131,7 @@ const Work = React.createClass({
 
 		const props = {
 			onClick: this.adjustSections,
-			src: data.thumbnail_path,
+			src: (data||{}).thumbnail_path || '',
 		}
 
 		return <ThumbnailPreview {...props} />
@@ -152,26 +152,22 @@ const Work = React.createClass({
 
 		const { mediaOpen } = this.state
 
+		const workContentProps = {
+			className: cn('Work-content', {
+				'media-is-open': mediaOpen,
+			}),
+		}
+
 		const workViewContainerProps = {
 			className: cn('Work-sub-container', {
 				'Work-view-container': true,
-				'is-open': mediaOpen,
-				'StickyContainer': true,
 			}),
-
-			style: {
-				width: mediaOpen ? '66%' : '33%',
-			}
 		}
 
 		const workEditContainerProps = {
 			className: cn('Work-sub-container', {
 				'Work-edit-container': true,
 			}),
-
-			style: {
-				width: mediaOpen ? '33%' : '66%',
-			}
 		}
 
 		const workEditProps = {
@@ -180,28 +176,27 @@ const Work = React.createClass({
 			updateWork: this.handleUpdateWork,
 		}
 
-		const stickyWorkViewProps = {
-		}
-
 		return (
-			<StickyContainer className="Work-container StickyContainer">
+			<StickyContainer className="Work-container">
 				{this.maybeRenderNavToSearchResults()}
 
 				<Sticky stickyStyle={{width: '100%'}} className="Work-sticky-header">
 					{this.renderHeader()}
 				</Sticky>
 
-				<div className="Work-content">
-					<StickyContainer {...workViewContainerProps}>
-						<Sticky {...stickyWorkViewProps}>
-							{this.renderMediaPreview()}
-						</Sticky>
-					</StickyContainer>
+				{/* .Work-content */}
+				<StickyContainer {...workContentProps}>
 
+					{/* .Work-view-container */}
+					<Sticky {...workViewContainerProps}>
+						{this.renderMediaPreview()}
+					</Sticky>
+
+					{/* .Work-edit-container */}
 					<div {...workEditContainerProps}>
 						<WorkEdit {...workEditProps} />
 					</div>
-				</div>
+				</StickyContainer>
 			</StickyContainer>
 		)
 	}
