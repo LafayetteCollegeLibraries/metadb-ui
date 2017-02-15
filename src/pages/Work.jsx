@@ -37,6 +37,12 @@ const Work = React.createClass({
 		}
 	},
 
+	componentWillReceiveProps: function (nextProps) {
+		if (!this.state.hasFirstSave && nextProps.isSaving) {
+			this.setState({hasFirstSave: true})
+		}
+	},
+
 	adjustSections: function () {
 		this.setState({mediaOpen: !this.state.mediaOpen})
 		this.forceUpdate()
@@ -46,18 +52,33 @@ const Work = React.createClass({
 		const { isFetching, isSaving, data } = this.props.work
 		const { hasFirstSave } = this.state
 
-		if (isFetching)
+		if (isFetching || !data || !data.modified_date)
 			return
 
 		if (isSaving)
 			return 'Saving...'
 
-		if (hasFirstSave) {
-			const dateString = data.last_modified
-			const date = new Date(Date.parse(dateString))
+		if (!hasFirstSave) {
+			const parsed = Date.parse(data.modified_date)
+
+			if (Number.isNaN(parsed))
+				return data.modified_date
+
+			const date = new Date(parsed)
+			const day = date.getUTCDate()
+			const moIdx = date.getUTCMonth()
+			const yr = date.getUTCFullYear()
+
+			const mo = [
+				'January', 'February', 'March', 'April', 'May',
+				'June', 'July', 'August', 'September',
+				'October', 'November', 'December',
+			][moIdx]
+
+			const str = `${mo} ${day}, ${yr}`
 
 			// TODO: better date formatting
-			return `Last updated: ${date.toDateString()}`
+			return `Last updated: ${str}`
 		}
 
 		return 'All changes saved'
