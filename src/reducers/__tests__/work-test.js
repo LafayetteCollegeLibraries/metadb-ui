@@ -3,13 +3,10 @@ import workReducer from '../work'
 import assign from 'object-assign'
 
 import {
-	ADD_EMPTY_VALUE_TO_WORK,
 	FETCHING_WORK,
 	RECEIVE_WORK,
-	REMOVE_VALUE_FROM_WORK,
 	SAVED_WORK,
 	SAVING_WORK,
-	UPDATE_WORK,
 } from '../../constants'
 
 const originalState = {
@@ -62,16 +59,18 @@ describe('workReducer', function () {
 		it('data differs from the originalState', function () {
 			expect(result.data).to.not.deep.equal(originalState.data)
 		})
-
-		it('updates the `fetchedAt` property', function () {
-			expect(result.fetchedAt).to.be.at.least(originalState.fetchedAt)
-		})
 	})
 
 	describe('@SAVED_WORK', function () {
-		const action = {type: SAVED_WORK}
+		const action = {
+			type: SAVED_WORK,
+			updates: {
+				title: ['First Title', 'Another Author'],
+				author: ['The Author']
+			}
+		}
 
-		let data, updates, state
+		let data, state
 
 		beforeEach(function () {
 			data = {
@@ -79,33 +78,19 @@ describe('workReducer', function () {
 				author: []
 			}
 
-			updates = {
-				title: ['First Title', 'Another Author'],
-				author: ['The Author']
-			}
-
 			state = {
 				data,
-				updates,
-				isChanged: true,
 			}
 		})
 
 		it('merges data with updates', function () {
 			const result = workReducer(state, action)
 
-			expect(result.data.title).to.deep.equal(updates.title)
-			expect(result.data.author).to.deep.equal(updates.author)
-		})
+			expect(result.data.title)
+				.to.deep.equal(action.updates.title)
 
-		it('empties the changes object', function () {
-			const result = workReducer(state, action)
-			expect(result.updates).to.be.empty
-		})
-
-		it('toggles `isChanged` to false', function () {
-			const result = workReducer(state, action)
-			expect(result.isChanged).to.be.false
+			expect(result.data.author)
+				.to.deep.equal(action.updates.author)
 		})
 
 		it('toggles `isSaving` to false', function () {

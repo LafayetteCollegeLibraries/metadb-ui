@@ -19,10 +19,6 @@ import {
 	// search constants
 	RECEIVE_SEARCH_ERR,
 
-	// work constants
-	FETCHING_WORK_ERR,
-	WORK_NOT_FOUND_ERR,
-
 	// types
 	NOTIFICATION_ERR as ERROR,
 	NOTIFICATION_SUCCESS as SUCCESS,
@@ -67,9 +63,6 @@ function getMessage (action) {
 		case FETCHING_ALL_VOCABULARIES_ERR:
 			return fetchingVocabulariesError(action)
 
-		// case FETCHING_WORK_ERR:
-		// 	return fetchingWorkError(action)
-
 		case RECEIVE_SEARCH_ERR:
 			return receiveSearchError(action)
 
@@ -81,9 +74,6 @@ function getMessage (action) {
 
 		case UPDATE_VOCABULARY_ERR:
 			return updateVocabularyError(action)
-
-		// case WORK_NOT_FOUND_ERR:
-		// 	return workNotFound(action)
 	}
 }
 
@@ -149,15 +139,6 @@ function deleteVocabularySuccess (action) {
 	return success(message)
 }
 
-function fetchingWorkError (action) {
-	const tmpl = messages.FETCHING_WORK_ERR
-	const id = action.id
-	const errmsg = action.error.message
-	const message = sprintf(tmpl, id, errmsg)
-
-	return error(message)
-}
-
 function fetchingVocabulariesError (action) {
 	const tmpl = messages.FETCHING_VOCABULARIES_ERR
 	const msg = action.error.message
@@ -198,14 +179,6 @@ function updateVocabularyError (action) {
 	const name = action.vocabulary.pref_label[0]
 	const msg = action.error.message
 	const message = sprintf(tmpl, name, msg)
-
-	return error(message)
-}
-
-function workNotFound (action) {
-	const tmpl = messages.WORK_NOT_FOUND_WITH_ID
-	const id = action.id
-	const message = sprintf(tmpl, id)
 
 	return error(message)
 }

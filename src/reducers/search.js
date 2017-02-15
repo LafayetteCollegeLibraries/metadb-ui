@@ -72,7 +72,7 @@ function searching (state, action) {
 	}
 }
 
-function receiveError (state, action) {
+function receiveError () {
 	return {
 		isSearching: false,
 	}

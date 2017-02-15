@@ -17,9 +17,10 @@ export default function workReducer (state, action) {
 		case FETCHING_WORK:
 			return fetchingWork(state, action)
 
-		// see lafayette_concerns#3, xhr requests for non-existant works
+		// see lafayette-preserve#3, xhr requests for non-existant works
 		// are returning 401: Unauthorized
 		case FETCHING_WORK_ERR:
+		case WORK_NOT_FOUND_ERR:
 			return workNotFound(state, action)
 
 		case RECEIVE_WORK:
@@ -30,9 +31,6 @@ export default function workReducer (state, action) {
 
 		case SAVING_WORK:
 			return savingWork(state, action)
-
-		case WORK_NOT_FOUND_ERR:
-			return workNotFound(state, action)
 
 		default:
 			return state

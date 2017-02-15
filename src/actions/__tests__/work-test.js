@@ -131,7 +131,14 @@ describe('Work actionCreator', function () {
 
 			return store.dispatch(actions.saveWork(id, updates))
 				.then(() => {
-					expect(store.getActions()).to.deep.equal(expectedActions)
+					const actions = store.getActions()
+
+					expect(actions).to.have.length(expectedActions.length)
+					expectedActions.forEach((action, idx) => {
+						expect(action.type).to.equal(actions[idx].type)
+					})
+
+					expect(actions[0].id).to.equal(expectedActions[0].id)
 				})
 		})
 	})
