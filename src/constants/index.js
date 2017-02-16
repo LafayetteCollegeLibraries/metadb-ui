@@ -1,3 +1,4 @@
+export * from './batch'
 export * from './notifications'
 export * from './search'
 export * from './terms'

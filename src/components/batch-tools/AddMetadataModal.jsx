@@ -4,6 +4,7 @@ import assign from 'object-assign'
 import Button from '../Button.jsx'
 
 import {
+	DateInput,
 	FormField,
 	MetadataForm,
 	StringInput,
@@ -114,8 +115,22 @@ const AddMetadataForm = React.createClass({
 
 		return (
 			<MetadataForm {...mdformProps}>
-				<FormField name="title" label="Title" renderer={StringInput} multiple />
-				<FormField name="description" label="Description" renderer={TextInput} multiple />
+				<FormField
+					name="title"
+					label="Title"
+					renderer={StringInput}
+				/>
+				<FormField
+					name="description"
+					label="Description"
+					renderer={TextInput}
+				/>
+				<FormField
+					name="date_original"
+					label="Date (Original)"
+					renderer={DateInput}
+					type="day"
+				/>
 			</MetadataForm>
 		)
 	},
