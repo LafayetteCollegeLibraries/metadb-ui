@@ -21,10 +21,6 @@ const DateInput = React.createClass({
 		if (!value)
 			return { date: '' }
 
-		if (value instanceof Date) {
-			value = value.toISOString()
-		}
-
 		// `time` will either be `HH:MM:SS.000Z`
 		// or undefined (if short date (YYYY-MM-DD) is passed)
 		let [ date ] = value.split('T')
@@ -60,9 +56,7 @@ const DateInput = React.createClass({
 		if (!this.props.onChange)
 			return
 
-		this.props.onChange && this.props.onChange.call(null,
-			this.getDateValue(), this.state.date
-		)
+		this.props.onChange && this.props.onChange(this.getDateValue())
 	},
 
 	render: function () {
