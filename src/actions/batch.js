@@ -9,7 +9,9 @@ import assign from 'object-assign'
 
 export const batchUpdateWorks = updates => (dispatch, getState) => {
 	const state = getState()
-	const { facets, query } = state.search
+	const { facets, query, results } = state.search
+
+	const count = results && results.pages ? results.pages.total_count : undefined
 
 	const search = {
 		facets: {},
@@ -32,12 +34,14 @@ export const batchUpdateWorks = updates => (dispatch, getState) => {
 	dispatch({
 		type: BATCH_UPDATE_WORKS,
 		updates,
+		count,
 	})
 
 	return batchUpdates({search, updates})
 		.then(() => {
 			dispatch({
 				type: BATCH_UPDATE_WORKS_OK,
+				count,
 			})
 		})
 		.catch(error => {

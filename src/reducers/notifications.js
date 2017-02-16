@@ -19,6 +19,11 @@ import {
 	// search constants
 	RECEIVE_SEARCH_ERR,
 
+	// batch updates
+	BATCH_UPDATE_WORKS,
+	BATCH_UPDATE_WORKS_OK,
+	BATCH_UPDATE_WORKS_ERR,
+
 	// types
 	NOTIFICATION_ERR as ERROR,
 	NOTIFICATION_SUCCESS as SUCCESS,
@@ -47,6 +52,15 @@ function getMessage (action) {
 	switch (action.type) {
 		case ADD_TERM_TO_VOCABULARY_ERR:
 			return addTermToVocabError(action)
+
+		case BATCH_UPDATE_WORKS:
+			return batchUpdateWorks('updating', action)
+
+		case BATCH_UPDATE_WORKS_OK:
+			return batchUpdateWorks('ok', action)
+
+		case BATCH_UPDATE_WORKS_ERR:
+			return batchUpdateWorks('err', action)
 
 		case CREATE_VOCABULARY_RESPONSE_ERR:
 			return createVocabularyError(action)
@@ -106,6 +120,40 @@ function addTermToVocabError (action) {
 	return error(message)
 }
 
+function batchUpdateWorks (type, action) {
+	let tmpl, message, what
+
+	if (type === 'err') {
+		tmpl = messages.BATCH_UPDATE_ERR
+		message = action.error.message
+
+		return error(sprintf(tmpl, message))
+	}
+
+	const count = action.count
+
+	if (type === 'ok' && typeof count === 'undefined') {
+		tmpl = messages.BATCH_UPDATE_OK
+		return success(tmpl)
+	}
+
+	if (type === 'ok') {
+		tmpl = messages.BATCH_UPDATE_OK_WITH_COUNT
+		what = 'work' + (count === 1 ? '' : 's')
+		return success(sprintf(tmpl, count, what))
+	}
+
+	if (type === 'updating' && typeof count === 'undefined') {
+		tmpl = messages.BATCH_UPDATE
+		return success(tmpl)
+	}
+
+	if (type === 'updating') {
+		tmpl = messages.BATCH_UPDATE_WITH_COUNT
+		what = 'work' + (count === 1 ? '' : 's')
+		return success(sprintf(tmpl, count, what))
+	}
+}
 
 function createVocabularyError (action) {
 	const tmpl = messages.CREATE_VOCABULARY_ERR

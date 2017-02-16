@@ -150,7 +150,7 @@ const AddMetadataForm = React.createClass({
 	render: function () {
 		const { data } = this.props
 		const count = data.pages.total_count
-		const label = `Apply metadata to ${count} result${count === 1 ? '' : 's'}`
+		const label = `Apply metadata to ${count} work${count === 1 ? '' : 's'}`
 
 		const modalProps = {
 			className: 'full',
