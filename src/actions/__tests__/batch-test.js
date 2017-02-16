@@ -101,7 +101,7 @@ describe('Batch actionCreator', function () {
 			const store = mockStore(storeWithRanges)
 			return store.dispatch(batchUpdateWorks(updates)).then(() => {
 				const lastArgs = fetchMock.lastCall()
-				let [ _, { body } ] = lastArgs
+				let [ , { body } ] = lastArgs
 
 				if (typeof body === 'string')
 					body = JSON.parse(body)
