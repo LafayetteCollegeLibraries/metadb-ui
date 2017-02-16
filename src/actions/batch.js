@@ -5,7 +5,6 @@ import {
 } from '../constants'
 
 import { batchUpdates } from '../../lib/api'
-import assign from 'object-assign'
 
 export const batchUpdateWorks = updates => (dispatch, getState) => {
 	const state = getState()
