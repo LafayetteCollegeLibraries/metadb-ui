@@ -59,12 +59,12 @@ describe('<FacetListWithMoreView />', function () {
 			const $el = shallowEl()
 
 			expect($el.state('modalOpen')).to.be.false
-			expect($el.find('ModalWithHeader')).to.have.length(0)
+			expect($el.find('Modal')).to.have.length(0)
 
 			$el.find(SEL).simulate('click')
 
 			expect($el.state('modalOpen')).to.be.true
-			expect($el.find('ModalWithHeader')).to.have.length(1)
+			expect($el.find('Modal')).to.have.length(1)
 		})
 	})
 
