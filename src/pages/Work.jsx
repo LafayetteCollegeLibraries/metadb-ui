@@ -202,20 +202,20 @@ const Work = React.createClass({
 					{this.renderHeader()}
 				</Sticky>
 
-				{/* .Work-content */}
-				<StickyContainer {...workContentProps}>
+					{/* .Work-content */}
+					<StickyContainer {...workContentProps}>
 
 					{/* .Work-view-container */}
 					<Sticky {...workViewContainerProps}>
 						{this.renderMediaPreview()}
 					</Sticky>
 
-					{/* .Work-edit-container */}
-					<div {...workEditContainerProps}>
-						<WorkEdit {...workEditProps} />
-					</div>
+						{/* .Work-edit-container */}
+						<div {...workEditContainerProps}>
+							<WorkEdit {...workEditProps} />
+						</div>
+					</StickyContainer>
 				</StickyContainer>
-			</StickyContainer>
 		)
 	}
 })

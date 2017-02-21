@@ -18,12 +18,14 @@ const labelFromName = name => {
 	return split.shift() + ' (' + split.join(', ') + ')'
 }
 
+
 const LargerField = props => {
 	if (!props.label)
 		props.label = labelFromName(props.name)
 
 	return <FormField {...props} renderer={TextInput} />
 }
+
 
 const SubjectOCM = props => {
 	const fetchTerms = () => {
@@ -48,19 +50,29 @@ const TechnicalMetadata = props => {
 	return <FormField {...props} renderer={TextInput} disabled />
 }
 
+
 const GenericWork = React.createClass({
 	_fetchingQueue: {},
+	_tmpOpts: [],
 
 	getInitialState: function () {
 		return {
-			terms: {},
+			terms: {}
 		}
 	},
 
-	controlledVocabularyField: function (opts) {
-		const { name, label, id } = opts
-		const terms = this.state.terms[id] || []
+	componentDidMount: function() {
+		console.log("mounted")
+		this._tmpOpts.forEach((value, index) => {
+			this.updateTerms(value.id)
+		})
+	},
 
+	componentWillUnmount: function() {
+		console.log("will unmount")
+	},
+
+	updateTerms: function(id) {
 		if (!this.state.terms.hasOwnProperty(id) && !this._fetchingQueue[id]) {
 			this._fetchingQueue[id] = true
 
@@ -71,9 +83,19 @@ const GenericWork = React.createClass({
 				delete this._fetchingQueue[id]
 
 				const update = assign({}, this.state.terms, {[id]: terms})
-				this.setState({terms: update})
+				if(this.isMounted()){
+					console.log("Update terms")
+					this.setState({terms: update})
+				}
 			})
 		}
+	},
+
+	controlledVocabularyField: function (opts) {
+		const { name, label, id } = opts
+		const terms = this.state.terms[id] || []
+
+		this._tmpOpts.push(opts)
 
 		return (
 			<FormField
@@ -108,13 +130,13 @@ const GenericWork = React.createClass({
 					id: 'mdl-subject-lcsh',
 				})
 			}
-			{
+			{/* {
 			 this.controlledVocabularyField({
 					name: 'subject_ocm',
 					label: 'Subject (OCM)',
 					id:'eaic-subject-ocm',
 				})
-			}
+			} */}
 			<FormField name="publisher" label="Publisher (Original)" multiple />
 			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="day"/>
 			<FormField name="format_medium" label="Format (Medium)" multiple />
