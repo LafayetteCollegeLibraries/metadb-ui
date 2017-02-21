@@ -85,7 +85,9 @@ const SearchResults = React.createClass({
 	},
 
 	handleCloseBatchTool: function (changes) {
-		this.props.batchUpdateWorks(changes)
+		if (changes)
+			this.props.batchUpdateWorks(changes)
+
 		this.setState({batchTool: null})
 	},
 
