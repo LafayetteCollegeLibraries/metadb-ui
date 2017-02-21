@@ -1,5 +1,18 @@
+.OpenSeadragonViewer {
+	&-container {
+		background-color: $black;
+		padding-top: 10px;
+		vertical-align: top;
+		width: 100%;
+	}
+}
 
-#react-osd--viewer > div:nth-child(1) {
+// styling individual elements of the stock OpenSeadragon viewer
+//
+// TODO: if we can't create better selectors for these (eg classes)
+// then we should go through and document what each is referring to.
+
+.OpenSeadragonViewer > div:nth-child(1) {
 
 	> div:nth-child(2) {
 

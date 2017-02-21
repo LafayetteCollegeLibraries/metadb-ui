@@ -32,14 +32,6 @@ const shallowEl = xtend => wrapEl(xtend, shallow)
 const mountEl = xtend => wrapEl(xtend, mount)
 
 describe('<MetadataForm />', function () {
-	describe('the `onSubmit` handler', function () {
-		it('is called when the form is submitted', function (done) {
-			const onSubmit = () => { done() }
-			const $el = shallowEl({onSubmit})
-			$el.find('form').simulate('submit', {preventDefault: noop})
-		})
-	})
-
 	describe('when passed child elements', function () {
 		it('passes values from `defaultProps` to children missing that prop', function () {
 			const PROP_KEY = 'someRandomProp'

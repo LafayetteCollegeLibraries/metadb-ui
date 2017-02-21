@@ -6,14 +6,11 @@ import thunk from 'redux-thunk'
 
 import fetchMock from 'fetch-mock'
 import {
-	ADD_EMPTY_VALUE_TO_WORK,
 	FETCHING_WORK,
 	FETCHING_WORK_ERR,
 	RECEIVE_WORK,
-	REMOVE_VALUE_FROM_WORK,
 	SAVING_WORK,
 	SAVED_WORK,
-	UPDATE_WORK,
 	WORK_NOT_FOUND_ERR,
 } from '../../constants'
 
@@ -24,43 +21,6 @@ const apiWorkUrl = id => (
 )
 
 describe('Work actionCreator', function () {
-	describe('#addEmptyValueToWork', function () {
-		it('returns the ADD_EMPTY_VALUE_TO_WORK action + key passed', function () {
-			const testKey = 'testKey'
-			const store = mockStore({work: {}})
-			const expectedAction = [
-				{
-					type: ADD_EMPTY_VALUE_TO_WORK,
-					key: testKey,
-				}
-			]
-
-			store.dispatch(actions.addEmptyValueToWork(testKey))
-			expect(store.getActions()).to.deep.equal(expectedAction)
-		})
-	})
-
-	describe('#editWorkField', function () {
-		it('returns the UPDATE_WORK action + key/index/value passed', function () {
-			const key = 'key'
-			const index = 0
-			const value = 'value'
-
-			const store = mockStore({work: {}})
-			const expectedAction = [
-				{
-					type: UPDATE_WORK,
-					key,
-					index,
-					value,
-				}
-			]
-
-			store.dispatch(actions.editWorkField(key, index, value))
-			expect(store.getActions()).to.deep.equal(expectedAction)
-		})
-	})
-
 	describe('#fetchWork', function () {
 		const id = 'example-id'
 
@@ -121,26 +81,6 @@ describe('Work actionCreator', function () {
 		})
 	})
 
-	describe('#removeValueFromWork', function () {
-		it('returns the REMOVE_VALUE_FROM_WORK action + key/index passed', function () {
-			const key = 'key'
-			const index = 0
-
-			const expectedAction = [
-				{
-					type: REMOVE_VALUE_FROM_WORK,
-					key,
-					index,
-				}
-			]
-
-			const store = mockStore({work: {}})
-
-			store.dispatch(actions.removeValueFromWork(key, index))
-			expect(store.getActions()).to.deep.equal(expectedAction)
-		})
-	})
-
 	describe('#saveWork', function () {
 		const id = 'example-work'
 
@@ -179,25 +119,27 @@ describe('Work actionCreator', function () {
 				work: {
 					data: {
 						title: ['Old Title'],
-					},
-					updates: {
-						title: ['New Title'],
-					},
+					}
 				}
+			}
+
+			const updates = {
+				title: ['New Title']
 			}
 
 			const store = mockStore(state)
 
-			return store.dispatch(actions.saveWork(id))
+			return store.dispatch(actions.saveWork(id, updates))
 				.then(() => {
-					expect(store.getActions()).to.deep.equal(expectedActions)
+					const actions = store.getActions()
+
+					expect(actions).to.have.length(expectedActions.length)
+					expectedActions.forEach((action, idx) => {
+						expect(action.type).to.equal(actions[idx].type)
+					})
+
+					expect(actions[0].id).to.equal(expectedActions[0].id)
 				})
 		})
 	})
 })
-
-
-// 	describe('#saveWork', function () {
-// 		xit('updates the work to the API server')
-// 	})
-// })

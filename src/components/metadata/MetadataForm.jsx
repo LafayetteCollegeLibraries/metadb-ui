@@ -12,9 +12,6 @@ const MetadataForm = React.createClass({
 		onAddValueField: T.func,
 		onChange: T.func,
 		onRemoveValueField: T.func,
-		onSubmit: T.func,
-
-		submitButton: T.oneOfType([T.func, T.element]),
 
 		defaultProps: T.object,
 	},
@@ -71,9 +68,9 @@ const MetadataForm = React.createClass({
 
 	render: function () {
 		return (
-			<form onSubmit={this.handleSubmit}>
+			<div className="MetadataForm">
 				{this.renderFormFields()}
-			</form>
+			</div>
 		)
 	}
 })

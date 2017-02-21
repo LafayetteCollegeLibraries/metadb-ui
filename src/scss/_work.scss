@@ -1,0 +1,80 @@
+// src/pages/Work.jsx
+//
+// .Work-container
+//   .Work-sticky-header
+//   .Work-content
+//     div
+//       div(padding-bottom=x) // placeholder for react-sticky
+//       .Work-view-container
+//     .Work-edit-container
+
+.Work {
+	&-container {
+		overflow-x: hidden;
+	}
+
+	&-sticky-header {
+		background-color: $white;
+		transition: all 60ms ease-out;
+		z-index: 10;
+
+		&.sticky {
+			box-shadow: 0 2px 4px 0 #aaa;
+			font-size: 0.85em;
+			margin-left: -$default-body-margin;
+			padding: 5px;
+		}
+	}
+
+	&-content {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		margin-top: 2em;
+
+		// _THIS_ is essentially our view-container. `react-sticky`'s
+		// <Sticky> component produces the following:
+		//
+		//   <div>
+		//     <div {/* this is a padding/reporting element */}/>
+		//     <div {/* any props passed to Sticky are inserted _here_ */}>
+		//       {/* ... */}
+		//     </div>
+		//   </div>
+		//
+		// So if we want to style the Sticky container, we need to
+		// target the empty div and _not_ `.Work-view-container`.
+		// using `:not([class])` will avoid styling the `.Work-edit-container`
+		// which qualifies as `.Work-content > div`, the latter of which
+		// is more specific + will win the race in css styling
+		> div:not([class]) {
+			flex-basis: 33%;
+			text-align: center;
+			z-index: 9;
+		}
+
+		&.media-is-open {
+			> div {
+				flex-basis: 100%;
+			}
+
+			.Work-view-container {
+				box-shadow: 0 5px 20px 5px $white;
+			}
+
+			.Work-edit-container {
+				padding-top: $default-body-margin * 2;
+			}
+		}
+	}
+
+	&-view-container {
+		background-color: inherit;
+		z-index: inherit;
+	}
+
+	&-edit-container {
+		flex-basis: 66%;
+		z-index: 1;
+	}
+}
