@@ -116,11 +116,6 @@ const AddMetadataForm = React.createClass({
 		return (
 			<MetadataForm {...mdformProps}>
 				<FormField
-					name="title"
-					label="Title"
-					renderer={StringInput}
-				/>
-				<FormField
 					name="description"
 					label="Description"
 					renderer={TextInput}
@@ -130,6 +125,16 @@ const AddMetadataForm = React.createClass({
 					label="Date (Original)"
 					renderer={DateInput}
 					type="day"
+				/>
+				<FormField
+					name="source"
+					label="Source"
+					renderer={StringInput}
+				/>
+				<FormField
+					name="rights"
+					label="Rights (Digital)"
+					renderer={TextInput}
 				/>
 			</MetadataForm>
 		)
