@@ -39,29 +39,27 @@ const workFieldKeys = Object.keys(workFields).reduce((dict, key, index) => {
 
 const sortByField = (a, b) => (workFieldKeys[a] - workFieldKeys[b])
 
-class ResultsTable extends React.Component {
-	constructor (props) {
-		super(props)
+const ResultsTable = React.createClass({
+	propTypes: propTypes,
 
+	getDefaultProps: function () {
+		return defaultProps
+	},
+
+	getInitialState: function () {
 		let fields = searchResultFields.get()
 
 		if (fields.length === 0) {
 			fields = this.props.defaultFields
 		}
 
-		this.state = {
+		return {
 			fields,
 			fieldSelectOpen: false,
 		}
+	},
 
-		this.getColumns = this.getColumns.bind(this)
-		this.getFieldToggleHeader = this.getFieldToggleHeader.bind(this)
-		this.handleOnSelectField = this.handleOnSelectField.bind(this)
-		this.renderFieldSelect = this.renderFieldSelect.bind(this)
-		this.setFields = this.setFields.bind(this)
-	}
-
-	getColumns () {
+	getColumns: function () {
 		// set default column first (thumbnail)
 		const columns = [
 			{
@@ -100,9 +98,9 @@ class ResultsTable extends React.Component {
 		}))
 
 		return columns.concat(fields)
-	}
+	},
 
-	getFieldToggleHeader () {
+	getFieldToggleHeader: function () {
 		const open = this.state.fieldSelectOpen
 
 		// simple wrapper for svg lines
@@ -148,13 +146,13 @@ class ResultsTable extends React.Component {
 			<button {...buttonProps} />,
 			(open ? this.renderFieldSelect() : null),
 		]
-	}
+	},
 
-	getThumbnailPath (path) {
+	getThumbnailPath: function (path) {
 		return `${process.env.API_BASE_URL}${path}`
-	}
+	},
 
-	handleOnSelectField (key, toggle, index) {
+	handleOnSelectField: function (key, toggle, index) {
 		const fields = [].concat(this.state.fields)
 		let update
 
@@ -184,9 +182,9 @@ class ResultsTable extends React.Component {
 		}
 
 		this.setFields(update)
-	}
+	},
 
-	renderFieldSelect () {
+	renderFieldSelect: function () {
 		const onClose = () => {
 			if (this.state.fieldSelectOpen) {
 				this.setState({fieldSelectOpen: false})
@@ -207,14 +205,14 @@ class ResultsTable extends React.Component {
 		}
 
 		return <ResultsTableFieldSelect {...props} />
-	}
+	},
 
-	setFields (fields) {
+	setFields: function (fields) {
 		searchResultFields.set(fields)
 		this.setState({fields})
-	}
+	},
 
-	render () {
+	render: function () {
 		return (
 			<div className="results-table-container">
 				<TacoTable
@@ -226,9 +224,6 @@ class ResultsTable extends React.Component {
 			</div>
 		)
 	}
-}
-
-ResultsTable.propTypes = propTypes
-ResultsTable.defaultProps = defaultProps
+})
 
 export default ResultsTable
