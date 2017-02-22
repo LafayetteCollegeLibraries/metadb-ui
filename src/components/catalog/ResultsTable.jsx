@@ -32,12 +32,13 @@ const defaultProps = {
 // create a dictionary to use for sorting the fields based on position.
 // this way, the fields remain in the order displayed in the
 // `ResultsTableFieldSelect` component
-const workFieldKeys = Object.keys(workFields).reduce((dict, key, index) => {
+const workFieldKeys = Object.keys(workFields)
+const workFieldSortDict = workFieldKeys.reduce((dict, key, index) => {
 	dict[key] = index + 1
 	return dict
 }, {})
 
-const sortByField = (a, b) => (workFieldKeys[a] - workFieldKeys[b])
+const sortByField = (a, b) => (workFieldSortDict[a] - workFieldSortDict[b])
 
 const ResultsTable = React.createClass({
 	propTypes: propTypes,
@@ -195,9 +196,14 @@ const ResultsTable = React.createClass({
 			this.setFields(this.props.defaultFields)
 		}
 
+		const onSelectAll = () => {
+			this.setFields(workFieldKeys)
+		}
+
 		const props = {
 			onClose,
 			onReset,
+			onSelectAll,
 			fields: workFields,
 			key: 'field-select',
 			onSelectField: this.handleOnSelectField,

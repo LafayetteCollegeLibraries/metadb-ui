@@ -42,6 +42,10 @@ const ResultsTableFieldSelect = React.createClass({
 		this.props.onReset && this.props.onReset()
 	},
 
+	handleSelectAll: function () {
+		this.props.onSelectAll && this.props.onSelectAll()
+	},
+
 	maybeCloseSelect: function (event) {
 		let target = event.target
 
@@ -68,7 +72,10 @@ const ResultsTableFieldSelect = React.createClass({
 
 	renderWorkFields: function () {
 		const header = [
-			(<div className="field field-header" key="header" onClick={this.handleReset}>
+			(<div className="field field-header" key="all" onClick={this.handleSelectAll}>
+				Select all fields
+			</div>),
+			(<div className="field field-header" key="restore" onClick={this.handleReset}>
 				Restore defaults
 			</div>),
 			(<div className="field-divider" key="divider"/>),
