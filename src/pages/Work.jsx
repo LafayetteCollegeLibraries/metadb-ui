@@ -101,6 +101,54 @@ const Work = React.createClass({
 		return <NavToSearchResults />
 	},
 
+	maybeRenderWorkContent: function () {
+		const { work } = this.props
+
+		if (!Object.keys(work).length)
+			return null
+
+		const { mediaOpen } = this.state
+
+		const workContentProps = {
+			className: cn('Work-content', {
+				'media-is-open': mediaOpen,
+			}),
+		}
+
+		const workViewContainerProps = {
+			className: cn('Work-sub-container', {
+				'Work-view-container': true,
+			}),
+		}
+
+		const workEditContainerProps = {
+			className: cn('Work-sub-container', {
+				'Work-edit-container': true,
+			}),
+		}
+
+		const workEditProps = {
+			autosave: true,
+			data: work.data || {},
+			updateWork: this.handleUpdateWork,
+		}
+
+		return (
+			<StickyContainer {...workContentProps}>
+
+				{/* .Work-view-container */}
+				<Sticky {...workViewContainerProps}>
+					{this.renderMediaPreview()}
+				</Sticky>
+
+				{/* .Work-edit-container */}
+				<div {...workEditContainerProps}>
+					<WorkEdit {...workEditProps} />
+				</div>
+			</StickyContainer>
+		)
+	},
+
 	renderHeader: function () {
 		const { isFetching, data } = this.props.work
 		const title = isFetching ? 'fetching...' : getWorkTitle(data)
@@ -168,32 +216,6 @@ const Work = React.createClass({
 			)
 		}
 
-		const { mediaOpen } = this.state
-
-		const workContentProps = {
-			className: cn('Work-content', {
-				'media-is-open': mediaOpen,
-			}),
-		}
-
-		const workViewContainerProps = {
-			className: cn('Work-sub-container', {
-				'Work-view-container': true,
-			}),
-		}
-
-		const workEditContainerProps = {
-			className: cn('Work-sub-container', {
-				'Work-edit-container': true,
-			}),
-		}
-
-		const workEditProps = {
-			autosave: true,
-			data: work.data || {},
-			updateWork: this.handleUpdateWork,
-		}
-
 		return (
 			<StickyContainer className="Work-container">
 				{this.maybeRenderNavToSearchResults()}
@@ -202,20 +224,9 @@ const Work = React.createClass({
 					{this.renderHeader()}
 				</Sticky>
 
-					{/* .Work-content */}
-					<StickyContainer {...workContentProps}>
+				{this.maybeRenderWorkContent()}
 
-					{/* .Work-view-container */}
-					<Sticky {...workViewContainerProps}>
-						{this.renderMediaPreview()}
-					</Sticky>
-
-						{/* .Work-edit-container */}
-						<div {...workEditContainerProps}>
-							<WorkEdit {...workEditProps} />
-						</div>
-					</StickyContainer>
-				</StickyContainer>
+			</StickyContainer>
 		)
 	}
 })
