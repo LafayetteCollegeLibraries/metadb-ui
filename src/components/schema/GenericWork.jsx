@@ -18,14 +18,12 @@ const labelFromName = name => {
 	return split.shift() + ' (' + split.join(', ') + ')'
 }
 
-
 const LargerField = props => {
 	if (!props.label)
 		props.label = labelFromName(props.name)
 
 	return <FormField {...props} renderer={TextInput} />
 }
-
 
 const SubjectOCM = props => {
 	const fetchTerms = () => {
@@ -50,7 +48,6 @@ const TechnicalMetadata = props => {
 	return <FormField {...props} renderer={TextInput} disabled />
 }
 
-
 const GenericWork = React.createClass({
 	_fetchingQueue: {},
 	_tmpOpts: [],
@@ -61,15 +58,16 @@ const GenericWork = React.createClass({
 		}
 	},
 
-	componentDidMount: function() {
-		console.log("mounted")
-		this._tmpOpts.forEach((value, index) => {
+	componentDidMount: function () {
+		this._isMounted = true
+
+		this._tmpOpts.forEach(value => {
 			this.updateTerms(value.id)
 		})
 	},
 
-	componentWillUnmount: function() {
-		console.log("will unmount")
+	componentWillUnmount: function () {
+		this._isMounted = false
 	},
 
 	updateTerms: function(id) {
@@ -81,12 +79,9 @@ const GenericWork = React.createClass({
 			.then(res => res.terms)
 			.then(terms => {
 				delete this._fetchingQueue[id]
-
 				const update = assign({}, this.state.terms, {[id]: terms})
-				if(this.isMounted()){
-					console.log("Update terms")
-					this.setState({terms: update})
-				}
+
+				this.setState({terms: update})
 			})
 		}
 	},
@@ -95,7 +90,9 @@ const GenericWork = React.createClass({
 		const { name, label, id } = opts
 		const terms = this.state.terms[id] || []
 
-		this._tmpOpts.push(opts)
+		if (typeof this.state.terms[id] === 'undefined') {
+			this._tmpOpts.push(opts)
+		}
 
 		return (
 			<FormField
@@ -130,13 +127,13 @@ const GenericWork = React.createClass({
 					id: 'mdl-subject-lcsh',
 				})
 			}
-			{/* {
+			{
 			 this.controlledVocabularyField({
 					name: 'subject_ocm',
 					label: 'Subject (OCM)',
 					id:'eaic-subject-ocm',
 				})
-			} */}
+			}
 			<FormField name="publisher" label="Publisher (Original)" multiple />
 			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="day"/>
 			<FormField name="format_medium" label="Format (Medium)" multiple />
