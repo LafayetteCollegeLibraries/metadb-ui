@@ -11,7 +11,7 @@
     "e2e-setup": "selenium-standalone install",
     "lint": "eslint .",
     "mock-server": "lafayette-preserve-mock",
-    "test": "npm run lint && npm run test:single && npm run test:e2e",
+    "test": "npm run lint && npm run test:single",
     "test:app": "node test/server",
     "test:e2e": "node test",
     "test:nw": "nightwatch",
