@@ -1,37 +1,37 @@
 @media print{
-	body *{
-		visibility: hidden;
-	}
-	.pdfjs, .pdfjs *{
-		visibility: visible;
-	}
+  body *{
+    visibility: hidden;
+  }
+  .pdfjs, .pdfjs *{
+    visibility: visible;
+  }
 
-	#printContainer, #mozPrintCallback-shim, #mozPrintCallback-shim * {
-		visibility: hidden;
-	}
+  #printContainer, #mozPrintCallback-shim, #mozPrintCallback-shim * {
+    visibility: hidden;
+  }
 
-	.pdfjs{
-		position: absolute;
-		left: 0;
-		top: 0;
-	}
+  .pdfjs{
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 
 .pdfjs {
-	height: 1214px;
-	@import "../../build/pdf_viewer.css";
+  height: 1214px;
+  @import "../../build/pdf_viewer.css";
 
-	/* Fix styles */
-	#thumbnailView {
-		width: 100%;
-	}
+  /* Fix styles */
+  #thumbnailView {
+    width: 100%;
+  }
 
-	.thumbnailSelectionRing {
-		width: 100% !important;
+  .thumbnailSelectionRing {
+    width: 100% !important;
     height: 100% !important;
-	}
+  }
 
-	.pdfViewer .page {
-		height: 100% !important;
-	}
+  .pdfViewer .page {
+    height: 100% !important;
+  }
 }

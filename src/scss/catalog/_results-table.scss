@@ -1,86 +1,86 @@
 // src/components/catalog/ResultsTable.jsx
 .results-table-container {
-	overflow-x: scroll;
+  overflow-x: scroll;
 }
 
 .results-table {
-	$thumbnail-size: 175px;
+  $thumbnail-size: 175px;
 
-	margin-top: 1em;
-	min-width: 100%;
+  margin-top: 1em;
+  min-width: 100%;
 
-	// style the toggle button for ResultsTableFieldSelect
-	.field-select {
-		text-align: left;
+  // style the toggle button for ResultsTableFieldSelect
+  .field-select {
+    text-align: left;
 
-		.toggle {
-			height: 25px;
-			width: 25px;
-		}
-	}
+    .toggle {
+      height: 25px;
+      width: 25px;
+    }
+  }
 
-	td {
-		min-width: $thumbnail-size;
-		padding: 1em;
-	}
+  td {
+    min-width: $thumbnail-size;
+    padding: 1em;
+  }
 
-	td.thumbnail-preview {
-		background-color: #eee;
-		height: $thumbnail-size;
-		padding: 1em;
-		text-align: center;
+  td.thumbnail-preview {
+    background-color: #eee;
+    height: $thumbnail-size;
+    padding: 1em;
+    text-align: center;
 
-		img {
-			max-height: 100%;
-			max-width: 100%;
-		}
-	}
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
 
-	// src/components/catalog/ResultsTableFieldSelect.jsx
-	&--field-select {
-		$selected-color: #1d5f83;
-		$selected-text: $white;
-		$hover-color: lighten($selected-color, 50%);
+  // src/components/catalog/ResultsTableFieldSelect.jsx
+  &--field-select {
+    $selected-color: #1d5f83;
+    $selected-text: $white;
+    $hover-color: lighten($selected-color, 50%);
 
-		background-color: $white;
-		box-shadow: 0 0 4px 1px $grey;
-		font-size: .9em;
-		font-weight: normal;
-		max-height: 75%;
-		overflow-y: scroll;
-		padding: 2px;
-		position: absolute;
-		text-align: left;
+    background-color: $white;
+    box-shadow: 0 0 4px 1px $grey;
+    font-size: .9em;
+    font-weight: normal;
+    max-height: 75%;
+    overflow-y: scroll;
+    padding: 2px;
+    position: absolute;
+    text-align: left;
 
-		.field {
-			background-color: $white;
-			color: $black;
-			cursor: pointer;
-			margin: 1px 2px;
-			padding: 2px;
+    .field {
+      background-color: $white;
+      color: $black;
+      cursor: pointer;
+      margin: 1px 2px;
+      padding: 2px;
 
-			&:hover {
-				background-color: $hover-color;
+      &:hover {
+        background-color: $hover-color;
 
-				&.selected {
-					color: $hover-color;
-				}
-			}
+        &.selected {
+          color: $hover-color;
+        }
+      }
 
-			&.selected {
-				background-color: $selected-color;
-				color: $selected-text;
-			}
-		}
+      &.selected {
+        background-color: $selected-color;
+        color: $selected-text;
+      }
+    }
 
-		.field-header {
-			color: #666;
-			font-size: .9em;
-			font-weight: bold;
-		}
+    .field-header {
+      color: #666;
+      font-size: .9em;
+      font-weight: bold;
+    }
 
-		.field-divider {
-			border-bottom: 1px solid #ccc;
-		}
-	}
+    .field-divider {
+      border-bottom: 1px solid #ccc;
+    }
+  }
 }

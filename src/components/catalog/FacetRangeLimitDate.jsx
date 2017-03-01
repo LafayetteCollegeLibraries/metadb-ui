@@ -8,8 +8,8 @@ import FacetListSelectedItem from './FacetListSelectedItem.jsx'
 import createRangeFacet from '../../../lib/create-range-facet'
 
 import {
-	INTERVALS,
-	VALUES as INTERVAL_VALUES,
+  INTERVALS,
+  VALUES as INTERVAL_VALUES,
 } from './common/date-intervals'
 
 import calculateRange from './common/calculate-range'
@@ -19,90 +19,90 @@ import roundDate from './common/round-date-to-interval'
 const T = React.PropTypes
 
 const FacetRangeLimitDate = React.createClass({
-	propTypes: {
-		name: T.string,
-		label: T.string,
-		items: T.array,
+  propTypes: {
+    name: T.string,
+    label: T.string,
+    items: T.array,
 
-		onSelectFacet: T.func.isRequired,
-		onRemoveSelectedFacet: T.func.isRequired,
-		selectedFacets: T.array.isRequired,
+    onSelectFacet: T.func.isRequired,
+    onRemoveSelectedFacet: T.func.isRequired,
+    selectedFacets: T.array.isRequired,
 
-		interval: T.oneOf(INTERVAL_VALUES)
-	},
+    interval: T.oneOf(INTERVAL_VALUES)
+  },
 
-	getInitialState: function () {
-		return {
-			hits: 0,
-			items: this.props.items,
-			max: 0,
-			min: 0,
-		}
-	},
+  getInitialState: function () {
+    return {
+      hits: 0,
+      items: this.props.items,
+      max: 0,
+      min: 0,
+    }
+  },
 
-	componentWillMount: function () {
-		// TODO: don't assume correctly formatted ISO timestamps
-		const range = calculateRange(this.props.items, v => {
-			const parsed = Date.parse(v)
-			return parsed
-		})
+  componentWillMount: function () {
+    // TODO: don't assume correctly formatted ISO timestamps
+    const range = calculateRange(this.props.items, v => {
+      const parsed = Date.parse(v)
+      return parsed
+    })
 
-		range.min = roundDate(this.props.interval, range.min)
-		range.max = roundDate(this.props.interval, range.max)
+    range.min = roundDate(this.props.interval, range.min)
+    range.max = roundDate(this.props.interval, range.max)
 
-		this.setState(range)
-	},
+    this.setState(range)
+  },
 
-	getFormattedDateValue: function (raw) {
-		return formatDateValue(this.props.interval, raw)
-	},
+  getFormattedDateValue: function (raw) {
+    return formatDateValue(this.props.interval, raw)
+  },
 
-	handleApplyRange: function (range) {
-		const [rawMin, rawMax] = range
+  handleApplyRange: function (range) {
+    const [rawMin, rawMax] = range
 
-		const min = this.getFormattedDateValue(rawMin)
-		const max = this.getFormattedDateValue(rawMax)
+    const min = this.getFormattedDateValue(rawMin)
+    const max = this.getFormattedDateValue(rawMax)
 
-		const facet = createRangeFacet(this.props.name, min, max)
+    const facet = createRangeFacet(this.props.name, min, max)
 
-		this.props.onSelectFacet(facet)
-	},
+    this.props.onSelectFacet(facet)
+  },
 
-	maybeRenderSelectedFacets: function () {
-		if (!this.props.selectedFacets.length)
-			return
+  maybeRenderSelectedFacets: function () {
+    if (!this.props.selectedFacets.length)
+      return
 
-		return this.props.selectedFacets.map((facet, index) => {
-			const key = `sel-${facet.name}-${facet.value.begin}-${facet.value.end}`
-			const props = {
-				data: facet,
-				onRemove: this.props.onRemoveSelectedFacet,
-				key,
-			}
+    return this.props.selectedFacets.map((facet, index) => {
+      const key = `sel-${facet.name}-${facet.value.begin}-${facet.value.end}`
+      const props = {
+        data: facet,
+        onRemove: this.props.onRemoveSelectedFacet,
+        key,
+      }
 
-			return React.createElement(FacetListSelectedItem, props)
-		})
-	},
+      return React.createElement(FacetListSelectedItem, props)
+    })
+  },
 
-	render: function () {
-		const containerProps = {
-			style: {
-				padding: '10px',
-			}
-		}
+  render: function () {
+    const containerProps = {
+      style: {
+        padding: '10px',
+      }
+    }
 
-		return (
-			<div {...containerProps}>
-				{this.maybeRenderSelectedFacets()}
-				<RangeSliderDate
-					interval={this.props.interval}
-					max={this.state.max}
-					min={this.state.min}
-					onApplyRange={this.handleApplyRange}
-				/>
-			</div>
-		)
-	}
+    return (
+      <div {...containerProps}>
+        {this.maybeRenderSelectedFacets()}
+        <RangeSliderDate
+          interval={this.props.interval}
+          max={this.state.max}
+          min={this.state.min}
+          onApplyRange={this.handleApplyRange}
+        />
+      </div>
+    )
+  }
 })
 
 export default FacetRangeLimitDate

@@ -12,48 +12,48 @@ import Button from '../Button.jsx'
 const T = React.PropTypes
 
 const GenericVocabulary = React.createClass({
-	getInitialState: function () {
-		return {
-			data: this.props.data || {
-				label: [],
-				alt_label: [],
-				pref_label: [],
-				hidden_label: [],
-			},
-		}
-	},
+  getInitialState: function () {
+    return {
+      data: this.props.data || {
+        label: [],
+        alt_label: [],
+        pref_label: [],
+        hidden_label: [],
+      },
+    }
+  },
 
-	handleChange: function (name, index, value) {
-		const data = this.state.data
-		data[name][index] = value
+  handleChange: function (name, index, value) {
+    const data = this.state.data
+    data[name][index] = value
 
-		this.setState({data})
-	},
+    this.setState({data})
+  },
 
-	handleSubmit: function (ev) {
-		ev && ev.preventDefault && ev.preventDefault()
+  handleSubmit: function (ev) {
+    ev && ev.preventDefault && ev.preventDefault()
 
-		const data = assign({}, this.state.data)
-		data.pref_label = [data.label[0]]
+    const data = assign({}, this.state.data)
+    data.pref_label = [data.label[0]]
 
-		this.props.onSubmit && this.props.onSubmit(data)
-	},
+    this.props.onSubmit && this.props.onSubmit(data)
+  },
 
-	render: function () {
-		const formProps = {
-			data: this.state.data,
-			onChange: this.handleChange,
-			onSubmit: this.handleSubmit,
-		}
+  render: function () {
+    const formProps = {
+      data: this.state.data,
+      onChange: this.handleChange,
+      onSubmit: this.handleSubmit,
+    }
 
-		return (
-			<MetadataForm {...formProps}>
-				<FormField name="label" label="Vocabulary name" renderer={StringInput} />
-				<FormField name="alt_label" label="Description" renderer={TextInput} />
-				<Button key="submit-btn" onClick={this.handleSubmit}>Create new vocabulary</Button>
-			</MetadataForm>
-		)
-	}
+    return (
+      <MetadataForm {...formProps}>
+        <FormField name="label" label="Vocabulary name" renderer={StringInput} />
+        <FormField name="alt_label" label="Description" renderer={TextInput} />
+        <Button key="submit-btn" onClick={this.handleSubmit}>Create new vocabulary</Button>
+      </MetadataForm>
+    )
+  }
 })
 
 export default GenericVocabulary

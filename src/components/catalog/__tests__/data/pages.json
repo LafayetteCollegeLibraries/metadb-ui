@@ -1,11 +1,11 @@
-{	
-	"current_page": 2,
-	"next_page": 3,
-	"prev_page": 1,
-	"total_pages": 924,
-	"limit_value": 25,
-	"offset_value": 25,
-	"total_count": 23088,
-	"first_page?": false,
-	"last_page?": false
+{ 
+  "current_page": 2,
+  "next_page": 3,
+  "prev_page": 1,
+  "total_pages": 924,
+  "limit_value": 25,
+  "offset_value": 25,
+  "total_count": 23088,
+  "first_page?": false,
+  "last_page?": false
 }

@@ -3,44 +3,44 @@ $button-offset: 1%;
 
 .form-element-wrapper {
 
-	// need to offset for absolute-positioned button on bottom
-	margin-bottom: 2em;
-	position: relative;
+  // need to offset for absolute-positioned button on bottom
+  margin-bottom: 2em;
+  position: relative;
 
-	button {
-		width: 2em;
-	}
+  button {
+    width: 2em;
+  }
 
-	button.add-row-btn {
-		left: $input-width + $button-offset;
-		margin-top: 1em;
-		position: absolute;
-	}
+  button.add-row-btn {
+    left: $input-width + $button-offset;
+    margin-top: 1em;
+    position: absolute;
+  }
 }
 
 .form-element {
 
-	@include clearfix;
-	display: block;
+  @include clearfix;
+  display: block;
 
-	button {
-		margin-left: $button-offset;
-	}
+  button {
+    margin-left: $button-offset;
+  }
 
-	input[type="datetime-local"],
-	input[type="email"],
-	input[type="number"],
-	input[type="password"],
-	input[type="search"],
-	input[type="text"],
-	input[type="url"],
-	textarea {
-		vertical-align: middle;
-		width: $input-width;
-	}
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="text"],
+  input[type="url"],
+  textarea {
+    vertical-align: middle;
+    width: $input-width;
+  }
 
-	// add some room to multiple .form-elements
-	+ * {
-		margin-top: 2px;
-	}
+  // add some room to multiple .form-elements
+  + * {
+    margin-top: 2px;
+  }
 }
