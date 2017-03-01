@@ -1,10 +1,10 @@
 .OpenSeadragonViewer {
-	&-container {
-		background-color: $black;
-		padding-top: 10px;
-		vertical-align: top;
-		width: 100%;
-	}
+  &-container {
+    background-color: $black;
+    padding-top: 10px;
+    vertical-align: top;
+    width: 100%;
+  }
 }
 
 // styling individual elements of the stock OpenSeadragon viewer
@@ -14,60 +14,60 @@
 
 .OpenSeadragonViewer > div:nth-child(1) {
 
-	> div:nth-child(2) {
+  > div:nth-child(2) {
 
-		> div:nth-child(1) {
+    > div:nth-child(1) {
 
-			display: inline !important;
-			position: relative !important;
-		}
+      display: inline !important;
+      position: relative !important;
+    }
 
-		> div:nth-child(2) {
+    > div:nth-child(2) {
 
-			display: inline !important;
-			position: relative !important;
+      display: inline !important;
+      position: relative !important;
 
-			> div:nth-child(1) {
+      > div:nth-child(1) {
 
-				display: none !important;
-			}
-		}
+        display: none !important;
+      }
+    }
 
-		> div:nth-child(3) {
+    > div:nth-child(3) {
 
-			display: block !important;
-			position: relative !important;
-		}
-	}
+      display: block !important;
+      position: relative !important;
+    }
+  }
 
-	> div:nth-child(3) {
+  > div:nth-child(3) {
 
-		> div:nth-child(1) {
+    > div:nth-child(1) {
 
-			position: relative !important;
-			width: 100%;
+      position: relative !important;
+      width: 100%;
 
-			> div:nth-child(1) {
+      > div:nth-child(1) {
 
-				position: relative !important;
-				float: right;
+        position: relative !important;
+        float: right;
 
-				> div:nth-child(2) {
+        > div:nth-child(2) {
 
-					position: relative !important;
-				}
-			}
-		}
+          position: relative !important;
+        }
+      }
+    }
 
-		> div:nth-child(2) {
+    > div:nth-child(2) {
 
-			position: relative !important;
-			display: block !important;
-		}
-	}
+      position: relative !important;
+      display: block !important;
+    }
+  }
 
-	.referencestrip {
+  .referencestrip {
 
-		transition: margin 250ms ease-in;
-	}
+    transition: margin 250ms ease-in;
+  }
 }

@@ -1,6 +1,6 @@
 {
-	"fetchedAt": 1472582214412,
-	"isFetching": false,
+  "fetchedAt": 1472582214412,
+  "isFetching": false,
   "data": [
     {
       "uri": "http://example-ns.org/ns/testVocab",

@@ -8,36 +8,36 @@ import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
 
 const initialState = {
-	activeVocabularyTerms: null,
-	autocompleteTerms: {},
-	notifications: [],
-	search: {},
-	vocabularies: {},
-	work: {},
+  activeVocabularyTerms: null,
+  autocompleteTerms: {},
+  notifications: [],
+  search: {},
+  vocabularies: {},
+  work: {},
 
-	// user: {},
+  // user: {},
 
-	// kept for React-Router
-	routing: {},
+  // kept for React-Router
+  routing: {},
 }
 
 const middlewares = [thunk]
 
 const store = createStore(
-	rootReducer, 
-	initialState,
-	compose(
-		applyMiddleware(...middlewares),
-		window.devToolsExtension ? window.devToolsExtension() : f => f
-	)
+  rootReducer, 
+  initialState,
+  compose(
+    applyMiddleware(...middlewares),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  )
 )
 
 // set up module hot-loading
 if (module.hot) {
-	module.hot.accept('../reducers/', () => {
-		const nextRootReducer = require('../reducers').default
-		store.replaceReducer(nextRootReducer)
-	})
+  module.hot.accept('../reducers/', () => {
+    const nextRootReducer = require('../reducers').default
+    store.replaceReducer(nextRootReducer)
+  })
 }
 
 export default store

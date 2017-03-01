@@ -1,66 +1,66 @@
 @mixin styledButton($bgcolor, $txtcolor: #000) {
-	background-color: $bgcolor;
-	border-color: darken($bgcolor, 20%);
-	color: $txtcolor;
+  background-color: $bgcolor;
+  border-color: darken($bgcolor, 20%);
+  color: $txtcolor;
 
-	&:hover, &:target {
-		background-color: darken($bgcolor, 5%);
-	}
+  &:hover, &:target {
+    background-color: darken($bgcolor, 5%);
+  }
 }
 
 // base style
 button {
-	@include styledButton($default);
+  @include styledButton($default);
 
-	-webkit-appearance: none;
-	appearance: none;
-	box-shadow: none;
-	border-radius: 2px;
-	border-style: solid;
-	border-width: 1px;
-	cursor: pointer;
-	font-size: 14px;
-	line-height: 1.5em;
-	outline: none;
-	padding: 4px 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  box-shadow: none;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.5em;
+  outline: none;
+  padding: 4px 6px;
 
-	// sizes
-	&.btn-size-small {
-		font-size: 12px;
-		padding: 2px 4px;
-	}
+  // sizes
+  &.btn-size-small {
+    font-size: 12px;
+    padding: 2px 4px;
+  }
 
-	&.btn-size-large {
-		font-size: 16px;
-		padding: 8px;
-	}
+  &.btn-size-large {
+    font-size: 16px;
+    padding: 8px;
+  }
 
-	// types
-	&.btn-type-info {
-		@include styledButton($info, #fff);
-	}
+  // types
+  &.btn-type-info {
+    @include styledButton($info, #fff);
+  }
 
-	&.btn-type-danger {
-		@include styledButton($danger, #fff);
-	}
+  &.btn-type-danger {
+    @include styledButton($danger, #fff);
+  }
 
-	&.btn-type-success {
-		@include styledButton($success, #fff);
-	}
+  &.btn-type-success {
+    @include styledButton($success, #fff);
+  }
 
-	&.btn-type-warning {
-		@include styledButton($warning);
-	}
+  &.btn-type-warning {
+    @include styledButton($warning);
+  }
 
-	&.btn-type-text {
-		background-color: transparent;
-		border: none;
-		color: $info;
-	}
+  &.btn-type-text {
+    background-color: transparent;
+    border: none;
+    color: $info;
+  }
 }
 
 .form-field--add-row-btn {
-	left: 90%;
-	margin-left: 9px;
-	position: relative;
+  left: 90%;
+  margin-left: 9px;
+  position: relative;
 }

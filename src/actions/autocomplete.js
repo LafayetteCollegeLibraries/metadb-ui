@@ -9,35 +9,35 @@ const queue = new Queue
 let fetchedVocabularies = []
 
 export const fetchAutocompleteTerms = vocabulary => (dispatch, getState) => {
-	return queue.add(genGetVocab.bind(null, vocabulary)).then((data) => {
-		if (!data)
-			return
+  return queue.add(genGetVocab.bind(null, vocabulary)).then((data) => {
+    if (!data)
+      return
 
-		const terms = data.terms.map(t => t.pref_label[0])
+    const terms = data.terms.map(t => t.pref_label[0])
 
-		dispatch({
-			type: RECEIVE_AUTOCOMPLETE_TERMS,
-			terms,
-			vocabulary,
-		})
+    dispatch({
+      type: RECEIVE_AUTOCOMPLETE_TERMS,
+      terms,
+      vocabulary,
+    })
 
-		// reset when we reach zero
-		if (queue.getPendingLength() === 0)
-			fetchedVocabularies = []
+    // reset when we reach zero
+    if (queue.getPendingLength() === 0)
+      fetchedVocabularies = []
 
-		return
-	})
+    return
+  })
 
-	function genGetVocab (vocab) {
-		if (fetchedVocabularies.indexOf(vocab.uri) > -1)
-			return
+  function genGetVocab (vocab) {
+    if (fetchedVocabularies.indexOf(vocab.uri) > -1)
+      return
 
-		if (Object.keys(getState().autocompleteTerms).indexOf(vocab.uri) > -1)
-			return
+    if (Object.keys(getState().autocompleteTerms).indexOf(vocab.uri) > -1)
+      return
 
-		fetchedVocabularies.push(vocab.uri)
-		return getVocabulary(vocab)
-	}
+    fetchedVocabularies.push(vocab.uri)
+    return getVocabulary(vocab)
+  }
 }
 
 

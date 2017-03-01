@@ -9,14 +9,14 @@ import vocabularies from './vocabularies'
 import work from './work'
 
 const routeReducer = combineReducers({
-	activeVocabularyTerms,
-	autocompleteTerms,
-	notifications,
-	search,
-	vocabularies,
-	work,
+  activeVocabularyTerms,
+  autocompleteTerms,
+  notifications,
+  search,
+  vocabularies,
+  work,
 
-	routing: routerReducer,
+  routing: routerReducer,
 })
 
 export default routeReducer

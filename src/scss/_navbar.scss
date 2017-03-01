@@ -1,44 +1,44 @@
 .navbar {
-	@include clearfix;
-	background-color: #fff;
-	border-bottom: 1px solid $theme-primary;
-	font-size: 1.25rem;
-	margin: -$default-body-margin;
-	margin-bottom: $default-body-margin;
-	padding: .5em;
-	vertical-align: middle;
+  @include clearfix;
+  background-color: #fff;
+  border-bottom: 1px solid $theme-primary;
+  font-size: 1.25rem;
+  margin: -$default-body-margin;
+  margin-bottom: $default-body-margin;
+  padding: .5em;
+  vertical-align: middle;
 
-	a {
-		text-decoration: none;
-	}
+  a {
+    text-decoration: none;
+  }
 
-	.site-logo {
-		max-height: 20px;
-	}
+  .site-logo {
+    max-height: 20px;
+  }
 }
 
 .site-navigation {
-	float: right;
-	font-size: 1.125rem;
-	font-weight: 100;
+  float: right;
+  font-size: 1.125rem;
+  font-weight: 100;
 
-	ul {
-		margin: 0;
-		padding: 0;
+  ul {
+    margin: 0;
+    padding: 0;
 
-		> li {
-			display: inline-block;
-			list-style-type: none;
-			margin: 0;
-			padding: 0;
+    > li {
+      display: inline-block;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
 
-			&:not(:first-of-type) {
-				margin-left: 1em;
-			}
-		}
-	}
+      &:not(:first-of-type) {
+        margin-left: 1em;
+      }
+    }
+  }
 
-	a:hover {
-		border-bottom: 1px solid #fff;
-	}
+  a:hover {
+    border-bottom: 1px solid #fff;
+  }
 }

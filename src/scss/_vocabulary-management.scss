@@ -5,78 +5,78 @@ $vocab-list-item-padding: .5em;
 
 // containers on /vocabularies page
 .vocabulary-list-container {
-	@include span-columns(1 of 3);
-	@include omega;
+  @include span-columns(1 of 3);
+  @include omega;
 
-	margin-right: 25px;
+  margin-right: 25px;
 }
 
 .terms-manager-container {
-	@include span-columns(2 of 3);
-	@include omega;
+  @include span-columns(2 of 3);
+  @include omega;
 }
 
 // individual component styles
 
 .vocabulary-list {
-	box-shadow: 0 0 2px 1px #aaa;
-	display: inline-block;
-	width: 100%;
+  box-shadow: 0 0 2px 1px #aaa;
+  display: inline-block;
+  width: 100%;
 
-	header,
-	footer {
-		background-color: $vocab-list-bgcolor;
-		padding: 10px;
-	}
+  header,
+  footer {
+    background-color: $vocab-list-bgcolor;
+    padding: 10px;
+  }
 
-	input {
-		font-size: .90em;
-		width: 100%;
-	}
+  input {
+    font-size: .90em;
+    width: 100%;
+  }
 }
 
 .vocab-list, 
 .vocab-list--empty {
-	height: $vocab-list-height;
-	// width: $vocab-list-width;
-	width: 100%;
+  height: $vocab-list-height;
+  // width: $vocab-list-width;
+  width: 100%;
 }
 
 .vocab-list {
-	display: inline-block;
-	margin: 0;
-	overflow-y: scroll;
-	padding: 0;
-	word-wrap: break-word;
+  display: inline-block;
+  margin: 0;
+  overflow-y: scroll;
+  padding: 0;
+  word-wrap: break-word;
 }
 
 .vocab-list--item {
-	border-bottom: 1px solid darken($vocab-list-bgcolor, 15%);
-	cursor: pointer;
-	padding: $vocab-list-item-padding;
+  border-bottom: 1px solid darken($vocab-list-bgcolor, 15%);
+  cursor: pointer;
+  padding: $vocab-list-item-padding;
 
-	&.active {
-		background-color: lighten($theme-primary, 25%);
-	}
+  &.active {
+    background-color: lighten($theme-primary, 25%);
+  }
 
-	&.hover:not(.active) {
-		background-color: lighten($theme-primary, 37.5%);
-	}
+  &.hover:not(.active) {
+    background-color: lighten($theme-primary, 37.5%);
+  }
 }
 
 .term-count {
-	display: block;
-	font-size: .80em;
-	font-style: italic;
+  display: block;
+  font-size: .80em;
+  font-style: italic;
 }
 
 .vocab-list--empty {
-	background-color: darken($vocab-list-bgcolor, 15%);
-	color: darken($vocab-list-bgcolor, 40%);
-	font-size: 2rem;
-	padding: 1em;
-	text-align: center;
-	word-wrap: break-word;
+  background-color: darken($vocab-list-bgcolor, 15%);
+  color: darken($vocab-list-bgcolor, 40%);
+  font-size: 2rem;
+  padding: 1em;
+  text-align: center;
+  word-wrap: break-word;
 }
 
 // //// --- term list --- ////
@@ -84,69 +84,69 @@ $term-tag-background-color: #99d5ca;
 $term-tag-text-color: #222;
 
 .terms {
-	list-style-type: none;
-	margin: 0;
-	padding: .5em;
+  list-style-type: none;
+  margin: 0;
+  padding: .5em;
 
-	li {
-		margin: 3px 0;
-	}
+  li {
+    margin: 3px 0;
+  }
 }
 
 .vocabulary-term {
-	.tag,
-	.remove-tag-btn {
-		border-radius: $default-border-radius;
-		color: $term-tag-text-color;
-		cursor: pointer;
+  .tag,
+  .remove-tag-btn {
+    border-radius: $default-border-radius;
+    color: $term-tag-text-color;
+    cursor: pointer;
 
-		transition: all 75ms ease-in-out;
-		
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		-o-user-select: none;
-		user-select: none;
+    transition: all 75ms ease-in-out;
+    
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 
-		&:hover {
-			color: #fff;
-		}
-	}
+    &:hover {
+      color: #fff;
+    }
+  }
 
-	.tag {
-		background-color: $term-tag-background-color;
-		display: inline-block;
-		font-weight: 100;
-		padding: 5px 10px;
-	}
-	
-	.remove-tag-btn {
-		background-color: transparent;
-		border: 2px solid #efefef;
-		font-size: .75em;
-		margin-left: .5em;
-		outline: none;
+  .tag {
+    background-color: $term-tag-background-color;
+    display: inline-block;
+    font-weight: 100;
+    padding: 5px 10px;
+  }
+  
+  .remove-tag-btn {
+    background-color: transparent;
+    border: 2px solid #efefef;
+    font-size: .75em;
+    margin-left: .5em;
+    outline: none;
 
-		&:hover {
-			background-color: #cc092f;
-			border-color: #aa070c;
-		}
-	}
+    &:hover {
+      background-color: #cc092f;
+      border-color: #aa070c;
+    }
+  }
 }
 
 .term-editor {
-	box-shadow: 0 0 2px 1px #aaa;
+  box-shadow: 0 0 2px 1px #aaa;
 
-	header,
-	footer {
-		padding: 10px;
-	}
+  header,
+  footer {
+    padding: 10px;
+  }
 
-	header {
-		border-bottom: 1px solid $vocab-list-bgcolor;
-	}
+  header {
+    border-bottom: 1px solid $vocab-list-bgcolor;
+  }
 
-	footer {
-		background-color: $vocab-list-bgcolor;
-	}
+  footer {
+    background-color: $vocab-list-bgcolor;
+  }
 }

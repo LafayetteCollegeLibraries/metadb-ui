@@ -21,19 +21,19 @@ import Work from './pages/Work.jsx'
 
 const MetaDB = (
 <Provider store={store}>
-	<Router history={history}>
-		<Route path="/" component={App}>
-			<IndexRoute component={Home} />
-			<Route path="search" getComponent={(nextState, cb) => {
-				if (nextState.location.search === '')
-					return cb(null, SearchLanding)
+  <Router history={history}>
+    <Route path="/" component={App}>
+      <IndexRoute component={Home} />
+      <Route path="search" getComponent={(nextState, cb) => {
+        if (nextState.location.search === '')
+          return cb(null, SearchLanding)
 
-				return cb(null, SearchResults)
-			}}/>
-			<Route path="vocabularies" component={VocabularyManager} />
-			<Route path="works/:workId" component={Work} />
-		</Route>
-	</Router>
+        return cb(null, SearchResults)
+      }}/>
+      <Route path="vocabularies" component={VocabularyManager} />
+      <Route path="works/:workId" component={Work} />
+    </Route>
+  </Router>
 </Provider>
 )
 

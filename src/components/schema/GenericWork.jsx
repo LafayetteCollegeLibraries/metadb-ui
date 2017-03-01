@@ -10,148 +10,148 @@ import DateInput from '../metadata/DateInput.jsx'
 import Button from '../Button.jsx'
 
 const labelFromName = name => {
-	const split = name.split('_').map(s => s.slice(0,1).toUpperCase() + s.slice(1))
+  const split = name.split('_').map(s => s.slice(0,1).toUpperCase() + s.slice(1))
 
-	if (split.length === 1)
-		return split[0]
+  if (split.length === 1)
+    return split[0]
 
-	return split.shift() + ' (' + split.join(', ') + ')'
+  return split.shift() + ' (' + split.join(', ') + ')'
 }
 
 const LargerField = props => {
-	if (!props.label)
-		props.label = labelFromName(props.name)
+  if (!props.label)
+    props.label = labelFromName(props.name)
 
-	return <FormField {...props} renderer={TextInput} />
+  return <FormField {...props} renderer={TextInput} />
 }
 
 const SubjectOCM = props => {
-	const fetchTerms = () => {
-		return fetch(`${process.env.API_BASE_URL}/vocabularies/eaic-subject-ocm.json`)
-		.then(res => res.json())
-		.then(res => res.terms)
-	}
+  const fetchTerms = () => {
+    return fetch(`${process.env.API_BASE_URL}/vocabularies/eaic-subject-ocm.json`)
+    .then(res => res.json())
+    .then(res => res.terms)
+  }
 
-	return (
-		<FormField {...props}
-			fetchTerms={fetchTerms}
-			highlightMatch
-			label="Subject (OCM)"
-			multiple
-			name="subject_ocm"
-			renderer={ControlledVocabularyInput}
-		/>
-	)
+  return (
+    <FormField {...props}
+      fetchTerms={fetchTerms}
+      highlightMatch
+      label="Subject (OCM)"
+      multiple
+      name="subject_ocm"
+      renderer={ControlledVocabularyInput}
+    />
+  )
 }
 
 const TechnicalMetadata = props => {
-	return <FormField {...props} renderer={TextInput} disabled />
+  return <FormField {...props} renderer={TextInput} disabled />
 }
 
 const GenericWork = React.createClass({
-	_fetchingQueue: {},
-	_tmpOpts: [],
+  _fetchingQueue: {},
+  _tmpOpts: [],
 
-	getInitialState: function () {
-		return {
-			terms: {}
-		}
-	},
+  getInitialState: function () {
+    return {
+      terms: {}
+    }
+  },
 
-	componentDidMount: function () {
-		this._isMounted = true
+  componentDidMount: function () {
+    this._isMounted = true
 
-		this._tmpOpts.forEach(value => {
-			this.updateTerms(value.id)
-		})
-	},
+    this._tmpOpts.forEach(value => {
+      this.updateTerms(value.id)
+    })
+  },
 
-	componentWillUnmount: function () {
-		this._isMounted = false
-	},
+  componentWillUnmount: function () {
+    this._isMounted = false
+  },
 
-	updateTerms: function(id) {
-		if (!this.state.terms.hasOwnProperty(id) && !this._fetchingQueue[id]) {
-			this._fetchingQueue[id] = true
+  updateTerms: function(id) {
+    if (!this.state.terms.hasOwnProperty(id) && !this._fetchingQueue[id]) {
+      this._fetchingQueue[id] = true
 
-			fetch(`${process.env.API_BASE_URL}/vocabularies/${id}.json`)
-			.then(res => res.json())
-			.then(res => res.terms)
-			.then(terms => {
-				delete this._fetchingQueue[id]
-				const update = assign({}, this.state.terms, {[id]: terms})
+      fetch(`${process.env.API_BASE_URL}/vocabularies/${id}.json`)
+      .then(res => res.json())
+      .then(res => res.terms)
+      .then(terms => {
+        delete this._fetchingQueue[id]
+        const update = assign({}, this.state.terms, {[id]: terms})
 
-				this.setState({terms: update})
-			})
-		}
-	},
+        this.setState({terms: update})
+      })
+    }
+  },
 
-	controlledVocabularyField: function (opts) {
-		const { name, label, id } = opts
-		const terms = this.state.terms[id] || []
+  controlledVocabularyField: function (opts) {
+    const { name, label, id } = opts
+    const terms = this.state.terms[id] || []
 
-		if (typeof this.state.terms[id] === 'undefined') {
-			this._tmpOpts.push(opts)
-		}
+    if (typeof this.state.terms[id] === 'undefined') {
+      this._tmpOpts.push(opts)
+    }
 
-		return (
-			<FormField
-				highlightMatch
-				label={label}
-				multiple
-				name={name}
-				renderer={ControlledVocabularyInput}
-				terms={terms}
-			/>
-		)
-	},
+    return (
+      <FormField
+        highlightMatch
+        label={label}
+        multiple
+        name={name}
+        renderer={ControlledVocabularyInput}
+        terms={terms}
+      />
+    )
+  },
 
-	render: function () {
-		const formProps = {
-			defaultProps: {
-				renderer: StringInput,
-			},
+  render: function () {
+    const formProps = {
+      defaultProps: {
+        renderer: StringInput,
+      },
 
-			...this.props,
-		}
+      ...this.props,
+    }
 
-		return (
-		<MetadataForm {...formProps}>
-			<FormField name="title" label="Title" />
-			{ LargerField({name: 'description_note'}) }
-			<FormField name="creator" label="Creator" multiple />
-			{
-				this.controlledVocabularyField({
-					name: 'subject_lcsh',
-					label: 'Subject (LCSH)',
-					id: 'mdl-subject-lcsh',
-				})
-			}
-			{
-			 this.controlledVocabularyField({
-					name: 'subject_ocm',
-					label: 'Subject (OCM)',
-					id:'eaic-subject-ocm',
-				})
-			}
-			<FormField name="publisher" label="Publisher (Original)" multiple />
-			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="day"/>
-			<FormField name="format_medium" label="Format (Medium)" multiple />
-			<TechnicalMetadata name="format_extent" label="Format Extent" />
-			{ LargerField({name: 'description'}) }
-			{ LargerField({name: 'description_condition'}) }
-			{ LargerField({name: 'description_provenance'}) }
-			{ LargerField({name: 'description_series'}) }
-			<FormField name="identifier_itemnumber" label="Identifier (Item Number)" />
-			<FormField name="publisher_original" label="Publisher (Original)" />
-			<FormField name="publisher_digital" label="Publisher (Digital)" />
-			<TechnicalMetadata name="format_digital" label="Format (Digital)" />
-			<FormField name="source" label="Source" />
-			<FormField name="rights" label="Rights (Digital)" renderer={TextInput} />
-			<FormField name="relation_ispartof" label="Relation (IsPartOf)" />
-		</MetadataForm>
-	)
-	}
+    return (
+    <MetadataForm {...formProps}>
+      <FormField name="title" label="Title" />
+      { LargerField({name: 'description_note'}) }
+      <FormField name="creator" label="Creator" multiple />
+      {
+        this.controlledVocabularyField({
+          name: 'subject_lcsh',
+          label: 'Subject (LCSH)',
+          id: 'mdl-subject-lcsh',
+        })
+      }
+      {
+       this.controlledVocabularyField({
+          name: 'subject_ocm',
+          label: 'Subject (OCM)',
+          id:'eaic-subject-ocm',
+        })
+      }
+      <FormField name="publisher" label="Publisher (Original)" multiple />
+      <FormField name="date_original" label="Date (Original)" renderer={DateInput} type="day"/>
+      <FormField name="format_medium" label="Format (Medium)" multiple />
+      <TechnicalMetadata name="format_extent" label="Format Extent" />
+      { LargerField({name: 'description'}) }
+      { LargerField({name: 'description_condition'}) }
+      { LargerField({name: 'description_provenance'}) }
+      { LargerField({name: 'description_series'}) }
+      <FormField name="identifier_itemnumber" label="Identifier (Item Number)" />
+      <FormField name="publisher_original" label="Publisher (Original)" />
+      <FormField name="publisher_digital" label="Publisher (Digital)" />
+      <TechnicalMetadata name="format_digital" label="Format (Digital)" />
+      <FormField name="source" label="Source" />
+      <FormField name="rights" label="Rights (Digital)" renderer={TextInput} />
+      <FormField name="relation_ispartof" label="Relation (IsPartOf)" />
+    </MetadataForm>
+  )
+  }
 })
 
 export default GenericWork

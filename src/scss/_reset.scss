@@ -1,12 +1,12 @@
 html {
-	font-size: inherit;
+  font-size: inherit;
 }
 
 body {
-	background-color: #default-body-background-color;
-	height: auto;
-	margin: $default-body-margin;
-	padding: 0;
+  background-color: #default-body-background-color;
+  height: auto;
+  margin: $default-body-margin;
+  padding: 0;
 }
 
 @import "reset/typography";

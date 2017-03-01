@@ -7,30 +7,30 @@ import * as actionCreators from './actions/'
 import Main from './pages/Main.jsx'
 
 function mapStateToProps (state) {
-	return {
-		// collection: state.collection,
-		// collections: state.collections,
+  return {
+    // collection: state.collection,
+    // collections: state.collections,
 
-		// error: state.error,
+    // error: state.error,
 
-		// schema: state.collection.schema,
+    // schema: state.collection.schema,
 
-		// activeVocabulary,
-		activeVocabularyTerms: state.activeVocabularyTerms,
-		autocompleteTerms: state.autocompleteTerms,
-		
-		notifications: state.notifications,
+    // activeVocabulary,
+    activeVocabularyTerms: state.activeVocabularyTerms,
+    autocompleteTerms: state.autocompleteTerms,
+    
+    notifications: state.notifications,
 
-		search: state.search,
+    search: state.search,
 
-		vocabularies: state.vocabularies,
+    vocabularies: state.vocabularies,
 
-		work: state.work,
-	}
+    work: state.work,
+  }
 }
 
 function mapDispatchToProps (dispatch) {
-	return bindActionCreators(actionCreators, dispatch)
+  return bindActionCreators(actionCreators, dispatch)
 }
 
 const App = connect(mapStateToProps, mapDispatchToProps)(Main)
