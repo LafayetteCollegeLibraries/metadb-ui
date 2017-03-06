@@ -28,6 +28,18 @@ const SearchResults = React.createClass({
 		if (qs) {
 			this.props.searchCatalogByQueryString(qs)
 		}
+
+		window.addEventListener('popstate', this.maybeCloseModalOnPopState)
+	},
+
+	componentWillUnmount: function () {
+		window.removeEventListener('popstate', this.maybeCloseModalOnPopState)
+	},
+
+	maybeCloseModalOnPopState: function () {
+		if (this.state.batchTool !== null) {
+			this.setState({batchTool: null})
+		}
 	},
 
 	componentWillReceiveProps: function (nextProps) {
