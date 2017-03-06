@@ -121,10 +121,20 @@ const AddMetadataForm = React.createClass({
 					renderer={TextInput}
 				/>
 				<FormField
+					name="creator"
+					label="Creator"
+					renderer={StringInput}
+				/>
+				<FormField
 					name="date_original"
 					label="Date (Original)"
 					renderer={DateInput}
 					type="day"
+				/>
+				<FormField
+					name="publisher_original"
+					label="Publisher (Original)"
+					renderer={StringInput}
 				/>
 				<FormField
 					name="source"
