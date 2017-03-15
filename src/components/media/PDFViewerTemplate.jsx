@@ -1,9 +1,11 @@
-// Here we try to restructure viewer.html for React JS;
-// attribute names are changed according to the ReactJS API
-// this file supports implementation of following features:
-// zoom in/out, changing document size, thumbnail view,
-// moving to a location on pdf document, searching in document,
-// downloading, printing and viewing document in full-screen mode, etc.
+/**
+ * Here we try to restructure viewer.html for React JS;
+ * attribute names are changed according to the ReactJS API
+ * this file supports implementation of following features:
+ * zoom in/out, changing document size, thumbnail view,
+ * moving to a location on pdf document, searching in document,
+ * downloading, printing and viewing document in full-screen mode, etc.
+ */
 import React from 'react'
 
 const PDFViewerTemplate = React.createClass({

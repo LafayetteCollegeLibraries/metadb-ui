@@ -1,0 +1,17 @@
+<MediaPlayer type="vimeo"
+						vimeoId="143418951"
+						/>
+<MediaPlayer type="youtube"
+						youtubeId="bTqVqk7FSmY"
+						/>
+<MediaPlayer type="audio"
+						config={{controls: true, crossOrigin: true}}
+						mediaSrc="https://cdn.selz.com/plyr/1.5/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3"
+						/>
+<MediaPlayer type="video"
+						poster="https://cdn.selz.com/plyr/1.5/View_From_A_Blue_Moon_Trailer-HD.jpg"
+						config={{controls: true, crossOrigin: true}}
+						mediaSrc="https://cdn.selz.com/plyr/1.5/View_From_A_Blue_Moon_Trailer-HD.mp4"
+						trackSrc="https://cdn.selz.com/plyr/1.5/View_From_A_Blue_Moon_Trailer-HD.en.vtt"
+						trackConfig={{ kind: "captions", label: "English", srcLang: "en", default: true}}
+						/>
