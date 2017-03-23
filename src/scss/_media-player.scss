@@ -1,0 +1,6 @@
+// media player
+@import "../../node_modules/plyr/src/scss/plyr";
+
+.plyr input[type='range'] {
+	-webkit-appearance: none;
+}
