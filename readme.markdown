@@ -1,4 +1,4 @@
-![metadb-ui][logo]
+<img width="250" alt="metaDB logo" src="https://cdn.rawgit.com/LafayetteCollegeLibraries/metadb-ui/master/build/assets/logo.svg">
 
 [![Build Status](https://travis-ci.com/LafayetteCollegeLibraries/metadb-ui.svg?token=RMxCrEacXTux6rxyXvxo&branch=master)](https://travis-ci.com/LafayetteCollegeLibraries/metadb-ui)
 
@@ -72,8 +72,6 @@ license
 
 GPL-3.0
 
-
-[logo]:https://cdn.rawgit.com/LafayetteCollegeLibraries/metadb-ui/82193887d1c3b4b4806952cf828400dc35afa752/build/assets/logo.svg
 [1]: https://facebook.github.io/react
 [2]: http://redux.js.org
 [3]: http://sufia.io
