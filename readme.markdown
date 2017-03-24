@@ -37,9 +37,16 @@ And in another:
 API_BASE_URL=http://localhost:3000 npm run dev
 ```
 
-after Webpack finishes running, you'll be able to visit the site at
+after Webpack finishes booting, you'll be able to visit the site at
 `http://localhost:8080`. (note: the mock-server will not actually
 update search results with facets/queries, it's not _that_ smart!)
+
+**Note:** the mock-server is _also_ a work-in-progress, and several Important
+Features are still missing, namely: OpenSeadragon tiles for the work-editing
+interface, individual thumbnails for works in Search Results, and all things
+related to Vocabulary Management. As its primary focus is for end-to-end 
+testing, the visual aspects will probably not be coming. However vocabularies
+are on their way.
 
 
 running tests
