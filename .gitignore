@@ -1,5 +1,16 @@
+# installed node modules
 node_modules
+
+# compiled sources via babel
 build/style.css
 build/bundle.js
+
+# errors from npm scripts
 npm-debug.log
+
+# generated reports for:
+# - end-to-end testing
 test/e2e/reports
+
+# - code-coverage analysis
+coverage
