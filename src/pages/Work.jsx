@@ -6,6 +6,8 @@ import cn from 'classnames'
 
 import ThumbnailPreview from '../components/media/ThumbnailPreview.jsx'
 import OpenSeadragonViewer from '../components/media/OpenSeadragonViewer.jsx'
+import PDFViewer from '../components/media/PDFViewer.jsx'
+import MediaPlayer from '../components/media/MediaPlayer.jsx'
 import NavToSearchResults from '../components/NavToSearchResults.jsx'
 import WorkHeader from '../components/work/Header.jsx'
 import WorkEdit from '../components/work/Edit.jsx'
@@ -162,6 +164,45 @@ const Work = React.createClass({
 		return <WorkHeader {...props} />
 	},
 
+	renderViewer: function () {
+		const { work } = this.props
+		const data = work.data
+		const { iiif_images, resource_type, download_path, thumbnail_path } = data
+		if(!resource_type)
+			throw 'No resource types specified for the Work'
+		const type = resource_type[0]
+
+		switch (type) {
+			case 'image/tiff':
+			case 'image/jp2':
+			case 'image/jpeg':
+				return (<OpenSeadragonViewer
+									prefixUrl='http://openseadragon.github.io/openseadragon/images/'
+									autoHideControls={false}
+									tileSources={iiif_images}
+									sequenceMode={iiif_images.length > 1}
+									showReferenceStrip={iiif_images.length > 1}
+									referenceStripScroll='vertical'
+									showNavigator={true}
+									onClose={this.adjustSections} />)
+				break
+			case 'application/pdf':
+			case 'application/x-pdf':
+				return (<PDFViewer src={download_path} />)
+				break
+			case 'video/mp4':
+			case 'video/ogg':
+			case 'audio/mp4':
+			case 'audio/aac':
+			case undefined:
+				//return (<MediaPlayer src={download_path} type={type} poster={thumbnail_path} />)
+				return (<MediaPlayer src="https://cdn.selz.com/plyr/1.5/View_From_A_Blue_Moon_Trailer-HD.mp4" type="video/mp4" poster={thumbnail_path} />)
+				break
+			default:
+				throw 'Unsupported resource type specified: ' + type
+		}
+	},
+
 	renderMediaPreview: function () {
 		const { work } = this.props
 		const data = work.data
@@ -175,25 +216,8 @@ const Work = React.createClass({
 		if (!data.thumbnail_path)
 			return
 
-		// if (isPdf) {
-		//   return /* pdfRenderer */
-		// }
-
-		const images = data.iiif_images
-
 		if (this.state.mediaOpen) {
-			return (
-				<OpenSeadragonViewer
-					prefixUrl='http://openseadragon.github.io/openseadragon/images/'
-					autoHideControls={false}
-					tileSources={images}
-					sequenceMode={images.length > 1}
-					showReferenceStrip={images.length > 1}
-					referenceStripScroll='vertical'
-					showNavigator={true}
-					onClose={this.adjustSections}
-			  />
-			 )
+			return this.renderViewer()
 		}
 
 		const props = {

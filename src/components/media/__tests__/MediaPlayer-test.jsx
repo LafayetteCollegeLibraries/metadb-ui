@@ -73,7 +73,7 @@ describe('<MediaPlayer />', () => {
 		expect(player).to.have.prop('crossOrigin', true)
 	})
 
-	describe('#parseType', function () {
+	describe('#renderMediaElement', function () {
 		it('sets media element to a Video by parsing the media type', function () {
 			const $el = mountEl()
 			const player = $el.instance()

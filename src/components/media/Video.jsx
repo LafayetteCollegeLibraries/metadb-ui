@@ -26,12 +26,14 @@ class Video extends React.Component {
 	// Render the <video> element
 	// @see (W3C link here)
 	render() {
-		const props = this.props
+		//const props = this.props
+		const props = {src: this.props.src, poster: this.props.poster}
+		const sources = this.props.sources
 
 		return (
 			<video {...props}>
 				{
-					props.sources.map(source => {
+					sources.map(source => {
 						return <source {...source} />
 					})
 				}
@@ -51,7 +53,10 @@ Video.propTypes = {
 }
 
 Video.defaultProps = {
-	sources: []
+	sources: [],
+	controls: true,
+	loop: false,
+	muted: false,
 }
 
 export default Video
