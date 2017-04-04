@@ -1,5 +1,5 @@
 import React from 'react'
-import { expect } from 'chai'
+import chai, { expect } from 'chai'
 import { shallow, mount } from 'enzyme'
 import assign from 'object-assign'
 import randomIndex from 'random-array-index'
@@ -30,7 +30,7 @@ describe('<VocabularyList />', function () {
 			const $filter = $el.find('input.filter')
 			expect($filter.prop('disabled')).to.be.true
 		})
-		
+
 		it('renders an `--empty` div with caption', function () {
 			const $div = $el.find('.vocab-list--empty')
 			expect($div).to.have.length(1)
@@ -40,7 +40,7 @@ describe('<VocabularyList />', function () {
 
 	describe('the vocabulary list item', function () {
 		const $el = wrapMount()
-		
+
 		it('renders for each vocabulary (on load)', function () {
 			const vocabLength = vocabResults.vocabularies.length
 			const $vocabItems = $el.find('.vocab-list--item')
@@ -57,10 +57,10 @@ describe('<VocabularyList />', function () {
 			const $hovered = $vocabItems.at(idx)
 
 			$hovered.simulate('mouseOver')
-			
+
 			it('adds a `.hover` classname', function () {
 				const classnames = ($hovered.prop('className') || '').split(' ')
-				
+
 				expect(classnames.length).to.be.greaterThan(0)
 				expect(classnames.indexOf('hover')).to.be.greaterThan(-1)
 			})
@@ -81,7 +81,7 @@ describe('<VocabularyList />', function () {
 				expect(index).to.equal(index)
 				called = true
 			}
-			
+
 			const $elClick = wrapMount({onVocabularyClick})
 			const $target = $elClick.find('.vocab-list--item').at(idx)
 
@@ -136,7 +136,7 @@ describe('<VocabularyList />', function () {
 			const $el = wrapMount()
 			const $filter = $el.find('.filter')
 			const startLen = vocabResults.vocabularies.length
-			
+
 			expect($el.find('.vocab-list--item')).to.have.length(startLen)
 
 			$filter.simulate('change', {target: {value: 'p'}})
@@ -180,7 +180,7 @@ describe('<VocabularyList />', function () {
 			const DOWN = 40
 
 			let idx = -1
-			
+
 			it('increments the `hoverIndex` when DOWN is pressed', function () {
 				expect($el.state('hoverIndex')).to.equal(idx)
 
@@ -192,7 +192,7 @@ describe('<VocabularyList />', function () {
 
 				$filter.simulate('keyDown', {keyCode: DOWN})
 				expect($el.state('hoverIndex')).to.equal(++idx)
-				
+
 				expect(
 					$el.find('.vocab-list--item').at(idx).prop('className')
 				).to.match(/hover/)
@@ -254,7 +254,7 @@ describe('<VocabularyList />', function () {
 		describe('the matching vocab item', function () {
 			it('has the class name `active`', function () {
 				expect($el.find('.active')).to.have.length(1)
-				
+
 				expect($el.find('.active').text()).to.match(keyReg)
 			})
 
