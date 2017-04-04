@@ -171,7 +171,7 @@ describe('Search actionCreator', function () {
 			})
 		})
 
-		it('removes a facet + makes an API call', function () {
+		it('removes a facet, removes a page number, and makes an API call', function () {
 			const FIELD = 'field'
 			const search = {
 				query: 'search query',
@@ -181,7 +181,10 @@ describe('Search actionCreator', function () {
 						{value: 'two', name: 'two', hits: 123},
 						{value: 'three', name: 'three', hits: 1234},
 					]
-				}
+				},
+				options: {
+					page: 2
+				},
 			}
 
 			const store = mockStore({search})
@@ -196,6 +199,8 @@ describe('Search actionCreator', function () {
 				const first = actions[0]
 				expect(first.payload.facets[FIELD])
 					.to.have.length(search.facets[FIELD].length - 1)
+
+				expect(first.payload.options).to.not.have.property('page')
 
 				const calls = fetchMock.calls()
 				expect(calls.matched).to.not.be.empty
