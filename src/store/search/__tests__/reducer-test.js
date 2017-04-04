@@ -89,5 +89,72 @@ describe('Search reducer', function () {
 
 			expect(res.isSearching).to.be.false
 		})
+
+		describe('when handling facets', function () {
+			const state = {
+				facets: {
+					subject_ocm: [
+						'200 COOL CATS',
+						'300 NICE DOGS'
+					],
+					author: [
+						{ value: 'Beverly Cleary' }
+					]
+				}
+			}
+
+			const action = actions.receivedSearchResults({
+				results: {
+					facets: [
+						{
+							name: 'subject_ocm',
+							items: [
+								{ value: '200 COOL CATS' },
+								{ value: '300 NICE DOGS' },
+								{ value: '400 SKATEBOARDS' },
+								{ value: '450 SICK MOVES' },
+							]
+						},
+						{
+							name: 'author',
+							items: [
+								{ value: 'Beverly Cleary' },
+								{ value: 'Stephen King' },
+								{ value: 'KA Applegate' },
+								{ value: 'Laura Ingalls Wilder' },
+							]
+						},
+						{
+							name: 'medium',
+							items: [
+								{ value: 'Book' },
+								{ value: 'Compact Disc' },
+							]
+						}
+					]
+				}
+			})
+
+			const expectedFacets = {
+				subject_ocm: [
+					{ value: '200 COOL CATS' },
+					{ value: '300 NICE DOGS' },
+				],
+				author: [
+					{ value: 'Beverly Cleary' },
+				]
+			}
+
+			const res = searchReducer(state, action)
+
+			it('fills in string facets with those from the results', function () {
+				expect(res.facets.subject_ocm).to.deep.equal(expectedFacets.subject_ocm)
+			})
+
+			it('passes through already-expanded facets', function () {
+				expect(res.facets.author).to.deep.equal(expectedFacets.author)
+			})
+		})
+
 	})
 })

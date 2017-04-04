@@ -1,6 +1,9 @@
 /* globals localStorage */
 import blqs from 'blacklight-querystring'
 
+export const stringify = input => blqs.stringify(input, { arrayFormat: 'brackets' })
+export const parse = input => blqs.parse(input)
+
 export const createRangeFacet = (name, min, max) => {
 	const label = min === max ? `${min}` : `${min} - ${max}`
 
@@ -30,10 +33,8 @@ export const formatSearchQueryString = (query, facets, options) => {
 	//    assume a shallow value + assign it to an object (whose key
 	//    matches the `type` attribute) within the `options` object.
 
-	const mappedFacets = {}
 	const opts = { ...options }
-
-	Object.keys(facets).forEach(key => {
+	const mappedFacets = Object.keys(facets).reduce((out, key) => {
 		const facet = facets[key]
 
 		for (let i = 0; i < facet.length; i++) {
@@ -45,16 +46,24 @@ export const formatSearchQueryString = (query, facets, options) => {
 					opts[type] = {}
 				}
 
-				opts[type][key] = current.value
-			} else {
-				if (!mappedFacets[key]) {
-					mappedFacets[key] = []
+				if (opts[type][key]) {
+					opts[type][key] = [].concat(opts[type][key], current.value)
+				} else {
+					opts[type][key] = current.value
 				}
 
-				mappedFacets[key].push(current.value)
+			} else {
+				if (!out[key]) {
+					out[key] = []
+				}
+
+				out[key].push(current.value)
 			}
 		}
-	})
+
+		return out
+	}, {})
+
 
 	const toStringify = {
 		options: opts,
@@ -62,7 +71,7 @@ export const formatSearchQueryString = (query, facets, options) => {
 		query,
 	}
 
-	const strung = blqs.stringify(toStringify)
+	const strung = stringify(toStringify)
 	return strung
 }
 
@@ -72,38 +81,35 @@ export const searchHistory = {
 	STORED_LIMIT: 20,
 
 	add: function addEntryToSearchHistory (search, limit) {
-		limit = limit || this.STORED_SEARCH_LIMIT
+		limit = limit || this.STORED_LIMIT
 
 		const history = this.getAll()
-		const update = [].concat(search, history.slice(0, limit - 1))
+		let update = [].concat(search, history)
 
-		localStorage.setItem(this.STORED_SEARCH_KEY, JSON.stringify(update))
+		if (update.length > limit) {
+			update = update.slice(0, limit)
+		}
+
+		localStorage.setItem(this.STORED_KEY, JSON.stringify(update))
 	},
 
 	clear: function clearSearchHistory () {
-		localStorage.setItem(this.STORED_SEARCH_KEY, '[]')
+		localStorage.setItem(this.STORED_KEY, '[]')
 	},
 
 	getAll: function getAllSearchHistory () {
-		const history = localStorage.getItem(this.STORED_SEARCH_KEY) || '[]'
+		const history = localStorage.getItem(this.STORED_KEY) || '[]'
 
 		try {
 			return JSON.parse(history)
-		} catch(e) {
+		} catch (e) {
 			return []
 		}
 	},
 
 	getPreviousQueries: function getPreviousSearchQueries () {
-		const history = localStorage.getItem(this.STORED_SEARCH_KEY) || '[]'
-
-		try {
-			const parsed = JSON.parse(history)
-			return parsed
-				.map(search => search.query)
-				.filter((query, idx, arr) => query && (arr.indexOf(query) === idx))
-		} catch (e) {
-			return []
-		}
+		return this.getAll()
+			.map(search => search.query)
+			.filter((query, idx, arr) => query && (arr.indexOf(query) === idx))
 	},
 }

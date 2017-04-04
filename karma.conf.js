@@ -52,11 +52,13 @@ module.exports = function(config) {
 					},
 				],
 			},
+
 			externals: {
 				'react/addons': true,
 				'react/lib/ExecutionEnvironment': true,
 				'react/lib/ReactContext': true,
 			},
+
 			plugins: [
 				new webpack.DefinePlugin({
 					'process.env': {
@@ -66,7 +68,9 @@ module.exports = function(config) {
 					},
 				})
 			],
+
 			devtool: '#inline-source-map',
+
 			node: {
 				fs: 'empty',
 			}
@@ -78,7 +82,7 @@ module.exports = function(config) {
 		// test results reporter to use
 		// possible values: 'dots', 'progress'
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: ['mocha'],
+		reporters: ['mocha', 'coverage', 'coveralls'],
 
 		// web server port
 		port: 9876,
@@ -100,6 +104,11 @@ module.exports = function(config) {
 
 		// Concurrency level
 		// how many browser should be started simultaneous
-		concurrency: Infinity
+		concurrency: Infinity,
+
+		coverageReporter: {
+			type: 'lcov',
+			dir: 'coverage/',
+		}
 	})
 }
