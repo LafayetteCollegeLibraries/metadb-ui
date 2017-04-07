@@ -20,8 +20,6 @@ describe('store/notifications/utils', function () {
 
 		it('includes a timestamp', function () {
 			expect(notification.time).to.be.a.number
-			expect(notification.time).to.be.closeTo(start, 1000)
-			expect(notification.time).to.be.closeTo(Date.now(), 1000)
 		})
 	})
 
