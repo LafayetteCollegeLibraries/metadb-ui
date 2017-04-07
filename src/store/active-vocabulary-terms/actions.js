@@ -77,6 +77,8 @@ export const fetchTermsFromVocabulary = vocabulary => {
 				dispatch(fetchedVocabularyTerms({terms, vocabulary}))
 			})
 			.catch(error => {
+				error.vocabulary = vocabulary
+
 				dispatch(fetchingVocabularyTermsErr(error))
 			})
 	}
