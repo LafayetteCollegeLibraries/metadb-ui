@@ -3,7 +3,6 @@ import * as utils from '../utils'
 
 describe('store/notifications/utils', function () {
 	describe('#createNotification', function () {
-		const start = Date.now()
 		const type = utils.OK
 		const template = '%(thing)s is for the children'
 		const data = { thing: 'Wu-Tang' }
