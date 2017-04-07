@@ -37,15 +37,15 @@ export const bulkMessageReducer = (templateWithoutCount, templateWithCount) => {
 	}
 
 	return (state, action) => {
-		const { payload } = action
-		const { count } = payload
+		const payload = action.payload || {}
 		const hasCount = hasProperty(payload, 'count')
+		const count = hasCount ? Number(payload.count) : undefined
 		const template = hasCount ? templateWithCount : templateWithoutCount
 
 		// if we're using the generic without-count message,
 		// than this data is irrelevant.
 		const data = {
-			count: Number(payload.count),
+			count,
 			workDisplay: count && count === 1 ? 'work' : 'works',
 		}
 
@@ -56,8 +56,12 @@ export const bulkMessageReducer = (templateWithoutCount, templateWithCount) => {
 
 export const vocabularyMessageReducer = (template) => {
 	return (state, action) => {
+		const payload = action.payload || {}
+		const label = payload.pref_label && payload.pref_label[0]
+		const uri = payload.uri
+
 		const data = {
-			label: action.pref_label[0] || action.uri || 'Unknown Vocabulary',
+			label: label || uri || 'Unknown Vocabulary',
 		}
 
 		if (action.error) {

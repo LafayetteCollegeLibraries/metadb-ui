@@ -36,6 +36,6 @@ export const Header = elFactory('header')
 Header.displayName = 'Header'
 
 export const Footer = elFactory('footer')
-Footer.displayName
+Footer.displayName = 'Footer'
 
-export const namespace = NS
+export const NAMESPACE = NS

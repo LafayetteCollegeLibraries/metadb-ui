@@ -8,6 +8,8 @@ import * as batch from '../batch/actions'
 import * as search from '../search/actions'
 import * as vocab from '../vocabulary/actions'
 
+export const UNKNOWN_NO_MESSAGE = 'Unknown error: No message attached'
+
 export default handleActions({
 	// handle notification actions first
 	[notifications.clearNotification]: (state, action) => {
@@ -49,45 +51,58 @@ export default handleActions({
 	},
 
 	[search.fetchingSearchErr]: (state, action) => {
+		const err = action.payload || {}
+
 		const data = {
-			message: action.error.message,
+			message: err.message || UNKNOWN_NO_MESSAGE,
 		}
 
-		return [].concat(state, util.errorMessage(msg.RECEIVE_SEARCH_ERR, data))
+		const out = util.errorMessage(msg.RECEIVE_SEARCH_ERR, data)
+
+		return [].concat(state, out)
 	},
 
-	[terms.addTermToVocabularyErr]: (state, action) => {
+	[terms.addingTermToVocabularyErr]: (state, action) => {
+		const err = action.payload || {}
+
 		const data = {
-			term: action.error.term,
-			message: action.error.message,
+			term: err.term,
+			message: err.message || UNKNOWN_NO_MESSAGE,
 		}
-		return [].concat(state,
-			util.errorMessage(msg.CREATE_TERM_ERROR, data)
-		)
+
+		const out = util.errorMessage(msg.CREATE_TERM_ERR, data)
+
+		return [].concat(state, out)
 	},
 
 	[terms.fetchingVocabularyTermsErr]: (state, action) => {
+		const err = action.payload || {}
+
 		const data = {
-			message: action.error.message
+			message: err.message || UNKNOWN_NO_MESSAGE,
 		}
 
-		return [].concat(state,
-			util.errorMessage(msg.RECEIVE_VOCABULARY_TERMS_ERR, data)
-		)
+		const out = util.errorMessage(msg.RECEIVE_VOCABULARY_TERMS_ERR, data)
+
+		return [].concat(state, out)
 	},
 
 	[terms.updatingTermInVocabularyErr]: (state, action) => {
-		const { message, termLabel, vocabulary } = action.error
+		const err = action.payload || {}
+
+		const { message, termLabel, vocabulary } = err
+		const pref_label = vocabulary && vocabulary.pref_label && vocabulary.pref_label[0]
+		const uri = vocabulary && vocabulary.uri
 
 		const data = {
-			message,
+			message: message || UNKNOWN_NO_MESSAGE,
 			term: termLabel,
-			vocabulary: vocabulary.pref_label[0] || vocabulary.uri || 'Unknown Vocabulary',
+			vocabulary: pref_label || uri || 'Unknown Vocabulary',
 		}
 
-		return [].concat(state,
-			util.errorMessage(msg.UPDATE_TERM_RESPONSE_ERR, data)
-		)
+		const out = util.errorMessage(msg.UPDATE_TERM_RESPONSE_ERR, data)
+
+		return [].concat(state, out)
 	},
 
 	[vocab.createdVocabulary]: (

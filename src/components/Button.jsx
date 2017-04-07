@@ -47,7 +47,7 @@ const Button = React.createClass({
 		delete uProps.type
 		delete uProps.className
 
-		const props = assign({}, uProps, {className})
+		const props = assign({}, uProps, {className, type: 'button'})
 
 		return React.createElement('button', props)
 	}
