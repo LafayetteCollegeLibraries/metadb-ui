@@ -121,10 +121,6 @@ describe('Notifications reducer', function () {
 	})
 
 	describe('`terms.fetchingVocabularyTermsErr`', function () {
-		const vocab = {
-			pref_label: ['Some Vocab']
-		}
-
 		const err = new Error('!!vocab err!!')
 		const action = terms.fetchingVocabularyTermsErr(err)
 		const results = reducer([], action)

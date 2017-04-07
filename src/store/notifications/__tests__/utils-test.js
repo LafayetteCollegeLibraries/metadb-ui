@@ -79,19 +79,19 @@ describe('store/notifications/utils', function () {
 
 			const results0 = reducer([], {payload: { count: 0 }})
 			const result0 = results0[0]
-			const [ _0, message0 ] = result0.message.split(WITH_COUNT_DELIMITER)
+			const [ , message0 ] = result0.message.split(WITH_COUNT_DELIMITER)
 
 			expect(message0).to.equal(PLURAL)
 
 			const results1 = reducer([], {payload: { count: 1 }})
 			const result1 = results1[0]
-			const [ _1, message1 ] = result1.message.split(WITH_COUNT_DELIMITER)
+			const [ , message1 ] = result1.message.split(WITH_COUNT_DELIMITER)
 
 			expect(message1).to.equal(SINGLE)
 
 			const results2 = reducer([], {payload: { count: 2 }})
 			const result2 = results2[0]
-			const [ _2, message2 ] = result2.message.split(WITH_COUNT_DELIMITER)
+			const [ , message2 ] = result2.message.split(WITH_COUNT_DELIMITER)
 
 			expect(message2).to.equal(PLURAL)
 		})
