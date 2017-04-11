@@ -4,7 +4,6 @@ import assign from 'object-assign'
 import Button from '../components/Button.jsx'
 import SearchFacetSidebar from '../components/catalog/SearchFacetSidebar.jsx'
 import Facet from '../components/catalog/Facet.jsx'
-import FacetList from '../components/catalog/FacetList.jsx'
 import FacetListWithViewMore from '../components/catalog/FacetListWithViewMore.jsx'
 import FacetRangeLimitDate from '../components/catalog/FacetRangeLimitDate.jsx'
 
@@ -276,7 +275,6 @@ const SearchResults = React.createClass({
 				<Facet name="language_sim" />
 				<Facet name="creator_photographer_sim"
 					label="Photographer"
-					bodyComponent={FacetList}
 					/>
 				<Facet name="date_original_dtsi"
 					label="Date (Original)"
