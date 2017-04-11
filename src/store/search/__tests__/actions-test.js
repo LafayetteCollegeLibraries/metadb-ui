@@ -46,72 +46,50 @@ describe('Search actionCreator', function () {
 			const QUERY = 'some query'
 
 			const expected = [
-				S.fetchingSearch({
+				S.preppingSearch({
 					query: QUERY,
 					facets: {},
-					options: {},
-					queryString: `q=${QUERY.replace(/ /g, '+')}`,
+					range: {},
+					options: {
+						format: 'json',
+						page: 1,
+						per_page: S.RESULTS_PER_PAGE,
+					}
 				}),
-
+				S.fetchingSearch(),
 				S.receivedSearchResults({results: {}})
 			]
 
 			return store.dispatch(S.searchCatalog('some query'))
 			.then(() => {
 				const actions = store.getActions()
-				expect(actions).to.have.length(2)
+				expect(actions).to.have.length(expected.length)
 				expect(actions).to.deep.equal(expected)
 			})
 		})
 
-		it('dispatches `fetchingSearch` w/ query details', function () {
+		it('dispatches `preppingSearch` w/ query details', function () {
 			const query = 'cats AND dogs'
-			const facets = { one: [{ value: 'a'}, {value: 'b'}]}
-			const options = { per_page: 5 }
+			const facets = { one: [{value: 'a'}, {value: 'b'}] }
+			const options = {
+				format: 'json',
+				per_page: S.RESULTS_PER_PAGE,
+				page: 1,
+			}
+			const range = {}
 
-			const expected = S.fetchingSearch({
+			const expected = S.preppingSearch({
 				query,
 				facets,
 				options,
-				queryString: 'q=cats+AND+dogs&f%5Bone%5D%5B%5D=a&f%5Bone%5D%5B%5D=b&per_page=5',
+				range,
 			})
 
-			return store.dispatch(S.searchCatalog(query, facets, options))
+			return store.dispatch(S.searchCatalog(query, facets, range, options))
 			.then(() => {
 				const actions = store.getActions()
-				expect(actions).to.have.length(2)
+				expect(actions).to.have.length(3)
 				expect(actions[0]).to.deep.equal(expected)
-			})
-		})
-	})
-
-	describe('#setSearchOption', function () {
-		it('adds key/val to `search.options`', function () {
-			const key = 'key'
-			const val = 'val'
-
-			return store.dispatch(S.setSearchOption(key, val)).then(() => {
-				const actions = store.getActions()
-				expect(actions[0].type).to.equal(S.fetchingSearch.toString())
-				expect(actions[0].payload.options).to.have.property(key)
-				expect(actions[0].payload.options[key]).to.equal(val)
-			})
-		})
-
-		it('will make an api call even if the key/val already exists', function () {
-			const key = 'key'
-			const val = 'val'
-
-			const options = {
-				[key]: val
-			}
-
-			const store = mockStore({search: {options}})
-
-			return store.dispatch(S.setSearchOption(key, val))
-			.then(() => {
-				const actions = store.getActions()
-				expect(actions).to.not.be.empty
 			})
 		})
 	})
@@ -121,15 +99,22 @@ describe('Search actionCreator', function () {
 			const field = 'facet_field'
 			const value = 'value'
 
+			const expectedActions = [
+				S.setFacet,
+				S.preppingSearch,
+				S.fetchingSearch,
+				S.receivedSearchResults,
+			]
+
 			return store.dispatch(S.toggleSearchFacet(field, value, true))
 			.then(() => {
 				const actions = store.getActions()
 
-				// it calls 2 actions (`fetchingSearch` + `receiveSearchResults`)
-				expect(actions).to.have.length(2)
+				expect(actions).to.have.length(expectedActions.length)
+				actions.forEach((a,i) => { expect(a.type).to.equal(expectedActions[i].toString()) })
 
-				// it sends the updated props w/ SEARCHING
-				const { payload } = actions[0]
+				// it sends the updated props w/ `preppingSearch`
+				const { payload } = actions[1]
 
 				// the facet prop now has the new property
 				expect(payload.facets).to.have.property(field)
@@ -182,10 +167,18 @@ describe('Search actionCreator', function () {
 						{value: 'three', name: 'three', hits: 1234},
 					]
 				},
-				options: {
-					page: 2
-				},
+				range: {},
+				meta: {
+					currentPage: 2,
+				}
 			}
+
+			const expectedActions = [
+				S.clearFacet,
+				S.preppingSearch,
+				S.fetchingSearch,
+				S.receivedSearchResults,
+			]
 
 			const store = mockStore({search})
 			const value = search.facets[FIELD][1]
@@ -194,13 +187,16 @@ describe('Search actionCreator', function () {
 			.then(() => {
 				const actions = store.getActions()
 
-				expect(actions).to.have.length(2)
+				expect(actions).to.have.length(expectedActions.length)
+				actions.forEach((a, i) => { expect(a.type).to.equal(expectedActions[i].toString()) })
 
-				const first = actions[0]
-				expect(first.payload.facets[FIELD])
+				const prepped = actions[1]
+
+				expect(prepped.payload.facets[FIELD])
 					.to.have.length(search.facets[FIELD].length - 1)
 
-				expect(first.payload.options).to.not.have.property('page')
+				expect(prepped.payload).to.have.property('options')
+				expect(prepped.payload.options.page).to.equal(1)
 
 				const calls = fetchMock.calls()
 				expect(calls.matched).to.not.be.empty

@@ -45,55 +45,6 @@ describe('search/utils', function () {
 		})
 	})
 
-	describe('`formatSearchQueryString`', function () {
-		it('does nothing for empty values', function () {
-			const empty = utils.formatSearchQueryString()
-
-			expect(empty).to.equal('')
-		})
-
-		it('flattens facetItem objects into an array of values', function () {
-			const input = {
-				subject_ocm: [
-					{ value: '200 COOL CATS' },
-					{ value: '300 COOL DOGS' },
-				]
-			}
-
-			const expected = {
-				subject_ocm: input.subject_ocm.map(i => i.value)
-			}
-
-			const stringified = utils.formatSearchQueryString('', input)
-			const parsed = utils.parse(stringified)
-
-			expect(parsed.facets).to.deep.equal(expected)
-		})
-
-		it('passes facetItems with a `type` value into their own option param', function () {
-			const TYPE = 'compliment'
-
-			const input = {
-				kind_words: [
-					{value: 'COOL', type: TYPE},
-					{value: 'NICE', type: TYPE},
-					{value: 'LOVELY', type: TYPE},
-				]
-			}
-
-			const stringified = utils.formatSearchQueryString('', input)
-			const expected = utils.stringify({
-				options: {
-					[TYPE]: {
-						kind_words: input.kind_words.map(i => i.value)
-					}
-				}
-			})
-
-			expect(stringified).to.equal(expected)
-		})
-	})
-
 	describe('searchHistory utils', function () {
 		// create a new stored-key so we don't accidentally
 		// overwrite values that exist

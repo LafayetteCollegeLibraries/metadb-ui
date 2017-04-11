@@ -28,6 +28,9 @@ import * as actions from './actions'
  *		// the actual formatted querystring (used for pushState)
  *    queryString: string
  *
+ *    // just like the facets, but w/ ranges
+ *		range: object
+ *
  *    // raw Blacklight results (specificially, the `response` object)
  *    results: object
  *
