@@ -1,6 +1,8 @@
 import React from 'react'
 import Modal from 'react-modal'
 import assign from 'object-assign'
+import InfiniteScroll from 'react-infinite-scroller'
+
 import Button from '../components/Button.jsx'
 import SearchFacetSidebar from '../components/catalog/SearchFacetSidebar.jsx'
 import Facet from '../components/catalog/Facet.jsx'
@@ -102,32 +104,8 @@ const SearchResults = React.createClass({
 		this.setState({batchTool: null})
 	},
 
-	handleNextPage: function () {
-		const pages = this.state.pages
-
-		if (!pages.next_page)
-			return
-
-		this.props.setSearchOption('page', pages.next_page)
-	},
-
 	handleOpenBatchTool: function (batchTool) {
 		this.setState({batchTool})
-	},
-
-	handlePerPageChange: function (val) {
-		this.props.setSearchOption('per_page', val)
-	},
-
-	handlePreviousPage: function () {
-		const pages = this.state.pages
-
-		if (!pages.prev_page)
-			return
-
-		const prev = pages.prev_page === 1 ? null : pages.prev_page
-
-		this.props.setSearchOption('page', prev)
 	},
 
 	handleSearchResponse: function (res) {
@@ -141,7 +119,6 @@ const SearchResults = React.createClass({
 			breadcrumbs,
 			facets,
 			options: this.props.search.options,
-			pages: res.results.pages,
 			results: res.results.docs,
 			timestamp: res.timestamp,
 		})
@@ -205,15 +182,11 @@ const SearchResults = React.createClass({
 	},
 
 	onRemoveFacet: function (key, facet) {
-		return this._onToggleFacet(false, key, facet)
+		return this.props.toggleSearchFacet(key, facet, false)
 	},
 
 	onSelectFacet: function (key, facet) {
-		return this._onToggleFacet(true, key, facet)
-	},
-
-	_onToggleFacet: function (which, key, facet) {
-		return this.props.toggleSearchFacet(key, facet, which)
+		return this.props.toggleSearchFacet(key, facet, true)
 	},
 
 	renderBreadcrumbs: function () {
@@ -293,9 +266,6 @@ const SearchResults = React.createClass({
 	},
 
 	renderResultsHeader: function () {
-		if (!this.state.pages)
-			return
-
 		const props = {
 			batchTools: [
 				{
@@ -304,13 +274,8 @@ const SearchResults = React.createClass({
 					component: AddMetadataModal,
 				}
 			],
-			pageData: this.state.pages,
-			onNextPage: this.handleNextPage,
 			onOpenBatchTool: this.handleOpenBatchTool,
-			onPreviousPage: this.handlePreviousPage,
-			onPerPageChange: this.handlePerPageChange,
 			onViewChange: this.toggleView,
-			perPage: this.props.search.options.per_page,
 			view: this.state.resultsView,
 			viewOptions: ['table', 'gallery'],
 		}

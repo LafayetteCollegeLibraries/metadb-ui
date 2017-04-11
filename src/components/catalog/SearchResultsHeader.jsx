@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from '../Button.jsx'
 import Toggle from '../Toggle.jsx'
-import SearchResultsPagerHeader from './SearchResultsPagerHeader.jsx'
+// import SearchResultsPagerHeader from './SearchResultsPagerHeader.jsx'
 
 import BatchToolMenu from '../batch-tools/Menu.jsx'
 
@@ -10,20 +10,13 @@ const BORDER_RADIUS = '2px'
 
 const SearchResultsHeader = React.createClass({
 	propTypes: {
-		onNextPage: T.func.isRequired,
-		onPreviousPage: T.func.isRequired,
-		onPerPageChange: T.func.isRequired,
 		onViewChange: T.func.isRequired,
 
 		batchTools: T.array,
 		onOpenBatchTool: T.func.isRequired,
 
-		pageData: T.object.isRequired,
 		view: T.string,
 		viewOptions: T.array,
-
-		perPage: T.oneOfType([T.number, T.string]),
-		perPageOptions: T.array,
 
 		batchTools: T.array,
 	},
@@ -115,9 +108,9 @@ const SearchResultsHeader = React.createClass({
 					</div>
 				</div>
 
+				{/*
 				<hr className="SearchResultsHeader-divider" style={styles.divider} />
 
-				{/*
 				<SearchResultsPagerHeader
 					data={this.props.pageData}
 					key="search-results-header-bottom"
