@@ -8,43 +8,51 @@ import * as actions from './actions'
  *  itself, as: a) that data doesn't need to be stored in the global state, and
  *  b) it can easily be re-fetched using search info here.
  *
- *  note: all of the heavy lifting is being done within the action/search creator
+ *	{
+ *	  // facets grouped by field
+ *	  // { 'subject': [{value: 'art' ...}, {value: 'anthropology' ...} ]}
+ *		facets: object
  *
- *  {
- *    // facets grouped by field
- *    // { 'subject': [{value: 'art' ...}, {value: 'anthropology' ...} ]}
- *    facets: object
+ *	  // contains the search query
+ *	  query: string
  *
- *    // flagged when SEARCHING action is received
- *    isSearching: bool
-
- *    // search options
- *    // { 'per_page': 25 }
- *    options: object
- *
- *    // contains the search query
- *    query: string
- *
- *		// the actual formatted querystring (used for pushState)
- *    queryString: string
- *
- *    // just like the facets, but w/ ranges
+ *		// just like the facets, but w/ ranges
  *		range: object
  *
- *    // raw Blacklight results (specificially, the `response` object)
- *    results: object
+ *		// stores the meta-information about the search (details that
+ *		// aren't exposed in the queryString)
+ *		meta: {
+ *			// flagged when `fetchingSearch` is called
+ *			isSearching: bool
  *
- *    // Date.now() used to determine whether or not to update state on the
- *    // SearchResults page
- *    timestamp: number
- *  }
+ *			// which page are we at
+ *			// (`search/actions` defaults this to 1)
+ *			page: number
+ *
+ *			// how many results per-page are we expecting
+ *			// (`search/actions` sets the app default)
+ *			perPage: number
+ *		}
+ *	}
  */
+
+const initialState = {
+	query: '',
+	facets: {},
+	range: {},
+	meta: {
+		isSearching: false,
+	}
+}
 
 export default handleActions({
 	[actions.fetchingSearch]: (state, action) => {
 		return {
-			...action.payload,
-			isSearching: true,
+			...state,
+			meta: {
+				...state.meta,
+				isSearching: true,
+			}
 		}
 	},
 
@@ -52,7 +60,25 @@ export default handleActions({
 	[actions.fetchingSearchErr]: state => {
 		return {
 			...state,
-			isSearching: false,
+			meta: {
+				...state.meta,
+				isSearching: false,
+			}
+		}
+	},
+
+	[actions.preppingSearch]: (state, action) => {
+		const { query, facets, range, options } = action.payload
+
+		return {
+			query,
+			facets,
+			range,
+			meta: {
+				...state.meta,
+				...options,
+				perPage: options.per_page,
+			}
 		}
 	},
 
@@ -103,4 +129,4 @@ export default handleActions({
 			timestamp: Date.now(),
 		}
 	},
-}, {})
+}, initialState)

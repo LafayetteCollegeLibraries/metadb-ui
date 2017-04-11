@@ -6,9 +6,10 @@ import searchReducer from '../reducer'
 const defaultState = {
 	query: '',
 	facets: {},
-	options: {},
-	isSearching: false,
-	queryString: '',
+	range: {},
+	meta: {
+		isSearching: false,
+	}
 }
 
 const defaultStatePure = { ...defaultState }
@@ -18,53 +19,19 @@ describe('Search reducer', function () {
 		expect(defaultState).to.deep.equal(defaultStatePure)
 	})
 
-	it('returns an empty object when state is undefined', function () {
+	it('returns a default object when state is undefined', function () {
 		const res = searchReducer(undefined, {type: 'nothing'})
 
 		expect(res).to.be.an('object')
-		expect(res).to.be.empty
+		expect(res).to.not.be.empty
 	})
 
 	describe('`fetchingSearch`', function () {
 		it('sets `isSearching` to true', function () {
-			const action = actions.fetchingSearch({
-				query: 'some query',
-				facets: {},
-				options: {},
-				queryString: 'q=some+query'
-			})
-
+			const action = actions.fetchingSearch()
 			const res = searchReducer(defaultState, action)
 
-			expect(res.isSearching).to.be.true
-		})
-
-		it('updates the `query`, `facets`, and `options` to those passed', function () {
-			const query = 'a whole new query'
-			const facets = { 'one': ['a','b'] }
-			const options = { 'per_page': 25 }
-			const queryString = '?q=a%20whole%20new%20query&f[one][]=a&f[one][]=b&per_page=25'
-
-			const action = actions.fetchingSearch({
-				query,
-				facets,
-				options,
-				queryString,
-			})
-
-			const res = searchReducer(defaultState, action)
-
-			expect(res.query).to.not.equal(defaultState.query)
-			expect(res.query).to.equal(query)
-
-			expect(res.facets).to.not.deep.equal(defaultState.facets)
-			expect(res.facets).to.deep.equal(facets)
-
-			expect(res.options).to.not.deep.equal(defaultState.options)
-			expect(res.options).to.deep.equal(options)
-
-			expect(res.queryString).to.not.deep.equal(defaultState.queryString)
-			expect(res.queryString).to.equal(queryString)
+			expect(res.meta.isSearching).to.be.true
 		})
 	})
 
@@ -73,7 +40,58 @@ describe('Search reducer', function () {
 			const action = actions.fetchingSearchErr()
 			const res = searchReducer({isSearching: true}, action)
 
-			expect(res.isSearching).to.be.false
+			expect(res.meta.isSearching).to.be.false
+		})
+	})
+
+	describe('`preppingSearch`', function () {
+		const query = 'a whole new query'
+		const facets = {
+			one: [
+				{value: 'a'},
+				{value: 'b'}
+			]
+		}
+		const range = {
+			date_created: [
+				{
+					label: '2000 - 2010',
+					value: {
+						begin: '2000',
+						end: '2010',
+					}
+				}
+			]
+		}
+
+		const options = {
+			format: 'json',
+			per_page: 25,
+			page: 1,
+		}
+
+		it('updates the `query`, `facets`, and `options` to those passed', function () {
+			const action = actions.preppingSearch({query, facets, range, options})
+			const res = searchReducer(defaultState, action)
+
+			console.info(JSON.stringify(defaultState, true, 2))
+			console.info(JSON.stringify(res, true, 2))
+
+			expect(res).to.not.deep.equal(defaultState)
+
+			expect(res.query).to.not.equal(defaultState.query)
+			expect(res.query).to.equal(query)
+
+			expect(res.facets).to.not.deep.equal(defaultState.facets)
+			expect(res.facets).to.deep.equal(facets)
+
+			expect(res.range).to.not.deep.equal(defaultState.range)
+			expect(res.range).to.deep.equal(range)
+
+			expect(res.meta).to.not.deep.equal(defaultState.meta)
+			expect(res.meta.format).to.equal(options.format)
+			expect(res.meta.perPage).to.equal(options.per_page)
+			expect(res.meta.page).to.equal(options.page)
 		})
 	})
 
