@@ -10,6 +10,8 @@ in active development and **very much a work in progress**.
 getting started
 ---------------
 
+[![Join the chat at https://gitter.im/LafayetteCollegeLibraries/metadb-ui](https://badges.gitter.im/LafayetteCollegeLibraries/metadb-ui.svg)](https://gitter.im/LafayetteCollegeLibraries/metadb-ui?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ```
 git clone https://github.com/LafayetteCollegeLibraries/metadb-ui
 cd metadb-ui
