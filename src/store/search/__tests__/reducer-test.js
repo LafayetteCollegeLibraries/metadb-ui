@@ -64,20 +64,18 @@ describe('Search reducer', function () {
 			]
 		}
 
-		const options = {
+		const meta = {
 			format: 'json',
 			per_page: 25,
 			page: 1,
 		}
 
-		it('updates the `query`, `facets`, and `options` to those passed', function () {
-			const action = actions.preppingSearch({query, facets, range, options})
+		it('updates the `query`, `facets`, and `meta` to those passed', function () {
+			const action = actions.preppingSearch({query, facets, range, meta})
 			const res = searchReducer(defaultState, action)
 
-			console.info(JSON.stringify(defaultState, true, 2))
-			console.info(JSON.stringify(res, true, 2))
-
 			expect(res).to.not.deep.equal(defaultState)
+			expect(res).to.contain.all.keys(['query', 'facets', 'range', 'meta'])
 
 			expect(res.query).to.not.equal(defaultState.query)
 			expect(res.query).to.equal(query)
@@ -88,10 +86,9 @@ describe('Search reducer', function () {
 			expect(res.range).to.not.deep.equal(defaultState.range)
 			expect(res.range).to.deep.equal(range)
 
-			expect(res.meta).to.not.deep.equal(defaultState.meta)
-			expect(res.meta.format).to.equal(options.format)
-			expect(res.meta.perPage).to.equal(options.per_page)
-			expect(res.meta.page).to.equal(options.page)
+			expect(res.meta.format).to.equal(meta.format)
+			expect(res.meta.per_page).to.equal(meta.per_page)
+			expect(res.meta.page).to.equal(meta.page)
 		})
 	})
 
@@ -103,9 +100,9 @@ describe('Search reducer', function () {
 				}
 			})
 
-			const res = searchReducer({isSearching: true}, action)
+			const res = searchReducer({meta: {isSearching: true}}, action)
 
-			expect(res.isSearching).to.be.false
+			expect(res.meta.isSearching).to.be.false
 		})
 
 		describe('when handling facets', function () {

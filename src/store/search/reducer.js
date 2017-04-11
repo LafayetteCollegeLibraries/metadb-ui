@@ -31,7 +31,7 @@ import * as actions from './actions'
  *
  *			// how many results per-page are we expecting
  *			// (`search/actions` sets the app default)
- *			perPage: number
+ *			per_page: number
  *		}
  *	}
  */
@@ -46,7 +46,7 @@ const initialState = {
 }
 
 export default handleActions({
-	[actions.fetchingSearch]: (state, action) => {
+	[actions.fetchingSearch]: state => {
 		return {
 			...state,
 			meta: {
@@ -68,7 +68,7 @@ export default handleActions({
 	},
 
 	[actions.preppingSearch]: (state, action) => {
-		const { query, facets, range, options } = action.payload
+		const { query, facets, range, meta } = action.payload
 
 		return {
 			query,
@@ -76,8 +76,7 @@ export default handleActions({
 			range,
 			meta: {
 				...state.meta,
-				...options,
-				perPage: options.per_page,
+				...meta,
 			}
 		}
 	},
@@ -123,10 +122,11 @@ export default handleActions({
 
 		return {
 			...state,
-			isSearching: false,
 			facets,
-			results,
-			timestamp: Date.now(),
+			meta: {
+				...state.meta,
+				isSearching: false,
+			},
 		}
 	},
 }, initialState)

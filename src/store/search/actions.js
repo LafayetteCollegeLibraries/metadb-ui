@@ -1,6 +1,5 @@
 import { createAction } from 'redux-actions'
 import browserHistory from 'react-router/lib/browserHistory'
-import findIndex from 'array-find-index'
 import isEqual from 'lodash.isequal'
 
 import * as api from './endpoints'
@@ -41,7 +40,7 @@ export const searchCatalog = (query, facets, range, meta) => {
 		const options = {
 			format: meta.format || 'json',
 			page: meta.page || 1,
-			per_page: meta.perPage ||  RESULTS_PER_PAGE,
+			per_page: meta.per_page ||  RESULTS_PER_PAGE,
 		}
 
 		dispatch(preppingSearch({query, facets, range, options}))
@@ -80,7 +79,7 @@ export const searchCatalog = (query, facets, range, meta) => {
 				dispatch(receivedSearchResults({results}))
 			})
 			.catch(error => {
-				dispatch(fetchingSearchError(error))
+				dispatch(fetchingSearchErr(error))
 			})
 	}
 }
@@ -130,11 +129,7 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 		}
 
 		else if (search[key][facet] && !isChecked) {
-			let count = 0
-
 			target = search[key][facet].filter(i => {
-				count++
-
 				if (hasProperty(i, 'value') && hasProperty(item, 'value')) {
 					return !isEqual(i.value, item.value)
 				}
