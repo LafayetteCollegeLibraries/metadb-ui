@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions'
 import arrayFind from 'array-find'
 import * as actions from './actions'
+import { createRangeFacet } from './utils'
 
 /**
  *  the search-state stores data related to the query itself -- results (which
@@ -9,6 +10,9 @@ import * as actions from './actions'
  *  b) it can easily be re-fetched using search info here.
  *
  *	{
+ *		// breadcrumb objects accumulated during the search
+ *		breadcrumbs: array
+ *
  *	  // facets grouped by field
  *	  // { 'subject': [{value: 'art' ...}, {value: 'anthropology' ...} ]}
  *		facets: object
@@ -37,15 +41,30 @@ import * as actions from './actions'
  */
 
 export const initialState = {
-	query: '',
+	breadcrumbs: [],
 	facets: {},
+	query: '',
 	range: {},
+
 	meta: {
 		isSearching: false,
 	}
 }
 
 export default handleActions({
+	[actions.clearFacet]: (state, action) => {
+		const breadcrumbs = state.breadcrumbs.filter(bc => {
+			return bc.item.value !== action.payload.item.value
+		})
+
+		return {
+			...state,
+			breadcrumbs,
+		}
+	},
+
+	[actions.clearSearch]: () => ({ ...initialState }),
+
 	[actions.fetchingSearch]: state => {
 		return {
 			...state,
@@ -71,6 +90,7 @@ export default handleActions({
 		const { query, facets, range, meta } = action.payload
 
 		return {
+			...state,
 			query,
 			facets,
 			range,
@@ -81,47 +101,99 @@ export default handleActions({
 		}
 	},
 
-	// this would be very straight-forward _if_ we weren't allowing
-	// users to return by way of copy/pasting a url w/ a search
-	// querystring. we're storing facets in state as objects,
-	// as opposed to the querystring where they are just the
-	// values. so in order to get these _back_ to objects, as the
-	// components are expecting them, we need to find their
-	// respective objects in the pool of facets returned from
-	// the server.
 	[actions.receivedSearchResults]: (state, action) => {
 		const { results } = action.payload || {}
-		const allFacets = results.facets
-		const selectedFacets = state.facets || {}
-		let facets = {}
+		const allFacets = results.facets || []
+		const selectedFacets = { ...state.facets }
 
-		const selectedKeys = Object.keys(selectedFacets)
+		// save ourselves the hassle of iterating through the returned
+		// array of facets + create a map:
+		//
+		//     { [facet.name]: index }
+		//
+		const facetDictionary = allFacets.reduce((out, f, index) => {
+			out[f.name] = index
+			return out
+		}, {})
 
-		if (selectedKeys.length) {
-			facets = selectedKeys.reduce((out, key) => {
-				out[key] = selectedFacets[key].map(item => {
+		let facets, breadcrumbs
 
-					// in most cases (read: not arriving from a link) the facets
-					// will be objects, so we'll just return them and deal with
-					// the minimal extra work
-					if (typeof item === 'object' && item !== null)
+		// rehydrating our selected facets, in the event that we are
+		// handling the first page-load and currently don't have
+		// access to helpful things such as labels
+		const selectedFacetsKeys = Object.keys(selectedFacets)
+		if (selectedFacetsKeys.length > 0) {
+			facets = selectedFacetsKeys.reduce((out, key) => {
+				const facet = selectedFacets[key]
+
+				const mapped = facet.map(item => {
+					// if we haven't lost state, or just arrived here,
+					// the facet items will already exist as objects
+					// and all we have to do is return them
+					if (typeof item === 'object' && item !== null) {
 						return item
+					}
 
-					// otherwise, loop through all of the facet-groups to find
-					// the appropriate one, and then loop through its items
-					// to locate the facet object
-					const group = arrayFind(allFacets, g => g.name === key)
+					// otherwise, loop through the items of the facet
+					// until you find one where the value matches our
+					// current one in the upper loop
+					const groupIdx = facetDictionary[key]
+					const group = allFacets[groupIdx]
 					return arrayFind(group.items, i => i.value === item)
-
-				// filter out any empty values
 				}).filter(Boolean)
 
+				out[key] = mapped
 				return out
 			}, {})
+		} else {
+			facets = {}
+		}
+
+		// if we're arriving here with a fresh initialState, then we'll
+		// have to populate the search breadcrumbs using the query,
+		// facets, and ranges
+
+		// if we're coming from a queryString, we'll have to populate
+		// the search breadcrumbs as well
+		if (!state.breadcrumbs.length) {
+			const facetBc = selectedFacetsKeys.reduce((out, key) => {
+				const facet = selectedFacets[key]
+				const allIdx = facetDictionary[key]
+				const orig = allFacets[allIdx]
+
+				return out.concat(facet.map(value => {
+					const group = {
+						label: orig.label,
+						name: orig.name,
+					}
+
+					const item = {value}
+					return {group, item}
+				}))
+			}, [])
+
+			const rangeBc = Object.keys(state.range).reduce((out, key) => {
+				const r = state.range[key]
+				const idx = facetDictionary[key]
+				const orig = allFacets[idx]
+
+				const group = {
+					label: orig.label,
+					name: orig.name,
+				}
+				const item = createRangeFacet(group.name, r.begin, r.end)
+
+				return out.concat({group, item})
+			}, [])
+
+			breadcrumbs = [].concat(facetBc, rangeBc).filter(Boolean)
+		} else {
+			breadcrumbs = [].concat(state.breadcrumbs || [])
 		}
 
 		return {
 			...state,
+			breadcrumbs,
 			facets,
 			meta: {
 				...state.meta,
@@ -129,4 +201,16 @@ export default handleActions({
 			},
 		}
 	},
+
+	[actions.setFacet]: (state, action) => {
+		const breadcrumbs = [].concat(state.breadcrumbs, {
+			group: action.payload.facet,
+			item: action.payload.item,
+		})
+
+		return {
+			...state,
+			breadcrumbs,
+		}
+	}
 }, initialState)

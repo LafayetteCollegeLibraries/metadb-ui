@@ -94,26 +94,9 @@ const SearchResults = React.createClass({
 		this.setState({batchTool})
 	},
 
-	handleSearchResponse: function (res) {
-		if (!res)
-			throw new Error('SearchResults#handleSearchResponse - no response passed')
-
-		const facets = res.results.facets
-		const breadcrumbs = getBreadcrumbList(facets, this.props.search.facets)
-
-		this.setState({
-			breadcrumbs,
-			facets,
-			options: this.props.search.options,
-			results: res.results.docs,
-			timestamp: res.timestamp,
-		})
-	},
-
 	handleSubmitSearchQuery: function (query) {
-		const { facets, options } = this.props.search
-
-		this.props.searchCatalog(query, facets, options)
+		// restart search w/ query (reset facets)
+		this.props.searchCatalog(query)
 	},
 
 	maybeRenderBatchTool: function () {
@@ -179,7 +162,7 @@ const SearchResults = React.createClass({
 	},
 
 	renderBreadcrumbs: function () {
-		if (!this.state.breadcrumbs)
+		if (!this.props.search.breadcrumbs)
 			return null
 
 		const onRemoveBreadcrumb = (key, value) => {
@@ -190,7 +173,7 @@ const SearchResults = React.createClass({
 		}
 
 		const props = {
-			breadcrumbs: this.state.breadcrumbs,
+			breadcrumbs: this.props.search.breadcrumbs,
 			onRemoveBreadcrumb,
 			query: this.props.search.query,
 		}
@@ -215,7 +198,7 @@ const SearchResults = React.createClass({
 			limit: 6,
 
 			query: this.props.search.query,
-			selectedFacets: this.props.search.facets,
+			selectedFacets: this.props.search.facets || {},
 
 			// event handlers
 			onClearSelectedFacets:this.clearSelectedFacets,

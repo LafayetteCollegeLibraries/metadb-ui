@@ -5,25 +5,27 @@ const T = React.PropTypes
 const SearchBreadcrumb = React.createClass({
 	propTypes: {
 		onRemove: T.func.isRequired,
-		value: T.string,
-		group: T.string,
+		group: T.object,
+		item: T.object,
 	},
 
 	getInitialState: function () {
-		return {}
+		return {
+			buttonHover: false,
+		}
 	},
 
 	handleButtonClick: function (ev) {
 		ev.preventDefault()
 
-		this.props.onRemove()
+		this.props.onRemove(this.props.group, this.props.item)
 	},
 
 	maybeRenderGroup: function (style) {
 		if (this.props.group)
 			return (
 				<span className="SearchBreadcrumb-group" style={style}>
-					{this.props.group + ' > '}
+					{this.props.group.label + ' > '}
 				</span>
 			)
 	},
@@ -87,7 +89,7 @@ const SearchBreadcrumb = React.createClass({
 				{this.maybeRenderGroup(styles.group)}
 
 				<span className="SearchBreadcrumb-value" style={styles.value}>
-					{this.props.value}
+					{this.props.item.value || this.props.item.label}
 				</span>
 
 				<button

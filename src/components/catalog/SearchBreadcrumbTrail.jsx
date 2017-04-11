@@ -14,12 +14,9 @@ const SearchBreadcrumbTrail = React.createClass({
 	renderGroupBreadcrumbs: function (breadcrumb, index) {
 		const props = {
 			key: `bc${index}`,
-			group: breadcrumb.group.label,
-			value: breadcrumb.facet.label,
-			onRemove: this.props.onRemoveBreadcrumb.bind(null,
-				breadcrumb.group.name,
-				breadcrumb.facet,
-			),
+			group: breadcrumb.group,
+			item: breadcrumb.item,
+			onRemove: this.props.onRemoveBreadcrumb,
 		}
 
 		return <SearchBreadcrumb {...props} />

@@ -90,6 +90,19 @@ export const searchCatalogByQueryString = queryString => {
 }
 
 export const toggleSearchFacet = (facet, item, isChecked) => {
+	let facetName, facetLabel
+
+	if (typeof facet === 'object') {
+		facetName = facet.name
+		facetLabel = facet.label
+	} else {
+		facetName = facetLabel = facet
+		facet = {
+			name: facetName,
+			label: facetLabel,
+		}
+	}
+
 	return (dispatch, getState) => {
 		const original = getState().search || {}
 		const search = { ...original }
@@ -102,10 +115,10 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 		if (isChecked) {
 			let shouldUpdate = true
 
-			if (hasProperty(search[key], facet)) {
+			if (hasProperty(search[key], facetName)) {
 				// check for duplicate values and don't update if it's already there
-				for (let i = 0; i < search[key][facet].length; i++) {
-					const current = search[key][facet][i]
+				for (let i = 0; i < search[key][facetName].length; i++) {
+					const current = search[key][facetName][i]
 					if (hasProperty(current, 'value') && hasProperty(item, 'value')) {
 						if (isEqual(current.value, item.value)) {
 							shouldUpdate = false
@@ -123,13 +136,13 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 			}
 
 			if (shouldUpdate) {
-				target = [].concat(search[key][facet], item).filter(Boolean)
+				target = [].concat(search[key][facetName], item).filter(Boolean)
 				dirty = true
 			}
 		}
 
-		else if (search[key][facet] && !isChecked) {
-			target = search[key][facet].filter(i => {
+		else if (search[key][facetName] && !isChecked) {
+			target = search[key][facetName].filter(i => {
 				if (hasProperty(i, 'value') && hasProperty(item, 'value')) {
 					return !isEqual(i.value, item.value)
 				}
@@ -139,7 +152,7 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 				}
 			})
 
-			if (search[key][facet].length > target.length) {
+			if (search[key][facetName].length > target.length) {
 				dirty = true
 			}
 		}
@@ -156,7 +169,7 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 
 		search[key] = {
 			...search[key],
-			[facet]: target,
+			[facetName]: target,
 		}
 
 		const { query, facets, range } = search

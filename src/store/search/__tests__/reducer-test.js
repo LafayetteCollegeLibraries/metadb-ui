@@ -107,31 +107,37 @@ describe('Search reducer', function () {
 
 		describe('when handling facets', function () {
 			const state = {
+				breadcrumbs: null,
 				facets: {
-					subject_ocm: [
-						'200 COOL CATS',
-						'300 NICE DOGS'
+					subject: [
+						'COOL CATS',
+						'NICE DOGS'
 					],
 					author: [
 						{ value: 'Beverly Cleary' }
 					]
-				}
+				},
+				query: '',
+				range: {},
+				meta: {},
 			}
 
 			const action = actions.receivedSearchResults({
 				results: {
 					facets: [
 						{
-							name: 'subject_ocm',
+							name: 'subject',
+							label: 'Subject',
 							items: [
-								{ value: '200 COOL CATS' },
-								{ value: '300 NICE DOGS' },
-								{ value: '400 SKATEBOARDS' },
-								{ value: '450 SICK MOVES' },
+								{ value: 'COOL CATS' },
+								{ value: 'NICE DOGS' },
+								{ value: 'SKATEBOARDS' },
+								{ value: 'SICK MOVES' },
 							]
 						},
 						{
 							name: 'author',
+							label: 'Author',
 							items: [
 								{ value: 'Beverly Cleary' },
 								{ value: 'Stephen King' },
@@ -141,6 +147,7 @@ describe('Search reducer', function () {
 						},
 						{
 							name: 'medium',
+							label: 'Medium',
 							items: [
 								{ value: 'Book' },
 								{ value: 'Compact Disc' },
@@ -151,23 +158,33 @@ describe('Search reducer', function () {
 			})
 
 			const expectedFacets = {
-				subject_ocm: [
-					{ value: '200 COOL CATS' },
-					{ value: '300 NICE DOGS' },
+				subject: [
+					{ value: 'COOL CATS' },
+					{ value: 'NICE DOGS' },
 				],
 				author: [
 					{ value: 'Beverly Cleary' },
 				]
 			}
 
+			const expectedBreadcrumbs = [
+				{ group: 'Subject', value: {value: 'COOL CATS'} },
+				{ group: 'Subject', value: {value: 'NICE DOGS'} },
+				{ group: 'Author', value: {value: 'Beverly Cleary'} },
+			]
+
 			const res = searchReducer(state, action)
 
 			it('fills in string facets with those from the results', function () {
-				expect(res.facets.subject_ocm).to.deep.equal(expectedFacets.subject_ocm)
+				expect(res.facets.subject).to.deep.equal(expectedFacets.subject)
 			})
 
 			it('passes through already-expanded facets', function () {
 				expect(res.facets.author).to.deep.equal(expectedFacets.author)
+			})
+
+			it('creates breadcrumbs if they do not exist already', function () {
+				expect(res.breadcrumbs).to.deep.equal(expectedBreadcrumbs)
 			})
 		})
 

@@ -4,6 +4,17 @@ import qs from 'qs'
 export const stringifyQs = input => qs.stringify(input, { arrayFormat: 'brackets' })
 export const parseQs = input => qs.parse(input)
 
+export const createBreadcrumb = (facet, item) => {
+	if (typeof item === 'object' && item.hasOwnProperty('value')) {
+		item = item.value
+	}
+
+	return {
+		group: facet || null,
+		value: item,
+	}
+}
+
 export const createRangeFacet = (name, min, max) => {
 	const label = min === max ? `${min}` : `${min} - ${max}`
 
