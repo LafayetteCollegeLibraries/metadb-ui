@@ -1,6 +1,7 @@
 <img width="250" alt="metaDB logo" src="https://cdn.rawgit.com/LafayetteCollegeLibraries/metadb-ui/master/build/assets/logo.svg">
 
-[![Build Status](https://travis-ci.org/LafayetteCollegeLibraries/metadb-ui.svg)](https://travis-ci.org/LafayetteCollegeLibraries/metadb-ui) [![Coverage Status](https://coveralls.io/repos/github/LafayetteCollegeLibraries/metadb-ui/badge.svg)](https://coveralls.io/github/LafayetteCollegeLibraries/metadb-ui)
+[![Build Status](https://travis-ci.org/LafayetteCollegeLibraries/metadb-ui.svg)](https://travis-ci.org/LafayetteCollegeLibraries/metadb-ui) [![Coverage Status](https://coveralls.io/repos/github/LafayetteCollegeLibraries/metadb-ui/badge.svg)](https://coveralls.io/github/LafayetteCollegeLibraries/metadb-ui) [![Join the chat at https://gitter.im/LafayetteCollegeLibraries/metadb-ui](https://badges.gitter.im/LafayetteCollegeLibraries/metadb-ui.svg)](https://gitter.im/LafayetteCollegeLibraries/metadb-ui?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 metadb-ui is a [React][1]/[Redux][2] front-end to [LafayettePreserve][3], a
 [Sufia][4] implementation for Lafayette College Libraries. It is currently
