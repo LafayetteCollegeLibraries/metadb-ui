@@ -117,6 +117,7 @@ const SearchResultsHeader = React.createClass({
 
 				<hr className="SearchResultsHeader-divider" style={styles.divider} />
 
+				{/*
 				<SearchResultsPagerHeader
 					data={this.props.pageData}
 					key="search-results-header-bottom"
@@ -126,6 +127,7 @@ const SearchResultsHeader = React.createClass({
 					perPage={this.props.perPage}
 					perPageOptions={this.props.perPageOptions}
 				/>
+				*/}
 			</div>
 		)
 	}
