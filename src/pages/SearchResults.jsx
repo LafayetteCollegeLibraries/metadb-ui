@@ -56,20 +56,6 @@ const SearchResults = React.createClass({
 		// equal `undefined`).
 		if (previousQueryString && queryString !== previousQueryString)
 			return this.props.searchCatalogByQueryString(queryString)
-
-		// we're using `props.search.timestamp` as a unique identifier
-		// to signify that the new search results being passed as props
-		// differ than the ones previous. this could also be done with
-		// a shallow compare of the `search` object but since what would
-		// be changing is at a deeper level (the `search.facets` and
-		// `search.options` objects in particular), this could be costly
-		const timestamp = this.props.search.timestamp
-		const next = nextProps.search.timestamp
-
-		if (!next || timestamp === next)
-			return
-
-		this.handleSearchResponse(nextProps.search)
 	},
 
 	getInitialState: function () {
@@ -146,11 +132,14 @@ const SearchResults = React.createClass({
 	},
 
 	maybeRenderLoadingModal: function () {
-		if (!this.props.search.isSearching)
+		const { meta } = this.props.search
+
+		if (typeof meta === undefined || typeof meta.isSearching === undefined) {
 			return null
+		}
 
 		const props = {
-			isOpen: true,
+			isOpen: meta.isSearching,
 			contentLabel: 'Loading',
 			style: {
 				overlay: {
@@ -210,11 +199,13 @@ const SearchResults = React.createClass({
 	},
 
 	renderFacetSidebar: function () {
-		if (!this.state.facets || !this.state.facets.length)
+		const facets = this.props.searchResults.facets
+
+		if (!facets || !facets.length)
 			return
 
 		const sidebarProps = {
-			data: this.state.facets,
+			data: facets,
 
 			// play it safe and default to <FacetListWithViewMore/>...
 			defaultBodyComponent: FacetListWithViewMore,
@@ -284,7 +275,7 @@ const SearchResults = React.createClass({
 	},
 
 	renderResults: function () {
-		const results = this.state.results
+		const results = this.props.searchResults.docs
 
 		if (typeof results === 'undefined')
 			return

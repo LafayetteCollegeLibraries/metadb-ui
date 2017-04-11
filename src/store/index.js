@@ -7,11 +7,13 @@ import thunk from 'redux-thunk'
 
 import rootReducer from './reducers'
 
+import { initialState as search } from './search/reducer'
+
 const initialState = {
 	activeVocabularyTerms: null,
 	autocompleteTerms: {},
 	notifications: [],
-	search: {},
+	search,
 	vocabularies: {},
 	work: {},
 

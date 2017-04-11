@@ -36,7 +36,7 @@ import * as actions from './actions'
  *	}
  */
 
-const initialState = {
+export const initialState = {
 	query: '',
 	facets: {},
 	range: {},

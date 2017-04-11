@@ -5,6 +5,10 @@ import Button from '../components/Button.jsx'
 import { clearSearches, getPreviousQueries } from '../../lib/search-history'
 
 const SearchLanding = React.createClass({
+	componentWillMount: function () {
+		this.props.clearSearch()
+	},
+
 	getInitialState: function () {
 		const previousQueries = getPreviousQueries()
 		return {previousQueries}
