@@ -11,8 +11,9 @@ const SearchLanding = React.createClass({
 	},
 
 	handleSearchSubmit: function (ev) {
-		ev.preventDefault()
-		const query = ev.target.elements.query.value
+		ev && ev.preventDefault && ev.preventDefault()
+
+		const query = this.queryElement.value || ''
 
 		browserHistory.push(`/search?q=${query}`)
 	},
@@ -72,9 +73,15 @@ const SearchLanding = React.createClass({
 		return (
 			<div>
 				<form onSubmit={this.handleSearchSubmit} style={searchboxWrapperStyle}>
-					<StringInput name="query" placeholder="Enter your query!" style={stringInputStyle} />
+					<StringInput
+						name="query"
+						placeholder="Enter your query!"
+						ref={el => { this.queryElement = el }}
+						style={stringInputStyle}
+						/>
 					<Button
 						children="Search"
+						onClick={this.handleSearchSubmit}
 						style={btnStyle}
 						type="success"
 						/>
