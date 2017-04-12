@@ -1,7 +1,9 @@
 import { expect } from 'chai'
 
 import * as actions from '../actions'
-import searchReducer from '../reducer'
+import searchReducer, {
+	initialState as INITIAL_STATE
+} from '../reducer'
 
 const defaultState = {
 	query: '',
@@ -9,7 +11,8 @@ const defaultState = {
 	range: {},
 	meta: {
 		isSearching: false,
-	}
+	},
+	breadcrumbs: [],
 }
 
 const defaultStatePure = { ...defaultState }
@@ -24,6 +27,70 @@ describe('Search reducer', function () {
 
 		expect(res).to.be.an('object')
 		expect(res).to.not.be.empty
+	})
+
+	describe('`clearFacet`', function () {
+		it('removes the appropriate breadcrumb from the collection', function () {
+			const breadcrumbs = [
+				{
+					facet: {name: 'subject', label: 'Subject'},
+					item: {value: 'COOL CATS'},
+				},
+				{
+					facet: {name: 'subject', label: 'Subject'},
+					item: {value: 'NICE DOGS'},
+				},
+				{ facet: {name: 'author', label: 'Author'},
+					item: {value: 'Brent'},
+				}
+			]
+
+			const state = {
+				...defaultState,
+				breadcrumbs,
+			}
+
+			const index = 1
+
+			const expected = [].concat(
+				breadcrumbs.slice(0, index),
+				breadcrumbs.slice(index + 1)
+			)
+
+			const action = actions.clearFacet(breadcrumbs[index])
+			const result = searchReducer(state, action)
+
+			expect(result.breadcrumbs).to.deep.equal(expected)
+		})
+	})
+
+	describe('`clearSearch`', function () {
+		it('restores the state to the initial values', function () {
+			const dirty = {
+				query: 'some cool query',
+				facets: {
+					subject: [
+						{value: 'neat'}
+					]
+				},
+				range: {},
+				meta: {
+					isSearching: false,
+					per_page: 40,
+				},
+				breadcrumbs: [
+					{
+						facet: {name: 'subject', label: 'Subject'},
+						item: {value: 'neat'}
+					}
+				]
+			}
+
+			const action = actions.clearSearch()
+			const result = searchReducer(dirty, action)
+
+			expect(result).to.deep.equal(INITIAL_STATE)
+		})
 	})
 
 	describe('`fetchingSearch`', function () {
@@ -168,9 +235,18 @@ describe('Search reducer', function () {
 			}
 
 			const expectedBreadcrumbs = [
-				{ group: 'Subject', value: {value: 'COOL CATS'} },
-				{ group: 'Subject', value: {value: 'NICE DOGS'} },
-				{ group: 'Author', value: {value: 'Beverly Cleary'} },
+				{
+					facet: {name: 'subject', label: 'Subject'},
+					item: {value: 'COOL CATS'}
+				},
+				{
+					facet: {name: 'subject', label: 'Subject'},
+					item: {value: 'NICE DOGS'}
+				},
+				{
+					facet: {name: 'author', label: 'Author'},
+					item: {value: 'Beverly Cleary'}
+				},
 			]
 
 			const res = searchReducer(state, action)

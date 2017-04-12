@@ -155,20 +155,23 @@ export default handleActions({
 
 		// if we're coming from a queryString, we'll have to populate
 		// the search breadcrumbs as well
-		if (!state.breadcrumbs.length) {
+		if (state.breadcrumbs === null) {
 			const facetBc = selectedFacetsKeys.reduce((out, key) => {
 				const facet = selectedFacets[key]
 				const allIdx = facetDictionary[key]
 				const orig = allFacets[allIdx]
 
 				return out.concat(facet.map(value => {
-					const group = {
-						label: orig.label,
+					const facet = {
 						name: orig.name,
+						label: orig.label,
 					}
 
-					const item = {value}
-					return {group, item}
+					const item = typeof value === 'string'
+						? {value}
+						: value
+
+					return {facet, item}
 				}))
 			}, [])
 
@@ -177,13 +180,13 @@ export default handleActions({
 				const idx = facetDictionary[key]
 				const orig = allFacets[idx]
 
-				const group = {
+				const facet = {
 					label: orig.label,
 					name: orig.name,
 				}
-				const item = createRangeFacet(group.name, r.begin, r.end)
+				const item = createRangeFacet(facet.name, r.begin, r.end)
 
-				return out.concat({group, item})
+				return out.concat({facet, item})
 			}, [])
 
 			breadcrumbs = [].concat(facetBc, rangeBc).filter(Boolean)
@@ -204,7 +207,7 @@ export default handleActions({
 
 	[actions.setFacet]: (state, action) => {
 		const breadcrumbs = [].concat(state.breadcrumbs, {
-			group: action.payload.facet,
+			facet: action.payload.facet,
 			item: action.payload.item,
 		})
 
