@@ -59,6 +59,7 @@
     "openseadragon": "^2.2.1",
     "pdfjs-dist": "^1.8.183",
     "promise-queue": "^2.2.3",
+    "prop-types": "^15.5.8",
     "qs": "^6.4.0",
     "rc-slider": "^5.1.2",
     "react": "^15.5.4",
