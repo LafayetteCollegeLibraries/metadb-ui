@@ -65,16 +65,6 @@ export default handleActions({
 
 	[actions.clearSearch]: () => ({ ...initialState }),
 
-	[actions.fetchingSearch]: state => {
-		return {
-			...state,
-			meta: {
-				...state.meta,
-				isSearching: true,
-			}
-		}
-	},
-
 	// any errors are handled within notifications
 	[actions.fetchingSearchErr]: state => {
 		return {
