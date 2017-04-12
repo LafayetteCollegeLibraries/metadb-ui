@@ -93,15 +93,6 @@ describe('Search reducer', function () {
 		})
 	})
 
-	describe('`fetchingSearch`', function () {
-		it('sets `isSearching` to true', function () {
-			const action = actions.fetchingSearch()
-			const res = searchReducer(defaultState, action)
-
-			expect(res.meta.isSearching).to.be.true
-		})
-	})
-
 	describe('`fetchingSearchErr`', function () {
 		it('sets `isSearching` to false', function () {
 			const action = actions.fetchingSearchErr()

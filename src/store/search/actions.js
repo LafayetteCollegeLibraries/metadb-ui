@@ -19,7 +19,6 @@ export const setFacet = createAction('setting search.facet')
 export const receivedSearchResults = createAction('received search results')
 
 export const getResultsAtPage = page => {
-	console.log(`getting results @ ${page}`)
 	return (dispatch, getState) => {
 		const search = getState().search
 		const { query, facets, range, meta } = search
