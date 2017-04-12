@@ -60,7 +60,7 @@ export const searchCatalog = (query, facets, range, meta) => {
 
 		const fullObj = {
 			...queryObj,
-			...meta,
+			...options,
 		}
 
 		const queryString = utils.stringifyQs(fullObj)

@@ -27,7 +27,7 @@ const SearchResults = React.createClass({
 		const qs = this.props.location.search
 
 		if (qs) {
-			this.props.searchCatalogByQueryString(qs)
+			this.props.searchCatalogByQueryString(qs.substr(1))
 		}
 
 		window.addEventListener('popstate', this.maybeCloseModalOnPopState)
@@ -282,6 +282,8 @@ const SearchResults = React.createClass({
 		if (this.props.search.isSearching) {
 			return this.maybeRenderLoadingModal()
 		}
+
+		const results = this.props.searchResults
 
 		const styles = {
 			sidebar: {
