@@ -5,8 +5,8 @@ const T = React.PropTypes
 const SearchBreadcrumb = React.createClass({
 	propTypes: {
 		onRemove: T.func.isRequired,
-		group: T.object,
-		item: T.object,
+		facet: T.object,
+		item: T.oneOfType([T.object, T.string]),
 	},
 
 	getInitialState: function () {
@@ -18,14 +18,14 @@ const SearchBreadcrumb = React.createClass({
 	handleButtonClick: function (ev) {
 		ev.preventDefault()
 
-		this.props.onRemove(this.props.group, this.props.item)
+		this.props.onRemove(this.props.facet, this.props.item)
 	},
 
-	maybeRenderGroup: function (style) {
-		if (this.props.group)
+	maybeRenderFacet: function (style) {
+		if (this.props.facet !== undefined)
 			return (
-				<span className="SearchBreadcrumb-group" style={style}>
-					{this.props.group.label + ' > '}
+				<span className="SearchBreadcrumb-facet" style={style}>
+					{this.props.facet.label + ' > '}
 				</span>
 			)
 	},
@@ -52,7 +52,7 @@ const SearchBreadcrumb = React.createClass({
 				position: 'relative',
 			},
 
-			group: {
+			facet: {
 				color: '#999',
 			},
 
@@ -86,10 +86,10 @@ const SearchBreadcrumb = React.createClass({
 				className="SearchBreadcrumb"
 				style={styles.container}
 				>
-				{this.maybeRenderGroup(styles.group)}
+				{this.maybeRenderFacet(styles.facet)}
 
 				<span className="SearchBreadcrumb-value" style={styles.value}>
-					{this.props.item.value || this.props.item.label}
+					{this.props.item.label || this.props.item.value || this.props.item}
 				</span>
 
 				<button
