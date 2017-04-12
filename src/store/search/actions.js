@@ -13,11 +13,20 @@ const hasProperty = (obj, prop) => (
 
 export const clearFacet = createAction('clearing search.facet')
 export const clearSearch = createAction('clearing search')
-export const fetchingSearch = createAction('fetching search')
 export const fetchingSearchErr = createAction('error fetching search')
 export const preppingSearch = createAction('prepping search')
 export const setFacet = createAction('setting search.facet')
 export const receivedSearchResults = createAction('received search results')
+
+export const getResultsAtPage = page => {
+	console.log(`getting results @ ${page}`)
+	return (dispatch, getState) => {
+		const search = getState().search
+		const { query, facets, range, meta } = search
+
+		return searchCatalog(query, facets, range, {...meta, page})(dispatch)
+	}
+}
 
 export const searchCatalog = (query, facets, range, meta) => {
 	return dispatch => {
@@ -40,10 +49,18 @@ export const searchCatalog = (query, facets, range, meta) => {
 		const options = {
 			format: meta.format || 'json',
 			page: meta.page || 1,
-			per_page: meta.per_page ||  RESULTS_PER_PAGE,
+			per_page: meta.per_page || RESULTS_PER_PAGE
 		}
 
-		dispatch(preppingSearch({query, facets, range, options}))
+		dispatch(preppingSearch({
+			query,
+			facets,
+			range,
+			meta: {
+				...options,
+				isSearching: true,
+			}
+		}))
 
 		const mappedFacets = Object.keys(facets).reduce((out, key) => {
 			out[key] = facets[key].map(i => i.value ? i.value : i)
@@ -65,13 +82,19 @@ export const searchCatalog = (query, facets, range, meta) => {
 
 		const queryString = utils.stringifyQs(fullObj)
 
-		browserHistory.push({
-			pathname: '/search',
-			search: `?${display}`,
-			state: fullObj,
-		})
+		// only update the browserHistory if we're at the
+		// beginning of a page, otherwise the state will
+		// update + cause the Router to update + trigger
+		// an unnecssary render
+		if (options.page === 1) {
+			browserHistory.push({
+				pathname: '/search',
+				search: `?${display}`,
+				state: fullObj,
+			})
+		}
 
-		dispatch(fetchingSearch())
+		// dispatch(fetchingSearch())
 
 		return api.search(queryString)
 			.then(results => results.response)
@@ -85,8 +108,8 @@ export const searchCatalog = (query, facets, range, meta) => {
 }
 
 export const searchCatalogByQueryString = queryString => {
-	const { q, f, range, ...opts } = utils.parseQs(queryString)
-	return searchCatalog(q, f, range, opts)
+	const { q, f, range, ...meta } = utils.parseQs(queryString)
+	return searchCatalog(q, f, range, meta)
 }
 
 export const toggleSearchFacet = (facet, item, isChecked) => {

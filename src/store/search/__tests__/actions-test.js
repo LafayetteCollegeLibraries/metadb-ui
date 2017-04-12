@@ -18,7 +18,7 @@ const state = {
 			'book', 'dvd',
 		]
 	},
-	options: {},
+	meta: {},
 }
 
 const store = mockStore({search: state})
@@ -41,8 +41,27 @@ describe('Search actionCreator', function () {
 		store.clearActions()
 	})
 
+	describe('#getResultsAtPage', function () {
+		const initialState = {
+			search: {
+				meta: {
+					page: 1
+				}
+			}
+		}
+
+		const store = mockStore(initialState)
+		const reqPage = 2
+
+		return store.dispatch(S.getResultsAtPage(reqPage))
+			.then(() => {
+				const state = store.getState()
+				expect(state.search.meta.page).to.equal(reqPage)
+			})
+	})
+
 	describe('#searchCatalog', function () {
-		it('dispatches `fetchingSearch` and `receivedSearchResults`', function () {
+		it('dispatches `preppingSearch` and `receivedSearchResults`', function () {
 			const QUERY = 'some query'
 
 			const expected = [
@@ -50,13 +69,13 @@ describe('Search actionCreator', function () {
 					query: QUERY,
 					facets: {},
 					range: {},
-					options: {
+					meta: {
+						isSearching: true,
 						format: 'json',
 						page: 1,
 						per_page: S.RESULTS_PER_PAGE,
 					}
 				}),
-				S.fetchingSearch(),
 				S.receivedSearchResults({results: {}})
 			]
 
@@ -71,7 +90,8 @@ describe('Search actionCreator', function () {
 		it('dispatches `preppingSearch` w/ query details', function () {
 			const query = 'cats AND dogs'
 			const facets = { one: [{value: 'a'}, {value: 'b'}] }
-			const options = {
+			const meta = {
+				isSearching: true,
 				format: 'json',
 				per_page: S.RESULTS_PER_PAGE,
 				page: 1,
@@ -81,14 +101,14 @@ describe('Search actionCreator', function () {
 			const expected = S.preppingSearch({
 				query,
 				facets,
-				options,
+				meta,
 				range,
 			})
 
-			return store.dispatch(S.searchCatalog(query, facets, range, options))
+			return store.dispatch(S.searchCatalog(query, facets, range, meta))
 			.then(() => {
 				const actions = store.getActions()
-				expect(actions).to.have.length(3)
+				expect(actions).to.have.length(2)
 				expect(actions[0]).to.deep.equal(expected)
 			})
 		})
@@ -102,7 +122,6 @@ describe('Search actionCreator', function () {
 			const expectedActions = [
 				S.setFacet,
 				S.preppingSearch,
-				S.fetchingSearch,
 				S.receivedSearchResults,
 			]
 
@@ -176,7 +195,6 @@ describe('Search actionCreator', function () {
 			const expectedActions = [
 				S.clearFacet,
 				S.preppingSearch,
-				S.fetchingSearch,
 				S.receivedSearchResults,
 			]
 
@@ -195,8 +213,8 @@ describe('Search actionCreator', function () {
 				expect(prepped.payload.facets[FIELD])
 					.to.have.length(search.facets[FIELD].length - 1)
 
-				expect(prepped.payload).to.have.property('options')
-				expect(prepped.payload.options.page).to.equal(1)
+				expect(prepped.payload).to.have.property('meta')
+				expect(prepped.payload.meta.page).to.equal(1)
 
 				const calls = fetchMock.calls()
 				expect(calls.matched).to.not.be.empty

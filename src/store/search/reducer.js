@@ -175,6 +175,7 @@ export default handleActions({
 				}))
 			}, [])
 
+			// TODO: revisit to make sure this works
 			const rangeBc = Object.keys(state.range).reduce((out, key) => {
 				const r = state.range[key]
 				const idx = facetDictionary[key]
