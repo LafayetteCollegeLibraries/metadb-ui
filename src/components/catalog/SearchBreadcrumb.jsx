@@ -16,8 +16,7 @@ const SearchBreadcrumb = React.createClass({
 	},
 
 	handleButtonClick: function (ev) {
-		ev.preventDefault()
-
+		ev && ev.preventDefault && ev.preventDefault()
 		this.props.onRemove(this.props.facet, this.props.item)
 	},
 
