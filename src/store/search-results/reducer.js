@@ -11,6 +11,19 @@ import * as search from '../search/actions'
 export default handleActions({
 	[search.clearSearch]: () => ({}),
 
+	[search.preppingSearch]: (state, action) => {
+		const { meta: { page } } = action.payload
+
+		if (page === 1) {
+			return {
+				...state,
+				docs: [],
+			}
+		}
+
+		return state
+	},
+
 	[search.receivedSearchResults]: (state, action) => {
 		const { results } = action.payload
 		const { pages } = results
