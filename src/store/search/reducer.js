@@ -191,13 +191,15 @@ export default handleActions({
 			breadcrumbs = [].concat(state.breadcrumbs || [])
 		}
 
+		const atEnd = results.pages && results.pages['last_page?']
+
 		return {
 			...state,
 			breadcrumbs,
 			facets,
 			meta: {
 				...state.meta,
-				atEnd: results.pages['last_page?'],
+				atEnd,
 				isSearching: false,
 			},
 		}
