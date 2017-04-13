@@ -206,10 +206,30 @@ export default handleActions({
 	},
 
 	[actions.setFacet]: (state, action) => {
-		const breadcrumbs = [].concat(state.breadcrumbs, {
-			facet: action.payload.facet,
-			item: action.payload.item,
-		})
+		const bc = state.breadcrumbs
+		const { type } = action.payload.item
+
+		let idx = -1
+		let breadcrumbs
+
+		if (type === 'range') {
+			for (let i = 0; i < bc.length; i++) {
+				if (bc[i].item.type === type) {
+					idx = i
+					break
+				}
+			}
+		}
+
+		if (idx > -1) {
+			breadcrumbs = [].concat(
+				bc.slice(0, idx),
+				bc.slice(idx + 1),
+				action.payload
+			)
+		} else {
+			breadcrumbs = [].concat(bc, action.payload)
+		}
 
 		return {
 			...state,
