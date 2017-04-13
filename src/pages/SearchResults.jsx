@@ -198,7 +198,7 @@ export default class SearchResults extends React.PureComponent {
 	}
 
 	renderFacetSidebar () {
-		const facets = this.props.searchResults.facets
+		const facets = this.props.searchResults.facets || []
 
 		if (!facets || !facets.length)
 			return
@@ -275,9 +275,9 @@ export default class SearchResults extends React.PureComponent {
 
 	renderResults () {
 		const { searchResults, search } = this.props
-		const results = searchResults.docs
+		const { docs } = searchResults
 
-		if (typeof results === 'undefined')
+		if (docs === undefined || searchResults.meta === undefined)
 			return
 
 		const isSearching = search.meta.isSearching
@@ -297,7 +297,7 @@ export default class SearchResults extends React.PureComponent {
 
 		return (
 			<InfiniteScroll {...props}>
-				<Component data={results} />
+				<Component data={docs} />
 			</InfiniteScroll>
 		)
 
@@ -310,13 +310,10 @@ export default class SearchResults extends React.PureComponent {
 	}
 
 	render () {
-		if (this.props.search.isSearching) {
-			return this.maybeRenderLoadingModal()
-		}
+		const { isSearching } = this.props.search.meta
+		const { docs } = this.props.searchResults
 
-		const results = this.props.searchResults
-
-		if (results.docs && results.docs.length === 0) {
+		if (!isSearching && docs && docs.length === 0) {
 			return <NoResultsFound query={this.props.search.query} />
 		}
 
@@ -351,6 +348,7 @@ export default class SearchResults extends React.PureComponent {
 					{this.renderBreadcrumbs()}
 					{this.renderResultsHeader()}
 
+					{this.maybeRenderLoadingModal()}
 					{this.renderResults()}
 				</section>
 			</div>
