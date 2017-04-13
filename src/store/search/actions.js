@@ -61,15 +61,13 @@ export const searchCatalog = (query, facets, range, meta) => {
 			}
 		}))
 
-		const mappedFacets = Object.keys(facets).reduce((out, key) => {
-			out[key] = facets[key].map(i => i.value ? i.value : i)
-			return out
-		}, {})
+		const mappedFacets = utils.mapFacets(facets)
+		const mappedRange = utils.mapRange(range)
 
 		const queryObj = {
 			q: query,
 			f: mappedFacets,
-			range,
+			range: mappedRange,
 		}
 
 		const display = utils.stringifyQs(queryObj)
@@ -123,74 +121,87 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 		}
 	}
 
+	const isRange = item.type && item.type === 'range'
+	const dispatchFn = isChecked ? setFacet : clearFacet
+
 	return (dispatch, getState) => {
 		const original = getState().search || {}
 		const search = { ...original }
-		const isRange = item.type && item.type === 'range'
-		const key = isRange ? 'range' : 'facets'
 
-		let dirty = false
-		let target
+		// ranges are super easy, as they're key/object-values
+		if (isRange) {
+			if (isChecked) {
+				search.range[facetName] = item.value
+			}
 
-		if (isChecked) {
-			let shouldUpdate = true
+			else {
+				delete search.range[facetName]
+			}
+		}
 
-			if (hasProperty(search[key], facetName)) {
+		else {
+			let dirty = false
+			let target
+
+			// selecting facet
+			if (isChecked) {
+				let shouldUpdate = true
+
+				// is the facet already being used?
 				// check for duplicate values and don't update if it's already there
-				for (let i = 0; i < search[key][facetName].length; i++) {
-					const current = search[key][facetName][i]
-					if (hasProperty(current, 'value') && hasProperty(item, 'value')) {
-						if (isEqual(current.value, item.value)) {
-							shouldUpdate = false
-							break
+				if (hasProperty(search.facets, facetName)) {
+					for (let i = 0; i < search.facets[facetName].length; i++) {
+						const current = search.facets[facetName][i]
+						if (hasProperty(current, 'value') && hasProperty(item, 'value')) {
+							if (isEqual(current.value, item.value)) {
+								shouldUpdate = false
+								break
+							}
+						} else {
+							if (isEqual(current, item)) {
+								shouldUpdate = false
+								break
+							}
 						}
+					}
+				}
+
+				if (shouldUpdate === true) {
+					target = [].concat(search.facets[facetName], item).filter(Boolean)
+					dirty = true
+				}
+			}
+
+			// removing facet
+			// we'll skip a catch-all `else` case and let `dirty = false`
+			// result in a no-op
+			else if (search.facets[facetName] && !isChecked) {
+				target = search.facets[facetName].filter(i => {
+					if (hasProperty(i, 'value') && hasProperty(item, 'value')) {
+						return !isEqual(i.value, item.value)
 					}
 
 					else {
-						if (isEqual(current, item)) {
-							shouldUpdate = false
-							break
-						}
+						return !isEqual(i, item)
 					}
+				})
+
+				if (search.facets[facetName].length > target.length) {
+					dirty = true
 				}
 			}
 
-			if (shouldUpdate) {
-				target = [].concat(search[key][facetName], item).filter(Boolean)
-				dirty = true
+			if (!dirty) {
+				return Promise.resolve()
+			}
+
+			search.facets = {
+				...search.facets,
+				[facetName]: target,
 			}
 		}
 
-		else if (search[key][facetName] && !isChecked) {
-			target = search[key][facetName].filter(i => {
-				if (hasProperty(i, 'value') && hasProperty(item, 'value')) {
-					return !isEqual(i.value, item.value)
-				}
-
-				else {
-					return !isEqual(i, item)
-				}
-			})
-
-			if (search[key][facetName].length > target.length) {
-				dirty = true
-			}
-		}
-
-		if (!dirty) {
-			return Promise.resolve()
-		}
-
-		if (isChecked) {
-			dispatch(setFacet({facet, item}))
-		} else {
-			dispatch(clearFacet({facet, item}))
-		}
-
-		search[key] = {
-			...search[key],
-			[facetName]: target,
-		}
+		dispatch(dispatchFn({facet, item}))
 
 		const { query, facets, range } = search
 

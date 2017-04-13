@@ -18,6 +18,22 @@ export const createRangeFacet = (name, min, max) => {
 	}
 }
 
+export const mapFacets = input => {
+	return Object.keys(input).reduce((out, key) => {
+		out[key] = input[key].map(i => i.value ? i.value : i)
+		return out
+	}, {})
+}
+
+export const mapRange = input => {
+	return Object.keys(input).reduce((out, key) => {
+		const item = input[key]
+		out[key] = item.value ? item.value : item
+
+		return out
+	}, {})
+}
+
 // TODO: move STORED_KEY + STORED_LIMIT to a user setting
 export const searchHistory = {
 	STORED_KEY: 'search-history',
