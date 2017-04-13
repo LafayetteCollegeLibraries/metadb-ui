@@ -17,7 +17,7 @@ const SearchLanding = React.createClass({
 	handleSearchSubmit: function (ev) {
 		ev && ev.preventDefault && ev.preventDefault()
 
-		const query = this.queryElement.value || ''
+		const query = this.queryElement.inputElement.value || ''
 
 		browserHistory.push(`/search?q=${query}`)
 	},
