@@ -280,10 +280,8 @@ export default class SearchResults extends React.PureComponent {
 		if (docs === undefined || searchResults.meta === undefined)
 			return
 
-		const isSearching = search.meta.isSearching
-		const atPage = search.meta.page
-		const totalPages = searchResults.meta.pages
-		const hasMore = !(isSearching || atPage === totalPages)
+		const { atEnd, isSearching } = search.meta
+		const hasMore = !(atEnd || isSearching)
 
 		const props = {
 			hasMore,
