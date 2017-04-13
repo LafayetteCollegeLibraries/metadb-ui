@@ -26,6 +26,9 @@ import { createRangeFacet } from './utils'
  *		// stores the meta-information about the search (details that
  *		// aren't exposed in the queryString)
  *		meta: {
+ *      // are we at the end?
+ *			atEnd: bool
+ *
  *			// flagged when `fetchingSearch` is called
  *			isSearching: bool
  *
@@ -47,7 +50,10 @@ export const initialState = {
 	range: {},
 
 	meta: {
+		atEnd: false,
 		isSearching: false,
+		page: 0,
+		per_page: 0,
 	}
 }
 
@@ -191,6 +197,7 @@ export default handleActions({
 			facets,
 			meta: {
 				...state.meta,
+				atEnd: results.pages['last_page?'],
 				isSearching: false,
 			},
 		}

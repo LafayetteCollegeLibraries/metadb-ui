@@ -93,8 +93,6 @@ export const searchCatalog = (query, facets, range, meta) => {
 			})
 		}
 
-		// dispatch(fetchingSearch())
-
 		return api.search(queryString)
 			.then(results => results.response)
 			.then(results => {
