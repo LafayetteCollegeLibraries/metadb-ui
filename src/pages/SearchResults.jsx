@@ -19,6 +19,7 @@ import { getBreadcrumbList } from '../../lib/facet-helpers'
 import { display as searchResultsDisplay } from '../../lib/search-result-settings'
 
 import AddMetadataModal from '../components/batch-tools/AddMetadataModal.jsx'
+import NoResultsFound from './NoResultsFound.jsx'
 
 export default class SearchResults extends React.PureComponent {
 	constructor (props) {
@@ -45,12 +46,10 @@ export default class SearchResults extends React.PureComponent {
 		}
 	}
 
-	// TODO: clean this up a bit? this is a hold-over from when this component
-	// was handling the starting search form as well as the results
 	componentWillMount () {
 		const qs = this.props.location.search
 
-		if (qs) {
+		if (qs && this.props.searchResults.docs === undefined) {
 			this.props.searchCatalogByQueryString(qs.substr(1))
 		}
 
@@ -282,26 +281,22 @@ export default class SearchResults extends React.PureComponent {
 			return
 
 		const isSearching = search.meta.isSearching
-		const totalPages = searchResults.meta.pages
 		const atPage = search.meta.page
-		const hasMore = atPage !== totalPages
+		const totalPages = searchResults.meta.pages
+		const hasMore = !(isSearching || atPage === totalPages)
+
+		const props = {
+			hasMore,
+			loadMore: this.props.getResultsAtPage,
+			pageStart: 1,
+			threshold: 50
+		}
 
 		const which = this.state.resultsView
 		const Component = this.determineResultsComponent(which)
 
-		const props = {
-			data: results,
-		}
-
-		console.log({totalPages, atPage, hasMore})
-
 		return (
-			<InfiniteScroll
-				hasMore={!isSearching && hasMore}
-				loadMore={this.props.getResultsAtPage}
-				pageStart={1}
-				threshold={50}
-			>
+			<InfiniteScroll {...props}>
 				<Component data={results} />
 			</InfiniteScroll>
 		)
@@ -320,6 +315,10 @@ export default class SearchResults extends React.PureComponent {
 		}
 
 		const results = this.props.searchResults
+
+		if (results.docs && results.docs.length === 0) {
+			return <NoResultsFound query={this.props.search.query} />
+		}
 
 		const styles = {
 			sidebar: {
