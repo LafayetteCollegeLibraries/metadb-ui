@@ -120,7 +120,7 @@ export default class SearchResults extends React.PureComponent {
 			return null
 
 		const Component = this.state.batchTool.component
-		const data = this.props.search.results || {}
+		const data = this.props.searchResults || {}
 
 		return (
 			<Component

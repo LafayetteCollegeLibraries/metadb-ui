@@ -93,7 +93,7 @@ const SearchResultsHeader = React.createClass({
 						>
 						<Button
 							className="SearchResultsHeader-tool-toggle"
-							onClick={this.props.onOpenToolModal}
+							onClick={this.toggleToolDropdown}
 							>
 							Choose metadata tool
 						</Button>
