@@ -67,6 +67,42 @@ describe('src/store/search-results/reducers', function () {
 		})
 	})
 
+	describe('`search.preppingSearch`', function () {
+		const initialState = {
+			docs: [].concat(results.docs),
+			facets: [].concat(results.facets),
+			meta: {
+				count: results.docs.length,
+				pages: 1,
+			}
+		}
+
+		it('clears out the stored docs when page === 1', function () {
+			const action = search.preppingSearch({
+				meta: {
+					page: 1,
+				}
+			})
+
+			const result = reducer(initialState, action)
+
+			expect(result.docs).to.not.deep.equal(initialState.docs)
+			expect(result.docs).to.be.empty
+		})
+
+		it('leaves the state as-is when page !== 1', function () {
+			const action = search.preppingSearch({
+				meta: {
+					page: 2,
+				}
+			})
+
+			const result = reducer(initialState, action)
+
+			expect(result).to.deep.equal(initialState)
+		})
+	})
+
 	describe('`search.receivedSearchResults`', function () {
 		it('contains the `docs`, `facets` props and a `meta` prop', function () {
 			const action = search.receivedSearchResults({results})
