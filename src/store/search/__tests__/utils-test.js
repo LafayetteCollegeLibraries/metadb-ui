@@ -45,6 +45,39 @@ describe('search/utils', function () {
 		})
 	})
 
+	describe('#flattenRange', function () {
+		it('compresses a complex range object into a queryString-able one', function () {
+			const input = {
+				date_created: {
+					name: 'date_created',
+					label: '1990 - 2000',
+					type: 'range',
+					value: {
+						begin: '1990',
+						end: '2000'
+					}
+				}
+			}
+
+			const expected = {
+				date_created: {
+					begin: '1990',
+					end: '2000',
+				}
+			}
+
+			const result = utils.flattenRange(input)
+
+			expect(result).to.deep.equal(expected)
+		})
+
+		it('passes the item if no `value` prop present', function () {
+			const input = { date_created: 'now' }
+			const result = utils.flattenRange(input)
+			expect(result).to.deep.equal(result)
+		})
+	})
+
 	describe('searchHistory utils', function () {
 		// create a new stored-key so we don't accidentally
 		// overwrite values that exist

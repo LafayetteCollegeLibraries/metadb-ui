@@ -62,12 +62,12 @@ export const searchCatalog = (query, facets, range, meta) => {
 		}))
 
 		const mappedFacets = utils.mapFacets(facets)
-		const mappedRange = utils.mapRange(range)
+		const flattenedRange = utils.flattenRange(range)
 
 		const queryObj = {
 			q: query,
 			f: mappedFacets,
-			range: mappedRange,
+			range: flattenedRange,
 		}
 
 		const display = utils.stringifyQs(queryObj)
@@ -125,8 +125,16 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 	const dispatchFn = isChecked ? setFacet : clearFacet
 
 	return (dispatch, getState) => {
-		const original = getState().search || {}
-		const search = { ...original }
+		const original = getState().search
+		const search = {
+			// defaults
+			query: '',
+			facets: {},
+			range: {},
+			meta: {},
+
+			...original,
+		}
 
 		// ranges are super easy, as they're key/object-values
 		if (isRange) {
@@ -145,13 +153,13 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 
 			// selecting facet
 			if (isChecked) {
+				const facets = search.facets
 				let shouldUpdate = true
-
 				// is the facet already being used?
 				// check for duplicate values and don't update if it's already there
-				if (hasProperty(search.facets, facetName)) {
-					for (let i = 0; i < search.facets[facetName].length; i++) {
-						const current = search.facets[facetName][i]
+				if (hasProperty(facets, facetName)) {
+					for (let i = 0; i < facets[facetName].length; i++) {
+						const current = facets[facetName][i]
 						if (hasProperty(current, 'value') && hasProperty(item, 'value')) {
 							if (isEqual(current.value, item.value)) {
 								shouldUpdate = false
@@ -167,7 +175,7 @@ export const toggleSearchFacet = (facet, item, isChecked) => {
 				}
 
 				if (shouldUpdate === true) {
-					target = [].concat(search.facets[facetName], item).filter(Boolean)
+					target = [].concat(facets[facetName], item).filter(Boolean)
 					dirty = true
 				}
 			}

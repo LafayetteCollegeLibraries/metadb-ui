@@ -44,7 +44,7 @@ import { createRangeFacet } from './utils'
  */
 
 export const initialState = {
-	breadcrumbs: [],
+	breadcrumbs: null,
 	facets: {},
 	query: '',
 	range: {},
@@ -102,15 +102,22 @@ export default handleActions({
 		const allFacets = results.facets || []
 		const selectedFacets = { ...state.facets }
 
-		// save ourselves the hassle of iterating through the returned
-		// array of facets + create a map:
-		//
-		//     { [facet.name]: index }
-		//
-		const facetDictionary = allFacets.reduce((out, f, index) => {
-			out[f.name] = index
-			return out
-		}, {})
+		// build a facet + item dictionary to save iterations down the road
+		const facetDictionary = {}
+		const itemDictionary = {}
+		const itemDictionaryDelimiter = '^'
+
+		for (let i = 0; i < allFacets.length; i++) {
+			const f = allFacets[i]
+
+			facetDictionary[f.name] = i
+
+			for (let j = 0; j < f.items.length; j++) {
+				const item = f.items[j]
+				const key = `${f.name}${itemDictionaryDelimiter}${item.value}`
+				itemDictionary[key] = item
+			}
+		}
 
 		let facets, breadcrumbs
 
@@ -153,19 +160,36 @@ export default handleActions({
 		// the search breadcrumbs as well
 		if (state.breadcrumbs === null) {
 			const facetBc = selectedFacetsKeys.reduce((out, key) => {
-				const facet = selectedFacets[key]
+				const facetGroup = selectedFacets[key]
 				const allIdx = facetDictionary[key]
 				const orig = allFacets[allIdx]
 
-				return out.concat(facet.map(value => {
+				return out.concat(facetGroup.map(value => {
 					const facet = {
 						name: orig.name,
 						label: orig.label,
 					}
 
-					const item = typeof value === 'string'
-						? {value}
-						: value
+					let item
+
+					if (typeof value === 'string') {
+						const key = `${orig.name}${itemDictionaryDelimiter}${value}`
+						const dictEntry = itemDictionary[key]
+
+						if (dictEntry) {
+							item = {
+								label: dictEntry.label || dictEntry.value,
+								value: dictEntry.value,
+							}
+						} else {
+							item = {
+								label: value,
+								value,
+							}
+						}
+					} else {
+						item = value
+					}
 
 					return {facet, item}
 				}))
@@ -207,14 +231,15 @@ export default handleActions({
 
 	[actions.setFacet]: (state, action) => {
 		const bc = state.breadcrumbs
-		const { type } = action.payload.item
+		const { item, facet } = action.payload
+		const { type } = item
 
 		let idx = -1
 		let breadcrumbs
 
 		if (type === 'range') {
 			for (let i = 0; i < bc.length; i++) {
-				if (bc[i].item.type === type) {
+				if (bc[i].item.type === type && bc[i].facet.name === facet.name) {
 					idx = i
 					break
 				}
