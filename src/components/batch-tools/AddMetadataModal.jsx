@@ -154,7 +154,7 @@ const AddMetadataForm = React.createClass({
 		if (!this.state.dirty)
 			return this.props.onClose()
 
-		const affected = this.props.data.pages.total_count
+		const affected = this.props.data.meta.count
 		const message = `Submit changes? This will update ${affected} records!`
 
 		if (confirm(message)) {
@@ -164,7 +164,7 @@ const AddMetadataForm = React.createClass({
 
 	render: function () {
 		const { data } = this.props
-		const count = data.pages.total_count
+		const count = data.meta.count
 		const label = `Apply metadata to ${count} work${count === 1 ? '' : 's'}`
 
 		const modalProps = {

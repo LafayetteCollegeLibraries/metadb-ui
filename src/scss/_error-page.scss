@@ -5,9 +5,13 @@
 	}
 
 	&-message {
-		border: 2px solid #4ea8dd;
+		border: 2px solid #910029;
 		border-radius: $default-border-radius;
 		margin-top: 3rem;
 		padding: 1rem;
+
+		h1 {
+			color: #910029;
+		}
 	}
 }

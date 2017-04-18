@@ -27,7 +27,7 @@ describe('<GenericVocabulary /> form schema', function () {
 
 		const renderer = $field.prop('renderer')
 		expect(renderer).to.be.a.function
-		expect(renderer.displayName).to.equal('StringInput')
+		expect(renderer.name).to.equal('StringInput')
 	})
 
 	it('renders a single TextInput for the alt_label (description)', function () {
@@ -39,7 +39,7 @@ describe('<GenericVocabulary /> form schema', function () {
 
 		const renderer = $field.prop('renderer')
 		expect(renderer).to.be.a.function
-		expect(renderer.displayName).to.equal('TextInput')
+		expect(renderer.name).to.equal('TextInput')
 	})
 
 	it('passes `data.label` as Name and `data.alt_label` as Description', function () {

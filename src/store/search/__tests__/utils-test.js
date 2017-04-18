@@ -45,52 +45,36 @@ describe('search/utils', function () {
 		})
 	})
 
-	describe('`formatSearchQueryString`', function () {
-		it('does nothing for empty values', function () {
-			const empty = utils.formatSearchQueryString()
-
-			expect(empty).to.equal('')
-		})
-
-		it('flattens facetItem objects into an array of values', function () {
+	describe('#flattenRange', function () {
+		it('compresses a complex range object into a queryString-able one', function () {
 			const input = {
-				subject_ocm: [
-					{ value: '200 COOL CATS' },
-					{ value: '300 COOL DOGS' },
-				]
+				date_created: {
+					name: 'date_created',
+					label: '1990 - 2000',
+					type: 'range',
+					value: {
+						begin: '1990',
+						end: '2000'
+					}
+				}
 			}
 
 			const expected = {
-				subject_ocm: input.subject_ocm.map(i => i.value)
+				date_created: {
+					begin: '1990',
+					end: '2000',
+				}
 			}
 
-			const stringified = utils.formatSearchQueryString('', input)
-			const parsed = utils.parse(stringified)
+			const result = utils.flattenRange(input)
 
-			expect(parsed.facets).to.deep.equal(expected)
+			expect(result).to.deep.equal(expected)
 		})
 
-		it('passes facetItems with a `type` value into their own option param', function () {
-			const TYPE = 'compliment'
-
-			const input = {
-				kind_words: [
-					{value: 'COOL', type: TYPE},
-					{value: 'NICE', type: TYPE},
-					{value: 'LOVELY', type: TYPE},
-				]
-			}
-
-			const stringified = utils.formatSearchQueryString('', input)
-			const expected = utils.stringify({
-				options: {
-					[TYPE]: {
-						kind_words: input.kind_words.map(i => i.value)
-					}
-				}
-			})
-
-			expect(stringified).to.equal(expected)
+		it('passes the item if no `value` prop present', function () {
+			const input = { date_created: 'now' }
+			const result = utils.flattenRange(input)
+			expect(result).to.deep.equal(result)
 		})
 	})
 

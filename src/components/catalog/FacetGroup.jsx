@@ -92,8 +92,23 @@ const FacetGroup = React.createClass({
 				items,
 				key: name + index,
 				label: child.props.label || data.label,
-				onRemoveSelectedFacet: this.props.onRemoveSelectedFacet.bind(null, name),
-				onSelectFacet: this.props.onSelectFacet.bind(null, name),
+				onRemoveSelectedFacet: value => {
+					const group = {
+						name: data.name,
+						label: data.label,
+					}
+
+					return this.props.onRemoveSelectedFacet(group, value)
+				},
+				onSelectFacet: value => {
+					const group = {
+						name: data.name,
+						label: data.label,
+					}
+
+					return this.props.onSelectFacet(group, value)
+				},
+
 				selectedFacets: this.getSelectedFacets(name)
 			}
 

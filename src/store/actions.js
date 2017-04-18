@@ -15,6 +15,8 @@ export { batchUpdateWorks } from './batch/actions'
 export { clearNotification } from './notifications/actions'
 
 export {
+	clearSearch,
+	getResultsAtPage,
 	searchCatalog,
 	searchCatalogByQueryString,
 	setSearchOption,

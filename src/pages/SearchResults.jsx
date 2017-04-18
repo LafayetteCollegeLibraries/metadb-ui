@@ -1,10 +1,11 @@
 import React from 'react'
 import Modal from 'react-modal'
 import assign from 'object-assign'
+import InfiniteScroll from 'react-infinite-scroller'
+
 import Button from '../components/Button.jsx'
 import SearchFacetSidebar from '../components/catalog/SearchFacetSidebar.jsx'
 import Facet from '../components/catalog/Facet.jsx'
-import FacetList from '../components/catalog/FacetList.jsx'
 import FacetListWithViewMore from '../components/catalog/FacetListWithViewMore.jsx'
 import FacetRangeLimitDate from '../components/catalog/FacetRangeLimitDate.jsx'
 
@@ -18,31 +19,54 @@ import { getBreadcrumbList } from '../../lib/facet-helpers'
 import { display as searchResultsDisplay } from '../../lib/search-result-settings'
 
 import AddMetadataModal from '../components/batch-tools/AddMetadataModal.jsx'
+import NoResultsFound from './NoResultsFound.jsx'
 
-const SearchResults = React.createClass({
-	// TODO: clean this up a bit? this is a hold-over from when this component
-	// was handling the starting search form as well as the results
-	componentWillMount: function () {
+export default class SearchResults extends React.PureComponent {
+	constructor (props) {
+		super(props)
+
+		this.maybeCloseModalOnPopState = this.maybeCloseModalOnPopState.bind(this)
+		this.clearSelectedFacets = this.clearSelectedFacets.bind(this)
+		this.handleCloseBatchTool = this.handleCloseBatchTool.bind(this)
+		this.handleOpenBatchTool = this.handleOpenBatchTool.bind(this)
+		this.handleSubmitSearchQuery = this.handleSubmitSearchQuery.bind(this)
+		this.maybeRenderBatchTool = this.maybeRenderBatchTool.bind(this)
+		this.maybeRenderLoadingModal = this.maybeRenderLoadingModal.bind(this)
+		this.onRemoveFacet = this.onRemoveFacet.bind(this)
+		this.onSelectFacet = this.onSelectFacet.bind(this)
+		this.renderBreadcrumbs = this.renderBreadcrumbs.bind(this)
+		this.renderFacetSidebar = this.renderFacetSidebar.bind(this)
+		this.renderResultsHeader = this.renderResultsHeader.bind(this)
+		this.renderResults = this.renderResults.bind(this)
+		this.toggleView = this.toggleView.bind(this)
+
+		this.state = {
+			batchTool: null,
+			resultsView: searchResultsDisplay.get() || 'table'
+		}
+	}
+
+	componentWillMount () {
 		const qs = this.props.location.search
 
-		if (qs) {
-			this.props.searchCatalogByQueryString(qs)
+		if (qs && this.props.searchResults.docs === undefined) {
+			this.props.searchCatalogByQueryString(qs.substr(1))
 		}
 
 		window.addEventListener('popstate', this.maybeCloseModalOnPopState)
-	},
+	}
 
-	componentWillUnmount: function () {
+	componentWillUnmount () {
 		window.removeEventListener('popstate', this.maybeCloseModalOnPopState)
-	},
+	}
 
-	maybeCloseModalOnPopState: function () {
+	maybeCloseModalOnPopState () {
 		if (this.state.batchTool !== null) {
 			this.setState({batchTool: null})
 		}
-	},
+	}
 
-	componentWillReceiveProps: function (nextProps) {
+	componentWillReceiveProps (nextProps) {
 		// compare the queryString in the browser to the previously-searched
 		// one. if it differs, submit the new search. this allows the search
 		// to be updated when the user uses the back/forward buttons in the
@@ -55,37 +79,16 @@ const SearchResults = React.createClass({
 		// equal `undefined`).
 		if (previousQueryString && queryString !== previousQueryString)
 			return this.props.searchCatalogByQueryString(queryString)
+	}
 
-		// we're using `props.search.timestamp` as a unique identifier
-		// to signify that the new search results being passed as props
-		// differ than the ones previous. this could also be done with
-		// a shallow compare of the `search` object but since what would
-		// be changing is at a deeper level (the `search.facets` and
-		// `search.options` objects in particular), this could be costly
-		const timestamp = this.props.search.timestamp
-		const next = nextProps.search.timestamp
-
-		if (!next || timestamp === next)
-			return
-
-		this.handleSearchResponse(nextProps.search)
-	},
-
-	getInitialState: function () {
-		return {
-			batchTool: null,
-			resultsView: searchResultsDisplay.get() || 'table',
-		}
-	},
-
-	clearSelectedFacets: function (ev) {
+	clearSelectedFacets (/* ev */) {
 		const query = this.props.search.query
 		const options = this.props.search.options
 
 		this.props.searchCatalog(query, {}, this.props.search.options)
-	},
+	}
 
-	determineResultsComponent: function (which) {
+	determineResultsComponent (which) {
 		switch (which) {
 			case 'gallery':
 				return ResultsGallery
@@ -94,72 +97,30 @@ const SearchResults = React.createClass({
 			default:
 				return ResultsTable
 		}
-	},
+	}
 
-	handleCloseBatchTool: function (changes) {
+	handleCloseBatchTool (changes) {
 		if (changes)
 			this.props.batchUpdateWorks(changes)
 
 		this.setState({batchTool: null})
-	},
+	}
 
-	handleNextPage: function () {
-		const pages = this.state.pages
-
-		if (!pages.next_page)
-			return
-
-		this.props.setSearchOption('page', pages.next_page)
-	},
-
-	handleOpenBatchTool: function (batchTool) {
+	handleOpenBatchTool (batchTool) {
 		this.setState({batchTool})
-	},
+	}
 
-	handlePerPageChange: function (val) {
-		this.props.setSearchOption('per_page', val)
-	},
+	handleSubmitSearchQuery (query) {
+		// restart search w/ query (reset facets)
+		this.props.searchCatalog(query)
+	}
 
-	handlePreviousPage: function () {
-		const pages = this.state.pages
-
-		if (!pages.prev_page)
-			return
-
-		const prev = pages.prev_page === 1 ? null : pages.prev_page
-
-		this.props.setSearchOption('page', prev)
-	},
-
-	handleSearchResponse: function (res) {
-		if (!res)
-			throw new Error('SearchResults#handleSearchResponse - no response passed')
-
-		const facets = res.results.facets
-		const breadcrumbs = getBreadcrumbList(facets, this.props.search.facets)
-
-		this.setState({
-			breadcrumbs,
-			facets,
-			options: this.props.search.options,
-			pages: res.results.pages,
-			results: res.results.docs,
-			timestamp: res.timestamp,
-		})
-	},
-
-	handleSubmitSearchQuery: function (query) {
-		const { facets, options } = this.props.search
-
-		this.props.searchCatalog(query, facets, options)
-	},
-
-	maybeRenderBatchTool: function () {
+	maybeRenderBatchTool () {
 		if (!this.state.batchTool)
 			return null
 
 		const Component = this.state.batchTool.component
-		const data = this.props.search.results || {}
+		const data = this.props.searchResults || {}
 
 		return (
 			<Component
@@ -167,14 +128,17 @@ const SearchResults = React.createClass({
 				onClose={this.handleCloseBatchTool}
 			/>
 		)
-	},
+	}
 
-	maybeRenderLoadingModal: function () {
-		if (!this.props.search.isSearching)
+	maybeRenderLoadingModal () {
+		const { meta } = this.props.search
+
+		if (typeof meta === undefined || typeof meta.isSearching === undefined) {
 			return null
+		}
 
 		const props = {
-			isOpen: true,
+			isOpen: meta.isSearching,
 			contentLabel: 'Loading',
 			style: {
 				overlay: {
@@ -203,22 +167,18 @@ const SearchResults = React.createClass({
 				<h1 {...h1props}>Searching... </h1>
 			</Modal>
 		)
-	},
+	}
 
-	onRemoveFacet: function (key, facet) {
-		return this._onToggleFacet(false, key, facet)
-	},
+	onRemoveFacet (key, facet) {
+		return this.props.toggleSearchFacet(key, facet, false)
+	}
 
-	onSelectFacet: function (key, facet) {
-		return this._onToggleFacet(true, key, facet)
-	},
+	onSelectFacet (key, facet) {
+		return this.props.toggleSearchFacet(key, facet, true)
+	}
 
-	_onToggleFacet: function (which, key, facet) {
-		return this.props.toggleSearchFacet(key, facet, which)
-	},
-
-	renderBreadcrumbs: function () {
-		if (!this.state.breadcrumbs)
+	renderBreadcrumbs () {
+		if (!this.props.search.breadcrumbs)
 			return null
 
 		const onRemoveBreadcrumb = (key, value) => {
@@ -229,20 +189,22 @@ const SearchResults = React.createClass({
 		}
 
 		const props = {
-			breadcrumbs: this.state.breadcrumbs,
+			breadcrumbs: this.props.search.breadcrumbs,
 			onRemoveBreadcrumb,
 			query: this.props.search.query,
 		}
 
-		return React.createElement(SearchBreadcrumbTrail, props)
-	},
+		return <SearchBreadcrumbTrail {...props} />
+	}
 
-	renderFacetSidebar: function () {
-		if (!this.state.facets || !this.state.facets.length)
+	renderFacetSidebar () {
+		const facets = this.props.searchResults.facets || []
+
+		if (!facets || !facets.length)
 			return
 
 		const sidebarProps = {
-			data: this.state.facets,
+			data: facets,
 
 			// play it safe and default to <FacetListWithViewMore/>...
 			defaultBodyComponent: FacetListWithViewMore,
@@ -252,7 +214,7 @@ const SearchResults = React.createClass({
 			limit: 6,
 
 			query: this.props.search.query,
-			selectedFacets: this.props.search.facets,
+			selectedFacets: this.props.search.facets || {},
 
 			// event handlers
 			onClearSelectedFacets:this.clearSelectedFacets,
@@ -276,7 +238,6 @@ const SearchResults = React.createClass({
 				<Facet name="language_sim" />
 				<Facet name="creator_photographer_sim"
 					label="Photographer"
-					bodyComponent={FacetList}
 					/>
 				<Facet name="date_original_dtsi"
 					label="Date (Original)"
@@ -292,12 +253,9 @@ const SearchResults = React.createClass({
 					/>
 			</SearchFacetSidebar>
 		)
-	},
+	}
 
-	renderResultsHeader: function () {
-		if (!this.state.pages)
-			return
-
+	renderResultsHeader () {
 		const props = {
 			batchTools: [
 				{
@@ -306,44 +264,55 @@ const SearchResults = React.createClass({
 					component: AddMetadataModal,
 				}
 			],
-			pageData: this.state.pages,
-			onNextPage: this.handleNextPage,
 			onOpenBatchTool: this.handleOpenBatchTool,
-			onPreviousPage: this.handlePreviousPage,
-			onPerPageChange: this.handlePerPageChange,
 			onViewChange: this.toggleView,
-			perPage: this.props.search.options.per_page,
 			view: this.state.resultsView,
 			viewOptions: ['table', 'gallery'],
 		}
 
 		return React.createElement(SearchResultsHeader, props)
-	},
+	}
 
-	renderResults: function () {
-		const results = this.state.results
+	renderResults () {
+		const { searchResults, search } = this.props
+		const { docs } = searchResults
 
-		if (typeof results === 'undefined')
+		if (docs === undefined || searchResults.meta === undefined)
 			return
+
+		const { atEnd, isSearching } = search.meta
+		const hasMore = !(atEnd || isSearching)
+
+		const props = {
+			hasMore,
+			loadMore: this.props.getResultsAtPage,
+			pageStart: 1,
+			threshold: 50
+		}
 
 		const which = this.state.resultsView
 		const Component = this.determineResultsComponent(which)
 
-		const props = {
-			data: results,
-		}
+		return (
+			<InfiniteScroll {...props}>
+				<Component data={docs} />
+			</InfiniteScroll>
+		)
 
 		return <Component {...props} />
-	},
+	}
 
-	toggleView: function (view) {
+	toggleView (view) {
 		searchResultsDisplay.set(view)
 		this.setState({resultsView: view})
-	},
+	}
 
-	render: function () {
-		if (this.props.search.isSearching) {
-			return this.maybeRenderLoadingModal()
+	render () {
+		const { isSearching } = this.props.search.meta
+		const { docs } = this.props.searchResults
+
+		if (!isSearching && docs && docs.length === 0) {
+			return <NoResultsFound query={this.props.search.query} />
 		}
 
 		const styles = {
@@ -377,11 +346,10 @@ const SearchResults = React.createClass({
 					{this.renderBreadcrumbs()}
 					{this.renderResultsHeader()}
 
+					{this.maybeRenderLoadingModal()}
 					{this.renderResults()}
 				</section>
 			</div>
 		)
 	}
-})
-
-export default SearchResults
+}

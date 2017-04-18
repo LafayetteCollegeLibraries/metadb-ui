@@ -1,145 +1,224 @@
 import { createAction } from 'redux-actions'
-import blqs from 'blacklight-querystring'
 import browserHistory from 'react-router/lib/browserHistory'
-import findIndex from 'array-find-index'
 import isEqual from 'lodash.isequal'
 
 import * as api from './endpoints'
 import * as utils from './utils'
 
+export const RESULTS_PER_PAGE = 50
+
 const hasProperty = (obj, prop) => (
 	Object.prototype.hasOwnProperty.call(obj, prop)
 )
 
-export const fetchingSearch = createAction('fetching search')
+export const clearFacet = createAction('clearing search.facet')
+export const clearSearch = createAction('clearing search')
 export const fetchingSearchErr = createAction('error fetching search')
+export const preppingSearch = createAction('prepping search')
+export const setFacet = createAction('setting search.facet')
 export const receivedSearchResults = createAction('received search results')
 
-const conductSearch = (dispatch, query, facets, options, queryString) => {
-	dispatch(fetchingSearch({query, facets, options, queryString}))
+export const getResultsAtPage = page => {
+	return (dispatch, getState) => {
+		const search = getState().search
+		const { query, facets, range, meta } = search
 
-	utils.searchHistory.add({query, facets, options})
-
-	return api.search(queryString + '&format=json')
-		.then(results => results.response)
-		.then(results => {
-			dispatch(receivedSearchResults({results}))
-		})
-		.catch(error => {
-			dispatch(fetchingSearchErr(error))
-		})
-}
-
-export const searchCatalog = (query, facets, opts) => {
-	return dispatch => {
-		if (!facets) facets = {}
-		if (!opts) opts = {}
-
-		const queryString = utils.formatSearchQueryString(query, facets, opts)
-
-		browserHistory.push({
-			pathname: '/search',
-			search: `?${queryString}`,
-			state: {
-				query,
-				facets,
-				opts,
-			}
-		})
-
-		return conductSearch(dispatch, query, facets, opts, queryString)
+		return searchCatalog(query, facets, range, {...meta, page})(dispatch)
 	}
 }
 
-// this function is used when arriving on a Search page w/ a pre-populated
-// search querystring (ex. arriving from a link, refreshing the results)
-// `parseSearchQuerystring` is used to extract the query, facets, and
-// options + passed to `conductSearch`
-export const searchCatalogByQueryString = queryString => {
+export const searchCatalog = (query, facets, range, meta) => {
 	return dispatch => {
-		const { query, facets, options } = blqs.parse(queryString)
-
-		if (hasProperty(options, 'range')) {
-			const { range } = options
-			delete options.range
-
-			for (let r in range) {
-				if (!facets[r])
-					facets[r] = []
-
-				facets[r].push(utils.createRangeFacet(r, range[r].begin, range[r].end))
-			}
+		if (query === undefined) {
+			query = ''
 		}
 
-		return conductSearch(dispatch, query, facets, options, queryString)
-	}
-}
-
-// toggle options such as `per_page` and `page`
-// TODO: remove this for infinite scrolling
-export const setSearchOption = (field, value) => {
-	return (dispatch, getState) => {
-		const search = getState().search || {}
-		const { query, facets, options } = search
-
-		if (value === null) {
-			delete options[field]
-		} else {
-			options[field] = value
+		if (facets === undefined) {
+			facets = {}
 		}
 
-		return searchCatalog(query, facets, options)(dispatch)
-	}
-}
+		if (range === undefined) {
+			range = {}
+		}
 
-export const toggleSearchFacet = (field, facet, isChecked) => {
-	return (dispatch, getState) => {
-		const search = getState().search || {}
+		if (meta === undefined) {
+			meta = {}
+		}
 
-		const query = search.query
-		const facets = { ...search.facets }
-		const options = { ...search.options }
+		const options = {
+			format: meta.format || 'json',
+			page: meta.page || 1,
+			per_page: meta.per_page || RESULTS_PER_PAGE
+		}
 
-		let dirty = false
-		let idx = -1
+		dispatch(preppingSearch({
+			query,
+			facets,
+			range,
+			meta: {
+				...options,
+				isSearching: true,
+			}
+		}))
 
-		if (facets[field]) {
-			idx = findIndex(facets[field], f => {
-				if (hasProperty(f, 'value') && hasProperty(facet, 'value')) {
-					return isEqual(f.value, facet.value)
-				} else {
-					return isEqual(f, facet)
-				}
+		const mappedFacets = utils.mapFacets(facets)
+		const flattenedRange = utils.flattenRange(range)
+
+		const queryObj = {
+			q: query,
+			f: mappedFacets,
+			range: flattenedRange,
+		}
+
+		const display = utils.stringifyQs(queryObj)
+
+		const fullObj = {
+			...queryObj,
+			...options,
+		}
+
+		const queryString = utils.stringifyQs(fullObj)
+
+		// only update the browserHistory if we're at the
+		// beginning of a page, otherwise the state will
+		// update + cause the Router to update + trigger
+		// an unnecssary render
+		if (options.page === 1) {
+			browserHistory.push({
+				pathname: '/search',
+				search: `?${display}`,
+				state: fullObj,
 			})
 		}
 
-		if (isChecked) {
-			if (idx === -1) {
-				facets[field] = [].concat(facets[field], facet).filter(Boolean)
-				dirty = true
+		return api.search(queryString)
+			.then(results => results.response)
+			.then(results => {
+				dispatch(receivedSearchResults({results}))
+			})
+			.catch(error => {
+				dispatch(fetchingSearchErr(error))
+			})
+	}
+}
+
+export const searchCatalogByQueryString = queryString => {
+	const { q, f, range, ...meta } = utils.parseQs(queryString)
+	return searchCatalog(q, f, range, meta)
+}
+
+export const toggleSearchFacet = (facet, item, isChecked) => {
+	let facetName, facetLabel
+
+	if (typeof facet === 'object') {
+		facetName = facet.name
+		facetLabel = facet.label
+	} else {
+		facetName = facetLabel = facet
+		facet = {
+			name: facetName,
+			label: facetLabel,
+		}
+	}
+
+	const isRange = item.type && item.type === 'range'
+	const dispatchFn = isChecked ? setFacet : clearFacet
+
+	return (dispatch, getState) => {
+		const original = getState().search
+		const search = {
+			// defaults
+			query: '',
+			facets: {},
+			range: {},
+			meta: {},
+
+			...original,
+		}
+
+		// ranges are super easy, as they're key/object-values
+		if (isRange) {
+			if (isChecked) {
+				search.range[facetName] = item.value
+			}
+
+			else {
+				delete search.range[facetName]
 			}
 		}
 
 		else {
-			if (idx !== -1) {
-				facets[field] = [].concat(
-					facets[field].slice(0, idx),
-					facets[field].slice(idx + 1)
-				)
+			let dirty = false
+			let target
 
-				dirty = true
+			// selecting facet
+			if (isChecked) {
+				const facets = search.facets
+				let shouldUpdate = true
+				// is the facet already being used?
+				// check for duplicate values and don't update if it's already there
+				if (hasProperty(facets, facetName)) {
+					for (let i = 0; i < facets[facetName].length; i++) {
+						const current = facets[facetName][i]
+						if (hasProperty(current, 'value') && hasProperty(item, 'value')) {
+							if (isEqual(current.value, item.value)) {
+								shouldUpdate = false
+								break
+							}
+						} else {
+							if (isEqual(current, item)) {
+								shouldUpdate = false
+								break
+							}
+						}
+					}
+				}
+
+				if (shouldUpdate === true) {
+					target = [].concat(facets[facetName], item).filter(Boolean)
+					dirty = true
+				}
+			}
+
+			// removing facet
+			// we'll skip a catch-all `else` case and let `dirty = false`
+			// result in a no-op
+			else if (search.facets[facetName] && !isChecked) {
+				target = search.facets[facetName].filter(i => {
+					if (hasProperty(i, 'value') && hasProperty(item, 'value')) {
+						return !isEqual(i.value, item.value)
+					}
+
+					else {
+						return !isEqual(i, item)
+					}
+				})
+
+				if (search.facets[facetName].length > target.length) {
+					dirty = true
+				}
+			}
+
+			if (!dirty) {
+				return Promise.resolve()
+			}
+
+			search.facets = {
+				...search.facets,
+				[facetName]: target,
 			}
 		}
 
-		if (!dirty) {
-			return Promise.resolve()
+		dispatch(dispatchFn({facet, item}))
+
+		const { query, facets, range } = search
+
+		// reset the page count
+		const meta = {
+			...search.meta,
+			page: 1,
 		}
 
-		// reset the page count if it's set
-		if (options.page) {
-			delete options.page
-		}
-
-		return searchCatalog(query, facets, options)(dispatch)
+		return searchCatalog(query, facets, range, meta)(dispatch)
 	}
 }

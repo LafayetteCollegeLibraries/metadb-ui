@@ -32,7 +32,7 @@ function buildUrl (path) {
 	if (isAbsoluteUrl(path))
 		return path
 
-	const p = path.substring(0,1) === '/' ? path : `/${path}`
+	const p = path.substr[0] === '/' ? path.substr(1) : path
 
 	return API_BASE_URL + p
 }

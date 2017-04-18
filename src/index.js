@@ -14,7 +14,7 @@ import Redirect from 'react-router/lib/Redirect'
 import store, { history } from './store'
 
 // pages / wrappers
-import App from './App.jsx'
+import App from './App'
 import Home from './pages/Home.jsx'
 import VocabularyManager from './pages/VocabularyManager.jsx'
 import SearchLanding from './pages/SearchLanding.jsx'

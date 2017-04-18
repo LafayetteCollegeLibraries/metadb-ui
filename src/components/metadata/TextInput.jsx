@@ -1,9 +1,15 @@
 // used for larger blobs of text, for single-line metadata, us `StringInput`
 import React from 'react'
-import assign from 'object-assign'
 
-const TextInput = React.createClass({
-	handleBlur: function (ev) {
+export default class TextInput extends React.PureComponent {
+	constructor (props) {
+		super(props)
+
+		this.handleBlur = this.handleBlur.bind(this)
+		this.handleFocus = this.handleFocus.bind(this)
+	}
+
+	handleBlur (ev) {
 		const val = ev.target.value
 		const check = this._initialValue ? this._initialValue : this.props.value
 
@@ -14,33 +20,35 @@ const TextInput = React.createClass({
 			return
 
 		this.props.onChange && this.props.onChange.call(null, val)
-	},
+	}
 
-	handleFocus: function (ev) {
+	handleFocus (ev) {
 		this._initialValue = ev.target.value
 
 		if (this.props.onFocus)
 			this.props.onFocus.apply(null, arguments)
-	},
+	}
 
-	render: function () {
-		const props = assign({},
+	render () {
+		const props = {
+
 			// passed props
-			this.props,
+			...this.props,
 
 			// internal overrides
-			{
-				defaultValue: this.props.value || '',
-				onBlur: this.handleBlur,
-				onFocus: this.handleFocus,
 
-				// we're overriding `onChange` to only trigger on blur,
-				// so we need to noop the original function
-				onChange: () => {},
+			defaultValue: this.props.value || '',
+			onBlur: this.handleBlur,
+			onFocus: this.handleFocus,
 
-				rows: 4,
-			}
-		)
+			// we're overriding `onChange` to only trigger on blur,
+			// so we need to noop the original function
+			onChange: () => {},
+
+			rows: 4,
+
+			ref: el => { this.inputElement = el },
+		}
 
 		// we're using `defaultValue`, since our value changes
 		// are being handled via blur/focus
@@ -54,6 +62,4 @@ const TextInput = React.createClass({
 
 		return React.createElement('textarea', props)
 	}
-})
-
-export default TextInput
+}

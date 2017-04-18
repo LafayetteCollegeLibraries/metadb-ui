@@ -8,6 +8,7 @@
 	&--item {
 		flex-basis: 175px;
 		flex-shrink: 1;
+		height: 225px;
 		margin: auto;
 		padding: 10px;
 
@@ -18,7 +19,7 @@
 	}
 
 	&--thumbnail {
-		width: 100%;
+		max-width: 100%;
 	}
 
 	&--caption {
