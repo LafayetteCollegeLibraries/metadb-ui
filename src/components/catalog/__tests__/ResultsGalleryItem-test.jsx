@@ -1,7 +1,6 @@
 import React from 'react'
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
-import assign from 'object-assign'
 import randomIndex from 'random-array-index'
 
 import ResultsGalleryItem from '../ResultsGalleryItem.jsx'

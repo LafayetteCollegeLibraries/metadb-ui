@@ -1,7 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { expect } from 'chai'
-import { mount, shallow, render } from 'enzyme'
+import { mount, shallow } from 'enzyme'
 import assign from 'object-assign'
 import FacetListWithViewMore from '../FacetListWithViewMore.jsx'
 import data from './data/facet.json'
@@ -25,7 +24,6 @@ const wrap = (xtend, renderer) => {
 
 const mountEl = xtend => wrap(xtend, mount)
 const shallowEl = xtend => wrap(xtend, shallow)
-const renderEl = xtend => wrap(xtend, render)
 
 describe('<FacetListWithMoreView />', function () {
 	it('renders the number of items established with `limit`', function () {

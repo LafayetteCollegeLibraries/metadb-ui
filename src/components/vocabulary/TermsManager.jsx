@@ -1,8 +1,7 @@
 import React from 'react'
 import TagList from '../tags/TagList.jsx'
-import BulkTermsEditModal from './BulkTermsEditModal.jsx'
-import TermEditModal from './TermEditModal.jsx'
 import shallowCompare from 'react-addons-shallow-compare'
+import Button from '../Button.jsx'
 
 const T = React.PropTypes
 
@@ -101,10 +100,6 @@ const TermsManager = React.createClass({
 				height: (14 * 30) + 'px',
 				overflowY: 'scroll',
 			}
-		}
-
-		const wrapperProps = {
-			className: 'term-editor'
 		}
 
 		return (

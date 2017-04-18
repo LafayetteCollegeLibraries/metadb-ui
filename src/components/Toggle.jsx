@@ -44,16 +44,15 @@ const Toggle = React.createClass({
 		const selected = value === this.props.value
 
 		const labelStyle = assign({}, {
-				backgroundColor: (selected ? '#b0b0b0' : '#efefef'),
-				cursor: (selected ? 'auto' : 'pointer'),
-				display: 'inline-block',
-				fontWeight: 'normal',
-				minWidth: '5em',
-				padding: '5px',
-				textAlign: 'center',
-			}, this.props.styles.toggle,
-			(selected ? this.props.styles.selected : undefined)
-		)
+			backgroundColor: (selected ? '#b0b0b0' : '#efefef'),
+			cursor: (selected ? 'auto' : 'pointer'),
+			display: 'inline-block',
+			fontWeight: 'normal',
+			minWidth: '5em',
+			padding: '5px',
+			textAlign: 'center',
+		}, this.props.styles.toggle,
+		(selected ? this.props.styles.selected : undefined))
 
 		if (index === 0) {
 			labelStyle.borderBottomLeftRadius = '1px'

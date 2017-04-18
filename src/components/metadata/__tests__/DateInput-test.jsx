@@ -62,7 +62,7 @@ describe('<DateInput />', function () {
 	})
 
 	it('returns null if no value is set', function (done) {
-		const onChange = (val, str) => {
+		const onChange = (val /*, str */) => {
 			expect(val).to.be.null
 			done()
 		}

@@ -3,6 +3,8 @@ import React from 'react'
 import assign from 'object-assign'
 
 const T = React.PropTypes
+
+// eslint-disable-next-line
 const DEFAULT_FIELD_NAME = 'undefined-field'
 
 const MetadataForm = React.createClass({

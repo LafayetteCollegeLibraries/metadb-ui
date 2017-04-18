@@ -34,7 +34,6 @@ class ResultsGalleryItem extends React.PureComponent {
 	}
 
 	render () {
-		const src = process.env.API_BASE_URL + this.props.data.thumbnail_path
 		return (
 			<figure className="search-results-gallery--item ResultsGalleryItem">
 				<Link to={`/works/${this.props.data.id}`}>

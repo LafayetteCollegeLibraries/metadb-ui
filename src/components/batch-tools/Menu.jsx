@@ -36,7 +36,9 @@ const BatchToolsMenu = React.createClass({
 			if (target.className === MENU_CLASSNAME) {
 				return
 			}
-		} while (target = target.parentElement)
+
+			target = target.parentElement
+		} while (target)
 
 		this.props.onClose()
 	},

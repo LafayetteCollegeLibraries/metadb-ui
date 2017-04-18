@@ -6,7 +6,6 @@ import Toggle from '../Toggle.jsx'
 import BatchToolMenu from '../batch-tools/Menu.jsx'
 
 const T = React.PropTypes
-const BORDER_RADIUS = '2px'
 
 const SearchResultsHeader = React.createClass({
 	propTypes: {
@@ -17,8 +16,6 @@ const SearchResultsHeader = React.createClass({
 
 		view: T.string,
 		viewOptions: T.array,
-
-		batchTools: T.array,
 	},
 
 	getInitialState: function () {

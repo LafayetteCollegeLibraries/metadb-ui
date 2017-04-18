@@ -1,8 +1,6 @@
 import React from 'react'
 import Link from 'react-router/lib/Link'
 
-const T = React.PropTypes
-
 const Navbar = React.createClass({
 	render: function () {
 		return (

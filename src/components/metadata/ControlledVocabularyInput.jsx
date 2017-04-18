@@ -1,6 +1,5 @@
 import React from 'react'
 import Autocomplete from 'react-autocomplete'
-import assign from 'object-assign'
 
 const T = React.PropTypes
 
@@ -29,6 +28,8 @@ const ControlledVocabularyInput = React.createClass({
 
 			// TODO: do something if there's a problem
 			// (maybe disable the input?)
+			//
+			// eslint-disable-next-line
 			.catch(console.warn)
 		}
 	},
@@ -61,12 +62,12 @@ const ControlledVocabularyInput = React.createClass({
 			menu.scrollTop = 0
 	},
 
-	handleSelect: function (value, item) {
+	handleSelect: function (value /*, item */) {
 		this.setState({inputValue: value})
 		this.props.onChange && this.props.onChange.call(null, value)
 	},
 
-	renderItem: function (item, isHighlighted, style) {
+	renderItem: function (item, isHighlighted /*, style */) {
 		const itemStyle = {
 			backgroundColor: isHighlighted ? '#4ea8dd' : 'inherit',
 			cursor: 'pointer',
@@ -97,7 +98,7 @@ const ControlledVocabularyInput = React.createClass({
 		)
 	},
 
-	renderMenu: function (items, value, style) {
+	renderMenu: function (items /*, value, style */) {
 		const menuStyle = {
 			borderRadius: '2px',
 			boxShadow: '0 2px 12px #aaa',

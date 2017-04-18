@@ -1,5 +1,4 @@
 import React from 'react'
-import assign from 'object-assign'
 import FacetListSelectedItem from './FacetListSelectedItem.jsx'
 import FacetListItem from './FacetListItem.jsx'
 
@@ -33,7 +32,7 @@ const FacetList = React.createClass({
 
 			const props = {
 				data: item,
-				onClick: this.props.onSelectFacet,
+				onClick: onSelectFacet,
 			}
 
 			return (

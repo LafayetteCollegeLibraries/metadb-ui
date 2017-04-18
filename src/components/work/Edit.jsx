@@ -34,6 +34,7 @@ const WorkEdit = React.createClass({
 
 		return this.props.updateWork(updates)
 			.then(() => this.setState({updates: {}}))
+			// eslint-disable-next-line no-console
 			.catch(err => console.warn('Error in WorkEdit:', err))
 	},
 

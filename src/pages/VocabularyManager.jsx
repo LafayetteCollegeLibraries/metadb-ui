@@ -3,8 +3,6 @@ import assign from 'object-assign'
 import arrayFind from 'array-find'
 import { sprintf } from 'sprintf-js'
 
-import camelCase from '../../lib/camel-case'
-
 // vocab side
 import VocabularyList from '../components/vocabulary/VocabularyList.jsx'
 import CreateVocabularyModal from '../components/vocabulary/CreateVocabularyModal.jsx'
@@ -17,7 +15,6 @@ import TermEditModal from '../components/vocabulary/TermEditModal.jsx'
 
 import { DELETE_VOCABULARY_WARNING } from '../messages'
 
-const T = React.PropTypes
 const VOCAB_LABEL_KEY = 'pref_label'
 
 const MODAL = {

@@ -90,8 +90,6 @@ const FacetListWithViewMore = React.createClass({
 	},
 
 	renderLimitedFacetList: function () {
-		const els = []
-
 		const limit = this.props.limit
 		const flProps = this.getFacetListProps({
 			items: this.props.items.slice(0, limit),

@@ -178,7 +178,7 @@ const VocabularyList = React.createClass({
 		}
 
 		return (
-			<ul className="vocab-list" className="VocabularyList" onMouseOut={this.clearHoverIndex}>
+			<ul className="vocab-list VocabularyList" onMouseOut={this.clearHoverIndex}>
 				{this.state.vocabularies.map(this.vocabularyListItem)}
 			</ul>
 		)

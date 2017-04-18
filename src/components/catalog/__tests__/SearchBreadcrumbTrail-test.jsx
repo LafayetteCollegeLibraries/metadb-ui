@@ -13,11 +13,11 @@ const mountEl = wrapEl(mount)
 const breadcrumbs = [
 	{
 		facet: {name: 'cool-facet', label: 'Cool Facet'},
-		item: {label: 'cool-value-1', label: 'Cool Value, 1'},
+		item: {value: 'cool-value-1', label: 'Cool Value, 1'},
 	},
 	{
 		facet: {name: 'cool-facet', label: 'Cool Facet'},
-		item: {label: 'cool-value-2', label: 'Cool Value, 2'}
+		item: {value: 'cool-value-2', label: 'Cool Value, 2'}
 	}
 ]
 

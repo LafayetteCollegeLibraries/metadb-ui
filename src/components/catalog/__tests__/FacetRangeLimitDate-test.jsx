@@ -28,7 +28,7 @@ describe('<FacetRangeLimitDate />', function () {
 	it('calculates and stores min/max and hits in state', function () {
 		const props = {...isoDateRange}
 		const $el = shallowEl(props)
-		const {min, max, hits, items} = calculateRange(props.items, val => Date.parse(val))
+		const {hits, items} = calculateRange(props.items, val => Date.parse(val))
 
 		expect($el.state('hits')).to.equal(hits)
 		expect($el.state('items')).to.deep.equal(items)
