@@ -26,6 +26,7 @@
   },
   "license": "GPL-3.0",
   "dependencies": {
+    "@lafayette-college-libraries/react-delayed-input": "^2.0.1",
     "array-find": "^1.0.0",
     "array-find-index": "^1.0.1",
     "babel-cli": "^6.24.1",

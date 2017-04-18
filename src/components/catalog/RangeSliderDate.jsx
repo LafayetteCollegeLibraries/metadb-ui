@@ -1,7 +1,7 @@
 import React from 'react'
 import Slider from 'rc-slider'
 
-import DelayedInput from '../metadata/DelayedInput.jsx'
+import DelayedInput from '@lafayette-college-libraries/react-delayed-input'
 import Button from '../Button.jsx'
 
 import formatDateValue from './common/format-date-value'
