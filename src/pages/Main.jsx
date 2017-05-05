@@ -1,7 +1,5 @@
 import React from 'react'
 import assign from 'object-assign'
-import { NotificationStack } from 'react-notification'
-
 import Navbar from '../components/Navbar.jsx'
 import NotificationCenter from '../components/NotificationCenter.jsx'
 

@@ -29,7 +29,7 @@ const shallowEl = xtend => wrapEl(xtend, shallow)
 
 describe('<OpenSeadragonViewer />', () => {
 	it('renders an OpenSeadragonViewer element', () => {
-			const $el = shallowEl()
-			expect($el.find(OpenSeadragonViewer)).to.be.a('Object');
+		const $el = shallowEl()
+		expect($el.find(OpenSeadragonViewer)).to.be.a('Object')
 	})
 })

@@ -20,12 +20,12 @@ const BulkTermsEditModal = React.createClass({
 		}
 	},
 
-	closeModal: function (data) {
+	closeModal: function (/* data */) {
 		this.setState({modalOpen: false})
 		this.props.onClose()
 	},
 
-	handleClose: function (ev) {
+	handleClose: function (/* ev */) {
 		this.closeModal()
 	},
 

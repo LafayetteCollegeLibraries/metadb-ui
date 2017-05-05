@@ -2,7 +2,6 @@ import React from 'react'
 import { expect } from 'chai'
 import { mount } from 'enzyme'
 import assign from 'object-assign'
-import randomBool from 'random-bool'
 import FacetListItem from '../FacetListItem.jsx'
 
 const defaultProps = {

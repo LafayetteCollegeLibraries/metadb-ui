@@ -7,14 +7,14 @@ import FormField from '../FormField.jsx'
 const RENDERER_DISPLAY_NAME = 'LolComponent'
 
 const wrapper = (xtend, renderer) => {
+	const fieldRenderer = p => <input type="text" defaultValue={p.value} />
+	fieldRenderer.displayName = RENDERER_DISPLAY_NAME
+
 	const props = assign({
 		name: 'test-form-field',
-		renderer: p => <input type="text" defaultValue={p.value} />,
+		renderer: fieldRenderer,
 		value: ['value'],
 	}, xtend)
-
-	// give our renderer a hook for us to easily grab onto
-	props.renderer.displayName = RENDERER_DISPLAY_NAME
 
 	return renderer(React.createElement(FormField, props))
 }

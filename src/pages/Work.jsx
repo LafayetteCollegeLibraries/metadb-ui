@@ -192,8 +192,8 @@ const Work = React.createClass({
 					referenceStripScroll='vertical'
 					showNavigator={true}
 					onClose={this.adjustSections}
-			  />
-			 )
+				/>
+			)
 		}
 
 		const props = {

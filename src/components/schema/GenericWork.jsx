@@ -7,7 +7,6 @@ import StringInput from '../metadata/StringInput.jsx'
 import TextInput from '../metadata/TextInput.jsx'
 import ControlledVocabularyInput from '../metadata/ControlledVocabularyInput.jsx'
 import DateInput from '../metadata/DateInput.jsx'
-import Button from '../Button.jsx'
 
 const labelFromName = name => {
 	const split = name.split('_').map(s => s.slice(0,1).toUpperCase() + s.slice(1))
@@ -25,6 +24,7 @@ const LargerField = props => {
 	return <FormField {...props} renderer={TextInput} />
 }
 
+/* eslint-disable no-unused-vars */
 const SubjectOCM = props => {
 	const fetchTerms = () => {
 		return fetch(`${process.env.API_BASE_URL}/vocabularies/eaic-subject-ocm.json`)
@@ -43,6 +43,7 @@ const SubjectOCM = props => {
 		/>
 	)
 }
+/* eslint-enable no-unused-vars */
 
 const TechnicalMetadata = props => {
 	return <FormField {...props} renderer={TextInput} disabled />
@@ -116,41 +117,41 @@ const GenericWork = React.createClass({
 		}
 
 		return (
-		<MetadataForm {...formProps}>
-			<FormField name="title" label="Title" />
-			{ LargerField({name: 'description_note'}) }
-			<FormField name="creator" label="Creator" multiple />
-			{
-				this.controlledVocabularyField({
-					name: 'subject_lcsh',
-					label: 'Subject (LCSH)',
-					id: 'mdl-subject-lcsh',
-				})
-			}
-			{
-			 this.controlledVocabularyField({
-					name: 'subject_ocm',
-					label: 'Subject (OCM)',
-					id:'eaic-subject-ocm',
-				})
-			}
-			<FormField name="publisher" label="Publisher (Original)" multiple />
-			<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="day"/>
-			<FormField name="format_medium" label="Format (Medium)" multiple />
-			<TechnicalMetadata name="format_extent" label="Format Extent" />
-			{ LargerField({name: 'description'}) }
-			{ LargerField({name: 'description_condition'}) }
-			{ LargerField({name: 'description_provenance'}) }
-			{ LargerField({name: 'description_series'}) }
-			<FormField name="identifier_itemnumber" label="Identifier (Item Number)" />
-			<FormField name="publisher_original" label="Publisher (Original)" />
-			<FormField name="publisher_digital" label="Publisher (Digital)" />
-			<TechnicalMetadata name="format_digital" label="Format (Digital)" />
-			<FormField name="source" label="Source" />
-			<FormField name="rights" label="Rights (Digital)" renderer={TextInput} />
-			<FormField name="relation_ispartof" label="Relation (IsPartOf)" />
-		</MetadataForm>
-	)
+			<MetadataForm {...formProps}>
+				<FormField name="title" label="Title" />
+				{ LargerField({name: 'description_note'}) }
+				<FormField name="creator" label="Creator" multiple />
+				{
+					this.controlledVocabularyField({
+						name: 'subject_lcsh',
+						label: 'Subject (LCSH)',
+						id: 'mdl-subject-lcsh',
+					})
+				}
+				{
+					this.controlledVocabularyField({
+						name: 'subject_ocm',
+						label: 'Subject (OCM)',
+						id:'eaic-subject-ocm',
+					})
+				}
+				<FormField name="publisher" label="Publisher (Original)" multiple />
+				<FormField name="date_original" label="Date (Original)" renderer={DateInput} type="day"/>
+				<FormField name="format_medium" label="Format (Medium)" multiple />
+				<TechnicalMetadata name="format_extent" label="Format Extent" />
+				{ LargerField({name: 'description'}) }
+				{ LargerField({name: 'description_condition'}) }
+				{ LargerField({name: 'description_provenance'}) }
+				{ LargerField({name: 'description_series'}) }
+				<FormField name="identifier_itemnumber" label="Identifier (Item Number)" />
+				<FormField name="publisher_original" label="Publisher (Original)" />
+				<FormField name="publisher_digital" label="Publisher (Digital)" />
+				<TechnicalMetadata name="format_digital" label="Format (Digital)" />
+				<FormField name="source" label="Source" />
+				<FormField name="rights" label="Rights (Digital)" renderer={TextInput} />
+				<FormField name="relation_ispartof" label="Relation (IsPartOf)" />
+			</MetadataForm>
+		)
 	}
 })
 

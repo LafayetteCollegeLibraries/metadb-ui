@@ -2,6 +2,7 @@ import React from 'react'
 import assign from 'object-assign'
 
 const T = React.PropTypes
+
 const ResultsContainer = React.createClass({
 	propTypes: {
 		data: T.array.isRequired,
@@ -30,12 +31,6 @@ const ResultsContainer = React.createClass({
 	},
 
 	render: function () {
-		const containerProps = assign({
-			style: {
-				marginTop: '10px',
-			}
-		}, this.props.containerProps)
-
 		return (
 			<div
 				className="ResultsContainer"

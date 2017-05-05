@@ -4,7 +4,7 @@ import assign from 'object-assign'
 
 import {
 	ERROR,
-	OK as SUCCESS,
+	OK as SUCCESS, // eslint-disable-line no-unused-vars
 } from '../store/notifications/utils'
 
 const T = React.PropTypes

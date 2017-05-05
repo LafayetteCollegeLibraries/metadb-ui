@@ -2,7 +2,7 @@ import React from 'react'
 import Button from './Button.jsx'
 import browserHistory from 'react-router/lib/browserHistory'
 
-export default function NavToSearchResults (props) {
+export default function NavToSearchResults (/* props */) {
 	return (
 		<nav>
 			<Button

@@ -1,9 +1,7 @@
 import React from 'react'
 import Modal from 'react-modal'
-import assign from 'object-assign'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import Button from '../components/Button.jsx'
 import SearchFacetSidebar from '../components/catalog/SearchFacetSidebar.jsx'
 import Facet from '../components/catalog/Facet.jsx'
 import FacetListWithViewMore from '../components/catalog/FacetListWithViewMore.jsx'
@@ -15,7 +13,6 @@ import SearchResultsHeader from '../components/catalog/SearchResultsHeader.jsx'
 import ResultsGallery from '../components/catalog/ResultsGallery.jsx'
 import ResultsTable from '../components/catalog/ResultsTable.jsx'
 
-import { getBreadcrumbList } from '../../lib/facet-helpers'
 import { display as searchResultsDisplay } from '../../lib/search-result-settings'
 
 import AddMetadataModal from '../components/batch-tools/AddMetadataModal.jsx'
@@ -66,7 +63,7 @@ export default class SearchResults extends React.PureComponent {
 		}
 	}
 
-	componentWillReceiveProps (nextProps) {
+	componentWillReceiveProps (/* nextProps */) {
 		// compare the queryString in the browser to the previously-searched
 		// one. if it differs, submit the new search. this allows the search
 		// to be updated when the user uses the back/forward buttons in the
@@ -85,7 +82,7 @@ export default class SearchResults extends React.PureComponent {
 		const query = this.props.search.query
 		const options = this.props.search.options
 
-		this.props.searchCatalog(query, {}, this.props.search.options)
+		this.props.searchCatalog(query, {}, options)
 	}
 
 	determineResultsComponent (which) {
@@ -298,8 +295,6 @@ export default class SearchResults extends React.PureComponent {
 				<Component data={docs} />
 			</InfiniteScroll>
 		)
-
-		return <Component {...props} />
 	}
 
 	toggleView (view) {

@@ -28,7 +28,7 @@ describe('<RangeSliderDate />', function () {
 
 		it('renders inputs with `type="month"', function () {
 			const $filtered = $els.findWhere($e => $e.prop('type') === 'month')
-			expect($els).to.have.length(2)
+			expect($filtered).to.have.length(2)
 		})
 
 		it('parses value to YYYY-MM', function () {
@@ -48,7 +48,7 @@ describe('<RangeSliderDate />', function () {
 
 		it('renders inputs with `type="date"`', function () {
 			const $filtered = $els.findWhere($e => $e.prop('type') === 'date')
-			expect($els).to.have.length(2)
+			expect($filtered).to.have.length(2)
 		})
 
 		it('parses value to YYYY-MM-DD', function () {
@@ -68,7 +68,7 @@ describe('<RangeSliderDate />', function () {
 
 		it('renders inputs with `type="number"`', function () {
 			const $filtered = $els.findWhere($e => $e.prop('type') === 'number')
-			expect($els).to.have.length(2)
+			expect($filtered).to.have.length(2)
 		})
 
 		it('parses value to YYYY', function () {

@@ -53,7 +53,9 @@ const ResultsTableFieldSelect = React.createClass({
 			if (target.className.indexOf(SELECT_CLASSNAME) > -1) {
 				return
 			}
-		} while (target = target.parentElement)
+
+			target = target.parentElement
+		} while (target)
 
 		this.props.onClose()
 	},

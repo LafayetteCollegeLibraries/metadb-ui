@@ -14,15 +14,9 @@ const Select = React.createClass({
 	},
 
 	defaultStyle: function () {
-		const arrowSvg = [
-		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 30">',
-			'<path d="M5,10L10,20L15,10" stroke="%23000" stroke-width="2"/>',
-		'</svg>'].join('')
-
 		return {
 			appearance: 'none',
 			backgroundColor: 'transparent',
-			// backgroundImage: "url('data:image/svg+xml;utf8,'" + arrowSvg + "')",
 			backgroundRepeat: 'no-repeat',
 			backgroundPositionX: '125%',
 			backgroundPositionY: 'bottom',
@@ -30,11 +24,9 @@ const Select = React.createClass({
 			borderRadius: '2px',
 			display: 'inline-block',
 			fontSize: '1em',
-			// MozAppearance: 'none',
 			padding: '15px',
 			paddingRight: '20px',
 			verticalAlign: 'middle',
-			// WebkitAppearance: 'none',
 		}
 	},
 

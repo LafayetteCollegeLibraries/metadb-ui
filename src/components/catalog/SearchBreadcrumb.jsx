@@ -34,7 +34,6 @@ const SearchBreadcrumb = React.createClass({
 
 		const borderRadiusVal = 10
 		const btnHoverColor = '#cc092f'
-		const borderColor = '#ccc'
 
 		const styles = {
 			container: {

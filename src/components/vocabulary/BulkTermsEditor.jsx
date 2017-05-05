@@ -99,7 +99,7 @@ const BulkTermsEditor = React.createClass({
 		this.setState({dragOverText: false})
 	},
 
-	toggleDragEnter: function (ev) {
+	toggleDragEnter: function (/* event */) {
 		this.setState({dragOverText: true})
 	},
 

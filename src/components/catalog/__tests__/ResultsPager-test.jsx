@@ -1,6 +1,6 @@
 import React from 'react'
 import { expect } from 'chai'
-import { shallow, mount } from 'enzyme'
+import { shallow } from 'enzyme'
 import assign from 'object-assign'
 import ResultsPager from '../ResultsPager.jsx'
 import commafy from 'number-with-commas'
@@ -21,7 +21,6 @@ const wrap = (xtend, renderer) => {
 }
 
 const shallowEl = xtend => wrap(xtend, shallow)
-const mountEl = xtend => wrap(xtend, mount)
 
 describe('<ResultsPager />', function () {
 	it('renders next button as disabled when `next_page` is null', function () {

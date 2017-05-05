@@ -48,10 +48,17 @@ function getStepValue (min, max, interval) {
 	let divisor
 
 	switch (interval) {
-		case YEAR:  divisor = day * 365.25
-		case MONTH: divisor = (day * 365.25) / 12
+		case YEAR:
+			divisor = day * 365.25
+			break
+
+		case MONTH:
+			divisor = (day * 365.25) / 12
+			break
+
 		case DAY:
-		default:    divisor = day
+		default:
+			divisor = day
 	}
 
 	return Math.round((max - min) / divisor)
@@ -173,7 +180,6 @@ class RangeSliderDate extends React.Component {
 	}
 
 	render () {
-		const hasOneValue = this.props.min === this.props.max
 		const applyRangeProps = {
 			onClick: this.handleApplyRange
 		}

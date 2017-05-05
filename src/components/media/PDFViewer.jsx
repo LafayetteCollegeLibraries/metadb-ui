@@ -1,3 +1,4 @@
+/* global webViewerLoad */
 import React from 'react'
 import PDFViewerTemplate from './PDFViewerTemplate.jsx'
 

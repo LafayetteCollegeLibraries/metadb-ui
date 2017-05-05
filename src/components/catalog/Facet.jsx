@@ -136,13 +136,15 @@ const Facet = React.createClass({
 
 		const transformDeg = this.state.open ? 90 : 0
 		const arrowSvg = [
-		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">',
+			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">',
 			'<path d="M2,1L8,5L2,9" stroke="'+stroke+'" stroke-width="2" fill="transparent" />',
-		'</svg>'].join('')
+			'</svg>',
+		].join('')
 
 		const props = {
 			key: 'dss-fp-header-arrow',
 			style: {
+				// eslint-disable-next-line
 				backgroundImage: "url('data:image/svg+xml;utf8," + arrowSvg + "')",
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: 'center center',
@@ -202,7 +204,7 @@ const Facet = React.createClass({
 				>
 				<header
 					className="Facet-header"
-					onClick={ev => this.setState({open: !this.state.open})}
+					onClick={() => this.setState({open: !this.state.open})}
 					style={headerStyles}
 					>
 					<h3 className="panel-title Facet-title" style={headerLabel}>

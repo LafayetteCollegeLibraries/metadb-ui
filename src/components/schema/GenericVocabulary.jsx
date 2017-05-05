@@ -9,8 +9,6 @@ import StringInput from '../metadata/StringInput.jsx'
 import TextInput from '../metadata/TextInput.jsx'
 import Button from '../Button.jsx'
 
-const T = React.PropTypes
-
 const GenericVocabulary = React.createClass({
 	getInitialState: function () {
 		return {

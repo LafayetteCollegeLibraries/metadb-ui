@@ -31,8 +31,6 @@ const FacetListSelectedItem = React.createClass({
 				{hits}
 			</span>
 		)
-
-		return React.createElement('span', props, hits)
 	},
 
 	render: function () {

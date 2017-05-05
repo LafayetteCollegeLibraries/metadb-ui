@@ -1,7 +1,8 @@
+/* global OpenSeadragon */
+
 import React from 'react'
 import 'openseadragon'
 import assign from 'object-assign'
-import Button from '../Button.jsx'
 
 const T = React.PropTypes
 
@@ -53,21 +54,21 @@ const OpenSeadragonViewer = React.createClass({
 		})
 
 		const icon = 'http://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/32/close-icon.png'
-		const additionalControls = [];
+		const additionalControls = []
 		const closeButton = new OpenSeadragon.Button({
 			tooltip: 'Close Viewer',
 			onClick: this.props.onClose,
 			srcRest: icon,
 			srcGroup: icon,
 			srcHover: icon,
-			srcDown: icon
-		});
-		additionalControls.push(closeButton);
-		const URButtonGroup = new OpenSeadragon.ButtonGroup({buttons: additionalControls});
+			srcDown: icon,
+		})
+		additionalControls.push(closeButton)
+		const URButtonGroup = new OpenSeadragon.ButtonGroup({buttons: additionalControls})
 
 		this.viewer.addControl(URButtonGroup.element, {
-			anchor: OpenSeadragon.ControlAnchor.TOP_RIGHT
-		});
+			anchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
+		})
 	},
 
 	resizeContainer: function () {

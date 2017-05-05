@@ -1,5 +1,4 @@
 import React from 'react'
-import assign from 'object-assign'
 
 const T = React.PropTypes
 

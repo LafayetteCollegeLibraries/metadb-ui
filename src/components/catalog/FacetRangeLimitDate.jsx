@@ -8,7 +8,6 @@ import FacetListSelectedItem from './FacetListSelectedItem.jsx'
 import createRangeFacet from '../../../lib/create-range-facet'
 
 import {
-	INTERVALS,
 	VALUES as INTERVAL_VALUES,
 } from './common/date-intervals'
 
@@ -72,7 +71,7 @@ const FacetRangeLimitDate = React.createClass({
 		if (!this.props.selectedFacets.length)
 			return
 
-		return this.props.selectedFacets.map((facet, index) => {
+		return this.props.selectedFacets.map((facet /*, index */) => {
 			const key = `sel-${facet.name}-${facet.value.begin}-${facet.value.end}`
 			const props = {
 				data: facet,
